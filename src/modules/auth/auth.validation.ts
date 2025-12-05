@@ -1,0 +1,71 @@
+import Joi from "joi";
+import { roles } from "../../configs/roles.ts";
+
+const register = {
+  body: Joi.object({
+    name: Joi.string().min(3).max(30).required(),
+    email: Joi.string().required(),
+    password: Joi.string().min(6).max(100).required(),
+    role: Joi.string()
+      .valid(...roles)
+      .required(),
+  }),
+};
+
+const login = {
+  body: Joi.object({
+    email: Joi.string().required(),
+    password: Joi.string().required(),
+    fcmToken: Joi.string().optional(),
+  }),
+};
+
+const verifyAccount = {
+  body: Joi.object({
+    email: Joi.string().required(),
+    code: Joi.string().required(),
+  }),
+};
+
+const logout = {
+  body: Joi.object({
+    refreshToken: Joi.string().required(),
+  }),
+};
+
+const refreshTokens = {
+  body: Joi.object({
+    refreshToken: Joi.string().required(),
+  }),
+};
+
+const forgotPassword = {
+  body: Joi.object({
+    email: Joi.string().required(),
+  }),
+};
+
+const resetPassword = {
+  body: Joi.object({
+    email: Joi.string().required(),
+    otp: Joi.string().required(),
+    password: Joi.string().min(6).max(100).required(),
+  }),
+};
+
+const changePassword = {
+  body: Joi.object({
+    oldPassword: Joi.string().required(),
+    newPassword: Joi.string().min(6).max(100).required(),
+  }),
+};
+export default {
+  register,
+  login,
+  verifyAccount,
+  logout,
+  refreshTokens,
+  forgotPassword,
+  resetPassword,
+  changePassword,
+};

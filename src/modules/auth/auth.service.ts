@@ -1,0 +1,118 @@
+import emailHelper from "../../configs/email.ts";
+import ApiError from "../../utils/ApiError.ts";
+import { randomOtp } from "../../utils/otp.ts";
+import User from "../user/user.model.ts";
+import http from "http-status";
+
+const register = async (userData: object) => {
+  const otp = randomOtp();
+  const user = new User(userData);
+  user.oneTimeCode = otp;
+  user.onTimeCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
+  await emailHelper.sendRegistrationEmail(user.email, otp);
+  await user.save();
+  return user;
+};
+
+const verifyAccount = async (email: string, code: string) => {
+  const user = await User.findOne({ email, oneTimeCode: code });
+  if (!user) {
+    throw new ApiError(http.FORBIDDEN, "Invalid code or email");
+  }
+  if (user.isEmailVerified && !user.isResetPassword) {
+    throw new ApiError(http.BAD_REQUEST, "Email is already verified");
+  }
+  if (user.onTimeCodeExpires && user.onTimeCodeExpires < new Date()) {
+    throw new ApiError(http.FORBIDDEN, "OTP has expired");
+  }
+  user.isEmailVerified = true;
+  user.oneTimeCode = null;
+  user.onTimeCodeExpires = null;
+  await user.save();
+  return user;
+};
+
+const login = async (email: string, password: string) => {
+  const user = await User.findOne({ email, isDeleted: false });
+  if (!user || !(await user.isPasswordMatch(password))) {
+    throw new ApiError(http.UNAUTHORIZED, "Incorrect email or password");
+  }
+  if (!user.isEmailVerified) {
+    throw new ApiError(http.UNAUTHORIZED, "Email not verified");
+  }
+  return user;
+};
+
+const forgotPassword = async (email: string) => {
+  const user = await User.findOne({ email, isDeleted: false });
+  if (!user) {
+    throw new ApiError(http.UNAUTHORIZED, "Incorrect email or password");
+  }
+  const otp = randomOtp();
+  user.oneTimeCode = otp;
+  user.onTimeCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
+  user.isResetPassword = true;
+  await emailHelper.sendResetPasswordEmail(user.email, otp);
+  await user.save();
+  return user;
+};
+
+const resetPassword = async (email: any, otp: string, newPassword: string) => {
+  const user = await User.findOne({ email, isDeleted: false });
+  if (!user) {
+    throw new ApiError(http.UNAUTHORIZED, "User not found");
+  }
+  if (user.oneTimeCode !== otp) {
+    throw new ApiError(http.FORBIDDEN, "Invalid OTP code");
+  }
+  if (user.onTimeCodeExpires && user.onTimeCodeExpires < new Date()) {
+    throw new ApiError(http.FORBIDDEN, "OTP has expired");
+  }
+  if (!user.isPasswordMatch(newPassword)) {
+    throw new ApiError(
+      http.BAD_REQUEST,
+      "New password must be different from the old password"
+    );
+  }
+  user.password = newPassword;
+  user.isResetPassword = false;
+  await user.save();
+  return user;
+};
+
+const changePassword = async (
+  userId: any,
+  oldPassword: string,
+  newPassword: string
+) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+  if (!user) {
+    throw new ApiError(http.UNAUTHORIZED, "User not found");
+  }
+  if (!user.isPasswordMatch(oldPassword)) {
+    throw new ApiError(http.BAD_REQUEST, "Old password is incorrect");
+  }
+
+  if (oldPassword === newPassword) {
+    throw new ApiError(
+      http.BAD_REQUEST,
+      "New password must be different from the old password"
+    );
+  }
+
+  user.password = newPassword;
+  await user.save();
+  return user;
+};
+
+export default {
+  // Utility Functions
+  // getUserByEmail,
+  // Auth Functions
+  register,
+  verifyAccount,
+  login,
+  forgotPassword,
+  resetPassword,
+  changePassword,
+};
