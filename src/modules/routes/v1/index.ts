@@ -1,6 +1,10 @@
 import express, { Router } from "express";
 import authRouter from "../../auth/auth.route.ts";
 import userRouter from "../../user/user.route.ts";
+import reviewRouter from "../../review/review.route.ts";
+import feedRouter from "../../feed/feed.route.ts";
+import adminRouter from "../../admin/admin.route.ts";
+import lessonRouter from "../../lesson/lesson.route.ts";
 
 const mainRouter: Router = express.Router();
 
@@ -17,6 +21,22 @@ const routes: routeObjects[] = [
   {
     path: "/user",
     route: userRouter,
+  },
+  {
+    path: "/review",
+    route: reviewRouter,
+  },
+  {
+    path: "/feed",
+    route: feedRouter,
+  },
+  {
+    path: "/admin",
+    route: adminRouter,
+  },
+  {
+    path: "/lesson",
+    route: lessonRouter,
   },
 ];
 

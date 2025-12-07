@@ -3,6 +3,7 @@ import Token from "./token.model.ts";
 import jwt from "../../utils/jwt.ts";
 import ApiError from "../../utils/ApiError.ts";
 import status from "http-status";
+import env from "../../configs/env.ts";
 
 const saveRefreshToken = async (opts: {
   userId: Types.ObjectId;
@@ -43,7 +44,7 @@ const generateUserTokens = async (opts: {
 
   const accessToken = jwt.generateToken(
     { _id: userId.toString(), type: "access" },
-    "15m"
+    env.DEBUG ? "7d" : "15m"
   );
   const token = jwt.generateToken(
     { _id: userId.toString(), type: "refresh" },

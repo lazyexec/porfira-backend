@@ -28,6 +28,8 @@ const updateProfile = {
       }).optional(),
       availableDays: Joi.array().items(Joi.string()).allow(null).optional(),
       documents: Joi.array().items(Joi.string()).allow(null).optional(),
+      content: Joi.string().allow(null).optional(),
+      qualification: Joi.array().items(Joi.object()).allow(null).optional(),
     }).optional(),
   }).min(1),
 };

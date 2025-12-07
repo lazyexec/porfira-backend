@@ -5,6 +5,10 @@ const getUserByEmail = async (email: string) => {
   return User.findOne({ email });
 };
 
+const getGenuineTeacher = async (teacherId: string) => {
+  return await User.findOne({ _id: teacherId, role: "teacher", isDeleted: false, "teacher.isAccepted": true });
+}
+
 const updateUser = async (userId: string, updateBody: object) => {
   const user = await User.findByIdAndUpdate(userId, updateBody, { new: true });
   return user;
@@ -22,4 +26,5 @@ export default {
   getUserByEmail,
   updateUser,
   getUserById,
+  getGenuineTeacher
 };

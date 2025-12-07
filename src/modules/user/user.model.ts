@@ -2,12 +2,14 @@ import mongoose from "mongoose";
 import { roles } from "../../configs/roles.ts";
 import regex from "../../utils/regex.ts";
 import bcrypt from "bcrypt";
-import hideFieldsPlugin from "../../plugins/mongoose/hideFields.ts";
+import hideFieldsPlugin from "../../plugins/mongoose/hideFields.plugin.ts";
+import paginate from "../../plugins/mongoose/paginate.plugin.ts";
 import type {
   IStudent,
   ITeacher,
   IUser,
   IUserMethods,
+  IUserModel,
 } from "./user.interface.ts";
 
 const studentSchema = new mongoose.Schema<IStudent>({
@@ -51,10 +53,44 @@ const teacherSchema = new mongoose.Schema<ITeacher>({
     required: false,
     default: null,
   },
+  content: {
+    type: String,
+    required: false,
+    default: null,
+  },
   documents: {
     type: [String],
     required: false,
     default: null,
+  },
+  rating: {
+    type: Number,
+    required: false,
+    default: null,
+  },
+  qualification: [
+    {
+      title: {
+        type: String,
+        required: false,
+        default: null,
+      },
+      institution: {
+        type: String,
+        required: false,
+        default: null,
+      },
+      year: {
+        type: Number,
+        required: false,
+        default: null,
+      },
+    },
+  ],
+  isAccepted: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 });
 
@@ -173,6 +209,7 @@ const userSchema = new mongoose.Schema<
   }
 );
 
+userSchema.plugin(paginate);
 userSchema.plugin(hideFieldsPlugin);
 
 // Middleware and Methods
@@ -201,9 +238,11 @@ userSchema.pre("save", async function () {
   }
 });
 
-const User = mongoose.model<IUser, mongoose.Model<IUser, {}, IUserMethods>>(
-  "user",
-  userSchema
-);
+userSchema.pre("save", function (next) {
+  if (this.role === "teacher" && !this.teacher) this.teacher = {};
+  if (this.role === "student" && !this.student) this.student = {};
+});
+
+const User = mongoose.model<IUser, IUserModel>("user", userSchema);
 
 export default User;

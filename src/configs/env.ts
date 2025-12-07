@@ -17,6 +17,7 @@ const validator = Joi.object({
   SMTP_USERNAME: Joi.string().required().description("SMTP Username"),
   SMTP_PASSWORD: Joi.string().required().description("SMTP Password"),
   EMAIL_FROM: Joi.string().email().required().description("Email From Address"),
+  STRIPE_SECRET_KEY: Joi.string().required().description("Stripe Secret Key"),
 }).unknown();
 
 const { value, error } = validator.validate(process.env);
@@ -44,5 +45,6 @@ const env = {
     },
     from: value.EMAIL_FROM,
   },
+  STRIPE_SECRET_KEY: value.STRIPE_SECRET_KEY,
 };
 export default env;

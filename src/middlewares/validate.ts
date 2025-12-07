@@ -22,7 +22,13 @@ const validate =
             new ApiError(httpStatus.BAD_REQUEST, error.details[0].message)
           );
         }
-        (req as any)[part] = value;
+
+        // For query and params, use Object.assign since they are read-only getters
+        if (part === "query" || part === "params") {
+          Object.assign((req as any)[part], value);
+        } else {
+          (req as any)[part] = value;
+        }
       }
 
       return next();

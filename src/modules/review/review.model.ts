@@ -1,0 +1,39 @@
+import mongoose from "mongoose";
+import type { IReview, IReviewModel } from "./review.interface.ts";
+import paginate from "../../plugins/mongoose/paginate.plugin.ts";
+import hideFields from "../../plugins/mongoose/hideFields.plugin.ts";
+
+const reviewSchema = new mongoose.Schema(
+  {
+    fromUser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+    toUser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+    score: {
+      type: Number,
+      required: true,
+      min: 1,
+      max: 5,
+    },
+    comment: {
+      type: String,
+      required: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+reviewSchema.plugin(paginate);
+reviewSchema.plugin(hideFields);
+
+const Review = mongoose.model<IReview, IReviewModel>("Review", reviewSchema);
+
+export default Review;

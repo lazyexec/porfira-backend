@@ -1,6 +1,9 @@
 import { Schema } from "mongoose";
 
-export default function hideFieldsPlugin(schema: Schema, fields: string[] = []) {
+export default function hideFieldsPlugin(
+  schema: Schema,
+  fields: string[] = []
+) {
   // Default fields to hide
   const defaultHidden = ["__v", "password", "oneTimeCode", "onTimeCodeExpires"];
   const hiddenFields = [...new Set([...defaultHidden, ...fields])];
@@ -11,7 +14,6 @@ export default function hideFieldsPlugin(schema: Schema, fields: string[] = []) 
     hiddenFields.forEach((path) => {
       const parts = path.split(".");
       const last = parts.pop();
-
       let current = ret;
       for (const p of parts) {
         if (!current[p]) return; // path doesn't exist → stop

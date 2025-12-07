@@ -21,4 +21,5 @@ router
     userController.updateProfile
   );
 
+
 export default router;

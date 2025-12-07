@@ -1,0 +1,108 @@
+import catchAsync from "../../utils/catchAsync.ts";
+import type { Request, Response } from "express";
+import httpStatus from "http-status";
+import response from "../../configs/response.ts";
+import pick from "../../utils/pick.ts";
+import adminService from "./admin.service.ts";
+
+const approveTeacher = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const teacher = await adminService.approveTeacher(id as any);
+
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Teacher approved successfully",
+      data: teacher,
+    })
+  );
+});
+
+const rejectTeacher = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const teacher = await adminService.rejectTeacher(id as any);
+
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Teacher rejected successfully",
+      data: teacher,
+    })
+  );
+});
+
+const getPendingTeachers = catchAsync(async (req: Request, res: Response) => {
+  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const teachers = await adminService.getPendingTeachers(options);
+
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Pending teachers retrieved successfully",
+      data: teachers,
+    })
+  );
+});
+
+const getAllBookings = catchAsync(async (req: Request, res: Response) => {
+  const filter = pick(req.query, ["status", "teacherId", "studentId"]);
+  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const bookings = await adminService.getAllBookings(filter, options);
+
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "All bookings retrieved successfully",
+      data: bookings,
+    })
+  );
+});
+
+const getAllTransactions = catchAsync(async (req: Request, res: Response) => {
+  const filter = pick(req.query, ["status", "teacherId", "studentId"]);
+  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const transactions = await adminService.getAllTransactions(filter, options);
+
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "All transactions retrieved successfully",
+      data: transactions,
+    })
+  );
+});
+
+const getTeacherEarnings = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const earnings = await adminService.getTeacherEarnings(id as any);
+
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Teacher earnings retrieved successfully",
+      data: earnings,
+    })
+  );
+});
+
+const getSystemRevenue = catchAsync(async (req: Request, res: Response) => {
+  const revenue = await adminService.getSystemRevenue();
+
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "System revenue retrieved successfully",
+      data: revenue,
+    })
+  );
+});
+
+export default {
+  approveTeacher,
+  rejectTeacher,
+  getPendingTeachers,
+  getAllBookings,
+  getAllTransactions,
+  getTeacherEarnings,
+  getSystemRevenue,
+};
