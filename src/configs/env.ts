@@ -18,6 +18,8 @@ const validator = Joi.object({
   SMTP_PASSWORD: Joi.string().required().description("SMTP Password"),
   EMAIL_FROM: Joi.string().email().required().description("Email From Address"),
   STRIPE_SECRET_KEY: Joi.string().required().description("Stripe Secret Key"),
+  STRIPE_WEBHOOK_SECRET: Joi.string().required().description("Stripe Webhook Secret Key"),
+  FRONTEND_URL: Joi.string().required().description("Frontend URL"),
 }).unknown();
 
 const { value, error } = validator.validate(process.env);
@@ -46,5 +48,7 @@ const env = {
     from: value.EMAIL_FROM,
   },
   STRIPE_SECRET_KEY: value.STRIPE_SECRET_KEY,
+  STRIPE_WEBHOOK_SECRET: value.STRIPE_WEBHOOK_SECRET,
+  FRONTEND_URL: value.FRONTEND_URL,
 };
 export default env;

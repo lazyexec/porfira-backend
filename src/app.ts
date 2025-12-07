@@ -9,11 +9,17 @@ import helmet from "helmet";
 import "./configs/passport.ts";
 import passport from "passport";
 import deviceMiddleware from "./middlewares/device.ts";
-
+import bodyParser from "body-parser";
+import bookingController from "./modules/booking/booking.controller.ts";
 const app: Application = express();
 
-app.use(express.json());
+app.post(
+  "/webhook/stripe",
+  bodyParser.raw({ type: "application/json" }),
+  bookingController.confirmBooking
+);
 
+app.use(express.json());
 // // set security HTTP headers
 app.use(helmet());
 // malter for file upload

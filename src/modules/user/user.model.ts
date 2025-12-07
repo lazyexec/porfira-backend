@@ -31,6 +31,11 @@ const teacherSchema = new mongoose.Schema<ITeacher>({
     required: false,
     default: null,
   },
+  stripePriceId: {
+    type: String,
+    default: null,
+    required: false,
+  },
   hourlyRate: {
     type: Number,
     required: false,
@@ -67,6 +72,10 @@ const teacherSchema = new mongoose.Schema<ITeacher>({
     type: Number,
     required: false,
     default: null,
+  },
+  balance: {
+    type: Number,
+    required: false,
   },
   qualification: [
     {

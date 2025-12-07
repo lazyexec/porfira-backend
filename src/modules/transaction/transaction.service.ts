@@ -1,6 +1,7 @@
 import ApiError from "../../utils/ApiError.ts";
 import httpStatus from "http-status";
 import Transaction from "./transaction.model.ts";
+import type { ITransaction } from "./transaction.interface.ts";
 
 const getTransactions = async (filter: any, options: any) => {
   const transactions = await Transaction.find();
@@ -23,10 +24,14 @@ const getSystemRevenues = async () => {
   return revenues[0]?.totalRevenues || 0;
 };
 
-const createTransaction = async (transactionData: object) => {
-  const transaction = new Transaction(transactionData);
-  await transaction.save();
+const createTransaction = async (transactionData: ITransaction) => {
+  const transaction = await Transaction.create(transactionData);
   return transaction;
+};
+
+const getAllTransactions = async (filter: any, options: any) => {
+  const transactions = await Transaction.paginate(filter, options);
+  return transactions;
 };
 
 export default {
@@ -34,4 +39,5 @@ export default {
   getTeacherEarnings,
   getSystemRevenues,
   createTransaction,
+  getAllTransactions,
 };

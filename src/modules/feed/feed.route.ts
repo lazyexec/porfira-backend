@@ -9,7 +9,15 @@ const router = express.Router();
 router
   .route("/teachers")
   .get(
-    auth("common"),
+    auth("student"),
+    validate(feedValidation.queryTeachers),
+    feedController.queryTeachers
+  );
+
+router
+  .route("/students")
+  .get(
+    auth("teacher"),
     validate(feedValidation.queryTeachers),
     feedController.queryTeachers
   );

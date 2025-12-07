@@ -6,8 +6,13 @@ const getUserByEmail = async (email: string) => {
 };
 
 const getGenuineTeacher = async (teacherId: string) => {
-  return await User.findOne({ _id: teacherId, role: "teacher", isDeleted: false, "teacher.isAccepted": true });
-}
+  return await User.findOne({
+    _id: teacherId,
+    role: "teacher",
+    isDeleted: false,
+    "teacher.isAccepted": true,
+  });
+};
 
 const updateUser = async (userId: string, updateBody: object) => {
   const user = await User.findByIdAndUpdate(userId, updateBody, { new: true });
@@ -18,13 +23,16 @@ const getUserById = async (userId: string) => {
   return User.findById(userId);
 };
 
-const getAllUsers = async () => {
-  return User.find();
+const syncTeacherBalance = async (teacherId: string, balance: number) => {
+  await User.updateOne(
+    { _id: teacherId },
+    { $inc: { "teacher.balance": balance } }
+  );
 };
-
 export default {
   getUserByEmail,
   updateUser,
   getUserById,
-  getGenuineTeacher
+  getGenuineTeacher,
+  syncTeacherBalance,
 };

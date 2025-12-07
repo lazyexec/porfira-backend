@@ -22,6 +22,7 @@ declare global {
 
     interface Request {
       device?: DeviceInfo;
+      rawBody?: string;
     }
   }
 }

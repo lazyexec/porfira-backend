@@ -4,7 +4,8 @@ import transactionService from "../transaction/transaction.service.ts";
 import ApiError from "../../utils/ApiError.ts";
 import httpStatus from "http-status";
 import type { Types } from "mongoose";
-import Lesson from "../lesson/lesson.model.ts";
+import Lesson from "../booking/booking.model.ts";
+import stripe from "../../configs/stripe.ts";
 
 /**
  * Approve teacher application
@@ -24,12 +25,31 @@ const approveTeacher = async (teacherId: Types.ObjectId) => {
     throw new ApiError(httpStatus.BAD_REQUEST, "User is not a teacher");
   }
 
+  if (teacher.teacher.isAccepted) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Teacher is Already Accepted");
+  }
+
+  const hourlyRate = teacher.teacher?.hourlyRate;
+  if (!hourlyRate) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Hourly Rate ");
+  }
+
+  const product = await stripe.stripe.products.create({
+    name: `Lesson with ${teacher.name}`,
+  });
+
+  const price = await stripe.stripe.prices.create({
+    product: product.id,
+    unit_amount: hourlyRate * 100,
+    currency: "usd",
+  });
+
+  teacher.teacher.stripePriceId = price.id;
   teacher.teacher.isAccepted = true;
   await teacher.save();
 
   return teacher;
 };
-
 
 const rejectTeacher = async (teacherId: Types.ObjectId) => {
   const teacher = await User.findOne({
@@ -51,7 +71,6 @@ const rejectTeacher = async (teacherId: Types.ObjectId) => {
 
   return teacher;
 };
-
 
 const getPendingTeachers = async (options: Record<string, any>) => {
   const teachers = await User.paginate(

@@ -22,6 +22,10 @@ const transactionSchema = new mongoose.Schema<ITransaction>(
       type: String,
       required: true,
     },
+    priceId: {
+      type: String,
+      required: true,
+    },
     amount: {
       type: Number,
       required: true,

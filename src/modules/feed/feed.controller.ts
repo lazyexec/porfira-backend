@@ -18,7 +18,7 @@ const queryTeachers = catchAsync(async (req: Request, res: Response) => {
     "minPrice",
     "maxPrice",
   ]);
-  const review = await feedService.quearyTeachers(filter, options);
+  const review = await feedService.queryTeachers(filter, options);
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,
@@ -27,6 +27,25 @@ const queryTeachers = catchAsync(async (req: Request, res: Response) => {
     })
   );
 });
+
+const queryStudents = catchAsync(async (req: Request, res: Response) => {
+  const options = pick(req.query, ["page", "limit", "sort"]);
+  const filter = pick(req.query, [
+    "name",
+    "subject",
+    "language",
+  ]);
+  const review = await feedService.queryTeachers(filter, options);
+
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Teachers fetched successfully",
+      data: review,
+    })
+  );
+});
+
 export default {
   queryTeachers,
 };

@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import paginate from "../../plugins/mongoose/paginate.plugin.ts";
 import hideFields from "../../plugins/mongoose/hideFields.plugin.ts";
-import type { ILesson, ILessonModel } from "./lesson.interface.ts";
+import type { IBooking, IBookingModel } from "./booking.interface.ts";
 
-const lessonSchema = new mongoose.Schema<ILesson>(
+const bookingSchema = new mongoose.Schema<IBooking>(
   {
     teacher: {
       type: mongoose.Schema.Types.ObjectId,
@@ -20,6 +20,22 @@ const lessonSchema = new mongoose.Schema<ILesson>(
       ref: "transaction",
       required: true,
     },
+    fromTime: {
+      type: Date,
+      required: true,
+    },
+    toTime: {
+      type: Date,
+      required: true,
+    },
+    date: {
+      type: Date,
+      required: true,
+    },
+    subject: {
+      type: String,
+      required: true,
+    },
     duration: {
       type: Number,
       required: true,
@@ -27,8 +43,8 @@ const lessonSchema = new mongoose.Schema<ILesson>(
     },
     status: {
       type: String,
-      enum: ["pending", "accepted", "rejected"],
-      default: "pending",
+      enum: ["unpaid", "pending", "rejected", "completed", "scheduled"],
+      default: "unpaid",
     },
   },
   {
@@ -36,9 +52,12 @@ const lessonSchema = new mongoose.Schema<ILesson>(
   }
 );
 
-lessonSchema.plugin(paginate);
-lessonSchema.plugin(hideFields);
+bookingSchema.plugin(paginate);
+bookingSchema.plugin(hideFields);
 
-const Lesson = mongoose.model<ILesson, ILessonModel>("Lesson", lessonSchema);
+const Booking = mongoose.model<IBooking, IBookingModel>(
+  "Booking",
+  bookingSchema
+);
 
-export default Lesson;
+export default Booking;

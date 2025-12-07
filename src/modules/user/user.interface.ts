@@ -7,6 +7,7 @@ export interface IStudent {
 export interface ITeacher {
   yearsOfTeachingExp?: number | null;
   subjectsTaught?: string[] | null;
+  stripePriceId?: string | null;
   hourlyRate?: number | null;
   availableTime?: {
     startTime?: string | null;
@@ -22,6 +23,7 @@ export interface ITeacher {
     year: number;
   }[];
   isAccepted?: boolean;
+  balance?: number | null;
 }
 
 export interface IUser {
