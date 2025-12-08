@@ -18,8 +18,8 @@ router
   .route("/students")
   .get(
     auth("teacher"),
-    validate(feedValidation.queryTeachers),
-    feedController.queryTeachers
+    validate(feedValidation.queryStudents),
+    feedController.queryStudents
   );
 
 export default router;

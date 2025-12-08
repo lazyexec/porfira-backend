@@ -11,4 +11,4 @@ if (env.DEBUG) {
   });
 }
 
-console.log(env);
+// console.log(env);

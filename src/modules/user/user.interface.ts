@@ -8,6 +8,9 @@ export interface ITeacher {
   yearsOfTeachingExp?: number | null;
   subjectsTaught?: string[] | null;
   stripePriceId?: string | null;
+  stripeAccountId?: string | null;
+  stripeOnboardingComplete?: boolean;
+  stripePayoutsEnabled?: boolean;
   hourlyRate?: number | null;
   availableTime?: {
     startTime?: string | null;
@@ -16,13 +19,13 @@ export interface ITeacher {
   availableDays?: string[] | null;
   content?: string | null;
   documents?: string[] | null;
-  rating?: number | null;
+  rating?: number | 0;
   qualification?: {
     title: string;
     institution: string;
     year: number;
   }[];
-  isAccepted?: boolean;
+  status?: string;
   balance?: number | null;
 }
 

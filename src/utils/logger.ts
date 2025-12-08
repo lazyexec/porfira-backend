@@ -15,12 +15,13 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: logName })
+    new winston.transports.File({ filename: logName }),
   ],
 });
 
 export default {
-  info: (msg: string) => logger.info(msg),
-  warn: (msg: string) => logger.warn(msg),
-  error: (msg: string) => logger.error(msg),
-};;
+  info: (msg: string, meta?: any) => logger.info(msg, meta),
+  warn: (msg: string, meta?: any) => logger.warn(msg, meta),
+  error: (msg: string, error?: any) => logger.error(msg, error),
+  success: (msg: string, meta?: any) => logger.log("SUCCESS", msg, meta),
+};

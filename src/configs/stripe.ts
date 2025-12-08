@@ -12,14 +12,18 @@ const createStripeSession = async ({
   successUrl,
   cancelUrl,
   metadata = {},
+  applicationFeeAmount,
+  transferDestination,
 }: {
   priceId: string;
   quantity: number;
   successUrl: string;
   cancelUrl: string;
   metadata?: Record<string, string>;
+  applicationFeeAmount?: number;
+  transferDestination?: string;
 }) => {
-  return await stripe.checkout.sessions.create({
+  const sessionConfig: Stripe.Checkout.SessionCreateParams = {
     mode: "payment",
     line_items: [
       {
@@ -30,13 +34,24 @@ const createStripeSession = async ({
     success_url: successUrl,
     cancel_url: cancelUrl,
     metadata,
-  });
+  };
+
+  if (applicationFeeAmount && transferDestination) {
+    sessionConfig.payment_intent_data = {
+      application_fee_amount: Math.round(applicationFeeAmount * 100), // Convert to cents
+      transfer_data: {
+        destination: transferDestination,
+      },
+    };
+  }
+
+  return await stripe.checkout.sessions.create(sessionConfig);
 };
 
 // Verify Stripe webhook
 const verifyWebhook = (req: any, signature: string) => {
   return stripe.webhooks.constructEvent(
-    req.body, // rawBody must be enabled in Express config
+    req.body,
     signature,
     env.STRIPE_WEBHOOK_SECRET
   );
@@ -48,12 +63,11 @@ const getPaymentIntent = async (paymentIntentId: string) => {
 };
 
 // Issue refund
-// const refundPayment = async (paymentIntentId: string, amount?: number) => {
-//   return await stripe.refunds.create({
-//     payment_intent: paymentIntentId,
-//     amount,
-//   });
-// };
+const refundPayment = async (paymentIntentId: string) => {
+  return await stripe.refunds.create({
+    payment_intent: paymentIntentId,
+  });
+};
 
 // Transfer teacher earnings (if using Stripe Connect)
 const transferToTeacher = async (
@@ -67,11 +81,47 @@ const transferToTeacher = async (
   });
 };
 
+const createAccountForTeacher = async ({
+  country,
+  email,
+}: {
+  country: string;
+  email: string;
+}) => {
+  return await stripe.accounts.create({
+    email,
+    type: "express",
+    country,
+    capabilities: {
+      card_payments: { requested: true },
+      transfers: { requested: true },
+    },
+    settings: {
+      payouts: {
+        schedule: {
+          interval: "manual",
+        },
+      },
+    },
+  });
+};
+
+const createOnboardingLink = async (teacherStripeAccountId: string) => {
+  return await stripe.accountLinks.create({
+    account: teacherStripeAccountId,
+    refresh_url: `${env.FRONTEND_URL}/teacher/wallet`, 
+    return_url: `${env.FRONTEND_URL}/teacher/wallet?stripe_connect=success`,
+    type: "account_onboarding",
+  });
+};
+
 export default {
   stripe,
   createStripeSession,
   verifyWebhook,
-  // refundPayment,
+  refundPayment,
   getPaymentIntent,
   transferToTeacher,
+  createAccountForTeacher,
+  createOnboardingLink,
 };

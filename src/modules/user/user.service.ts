@@ -10,7 +10,7 @@ const getGenuineTeacher = async (teacherId: string) => {
     _id: teacherId,
     role: "teacher",
     isDeleted: false,
-    "teacher.isAccepted": true,
+    "teacher.status": "approved",
   });
 };
 

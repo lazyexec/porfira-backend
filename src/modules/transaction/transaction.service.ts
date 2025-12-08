@@ -2,6 +2,8 @@ import ApiError from "../../utils/ApiError.ts";
 import httpStatus from "http-status";
 import Transaction from "./transaction.model.ts";
 import type { ITransaction } from "./transaction.interface.ts";
+import stripe from "../../configs/stripe.ts";
+import userService from "../user/user.service.ts";
 
 const getTransactions = async (filter: any, options: any) => {
   const transactions = await Transaction.find();
@@ -34,10 +36,18 @@ const getAllTransactions = async (filter: any, options: any) => {
   return transactions;
 };
 
+const createOnBoardingIntent = async (teacherStripeAccountId: string) => {
+  const intent = await stripe.createOnboardingLink(teacherStripeAccountId);
+  return intent;
+};
+
+
 export default {
   getTransactions,
   getTeacherEarnings,
   getSystemRevenues,
   createTransaction,
   getAllTransactions,
+  // Account completion
+  createOnBoardingIntent,
 };

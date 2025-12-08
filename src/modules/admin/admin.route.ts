@@ -40,13 +40,6 @@ router
   );
 
 // Bookings and transactions
-router
-  .route("/bookings")
-  .get(
-    auth("admin"),
-    validate(adminValidation.getAllBookings),
-    adminController.getAllBookings
-  );
 
 router
   .route("/transactions")

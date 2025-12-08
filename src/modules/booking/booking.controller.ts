@@ -35,22 +35,6 @@ const claimBooking = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
-const confirmBooking = catchAsync(async (req: Request, res: Response) => {
-  const signature = req.headers["stripe-signature"] as string;
-  if (!signature) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Payment Signature is Invalid");
-  }
-  const verify = stripe.verifyWebhook(req, signature);
-  const booking = await bookingService.confirmSession(verify);
-  res.status(httpStatus.OK).json(
-    response({
-      status: httpStatus.OK,
-      message: "Booking Created Successfully",
-      data: booking,
-    })
-  );
-});
-
 const rePayment = catchAsync(async (req: Request, res: Response) => {
   const bookingId = req.params.bookingId;
   if (!bookingId) {
@@ -66,7 +50,67 @@ const rePayment = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
-const getBooking = catchAsync(async (req: Request, res: Response) => {});
+const getTeacherBookings = catchAsync(async (req: Request, res: Response) => {
+  const teacherId = req.user?.id;
+  if (!teacherId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "User not authenticated");
+  }
+  const options = pick(req.query, [
+    "sortBy",
+    "limit",
+    "page",
+    "populate",
+    "status",
+  ]);
+  const booking = await bookingService.getBookingsTeacher(teacherId, options);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Booking Teacher Retrieved Successfully",
+      data: booking,
+    })
+  );
+});
+
+const getStudentBookings = catchAsync(async (req: Request, res: Response) => {
+  const studentId = req.user?.id;
+  if (!studentId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "User not authenticated");
+  }
+  const options = pick(req.query, [
+    "sortBy",
+    "limit",
+    "page",
+    "populate",
+    "status",
+  ]);
+  const booking = await bookingService.getStudentBookings(studentId, options);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Booking Student Retrieved Successfully",
+      data: booking,
+    })
+  );
+});
+
+const getBookings = catchAsync(async (req: Request, res: Response) => {
+  const options = pick(req.query, [
+    "sortBy",
+    "limit",
+    "page",
+    "populate",
+    "status",
+  ]);
+  const booking = await bookingService.getBookings(options);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Booking Retrieved Successfully",
+      data: booking,
+    })
+  );
+});
 
 const updateBooking = catchAsync(async (req: Request, res: Response) => {});
 
@@ -74,9 +118,10 @@ const deleteBooking = catchAsync(async (req: Request, res: Response) => {});
 
 export default {
   claimBooking,
-  getBooking,
+  getTeacherBookings,
+  getStudentBookings,
+  getBookings,
   updateBooking,
   deleteBooking,
-  confirmBooking,
   rePayment,
 };

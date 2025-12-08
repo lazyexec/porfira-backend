@@ -13,13 +13,14 @@ const sendMail = async (options: nodemailer.SendMailOptions) => {
 };
 
 const sendRegistrationEmail = async (to: string, token: string) => {
+  logger.info(`Sending registration email to ${to} with token ${token}`);
+  console.log("Email sent successfully");
   await sendMail({
     to,
     subject: "Registration Confirmation",
     text: `Please confirm your registration using this token: ${token}`,
   });
   // Implementation for sending registration email
-  logger.info(`Sending registration email to ${to} with token ${token}`);
 };
 
 const sendResetPasswordEmail = async (to: string, token: string) => {

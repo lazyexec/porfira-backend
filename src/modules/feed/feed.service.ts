@@ -8,7 +8,7 @@ const queryTeachers = async (filter: any, options: object) => {
     role: "teacher",
     isEmailVerified: true,
     teacher: {
-      isAccepted: true,
+      status: "approved",
     },
   };
 
@@ -46,27 +46,10 @@ const queryStudents = async (filter: any, options: object) => {
     isDeleted: false,
     role: "student",
     isEmailVerified: true,
-    teacher: {
-      isAccepted: true,
-    },
   };
 
   for (const key of Object.keys(filter)) {
-    if (key === "minPrice" || key === "maxPrice") {
-      query.teacher.hourlyRate = {
-        $gte: filter.minPrice,
-        $lte: filter.maxPrice,
-      };
-    } else if (key === "minExperience" || key === "maxExperience") {
-      query.teacher.yearsOfTeachingExp = {
-        $gte: filter.minExperience,
-        $lte: filter.maxExperience,
-      };
-    } else if (key === "minRating" || key === "maxRating") {
-      query.teacher.rating = { $gte: filter.minRating, $lte: filter.maxRating };
-    } else if (key === "subjects") {
-      query.teacher.subjectsTaught = { $in: filter.subjects };
-    } else if (
+    if (
       (key === "name" || key === "subject" || key === "language") &&
       filter[key] !== ""
     ) {
@@ -82,5 +65,5 @@ const queryStudents = async (filter: any, options: object) => {
 
 export default {
   queryTeachers,
-  queryStudents
+  queryStudents,
 };

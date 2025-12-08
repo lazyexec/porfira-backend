@@ -48,4 +48,5 @@ const queryStudents = catchAsync(async (req: Request, res: Response) => {
 
 export default {
   queryTeachers,
+  queryStudents,
 };

@@ -10,7 +10,7 @@ export default function hideFieldsPlugin(
 
   function transform(_: any, ret: any) {
     if (ret._id) ret.id = ret._id.toString();
-    delete ret._id;
+    // delete ret._id;
     hiddenFields.forEach((path) => {
       const parts = path.split(".");
       const last = parts.pop();

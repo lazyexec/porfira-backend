@@ -44,19 +44,6 @@ const getPendingTeachers = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
-const getAllBookings = catchAsync(async (req: Request, res: Response) => {
-  const filter = pick(req.query, ["status", "teacherId", "studentId"]);
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
-  const bookings = await adminService.getAllBookings(filter, options);
-
-  res.status(httpStatus.OK).json(
-    response({
-      status: httpStatus.OK,
-      message: "All bookings retrieved successfully",
-      data: bookings,
-    })
-  );
-});
 
 const getAllTransactions = catchAsync(async (req: Request, res: Response) => {
   const filter = pick(req.query, ["status", "teacherId", "studentId"]);
@@ -101,7 +88,6 @@ export default {
   approveTeacher,
   rejectTeacher,
   getPendingTeachers,
-  getAllBookings,
   getAllTransactions,
   getTeacherEarnings,
   getSystemRevenue,

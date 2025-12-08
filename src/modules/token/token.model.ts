@@ -18,16 +18,15 @@ export interface IToken extends Document {
 
 const TokenSchema = new Schema<IToken>(
   {
-    token: { type: String, required: true, index: true }, // hashed token
+    token: { type: String, required: true }, // hashed token
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index: true,
     },
     type: { type: String, required: true },
-    expires: { type: Date, required: true, index: true },
-    blacklisted: { type: Boolean, default: false, index: true },
+    expires: { type: Date, required: true },
+    blacklisted: { type: Boolean, default: false },
     deviceId: { type: String, default: null },
     ip: { type: String, default: null },
     userAgent: { type: String, default: null },

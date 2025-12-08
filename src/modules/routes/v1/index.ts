@@ -5,6 +5,7 @@ import reviewRouter from "../../review/review.route.ts";
 import feedRouter from "../../feed/feed.route.ts";
 import adminRouter from "../../admin/admin.route.ts";
 import bookingRouter from "../../booking/booking.route.ts";
+import notificationRouter from "../../notification/notification.route.ts";
 
 const mainRouter: Router = express.Router();
 
@@ -37,6 +38,10 @@ const routes: routeObjects[] = [
   {
     path: "/booking",
     route: bookingRouter,
+  },
+  {
+    path: "/notification",
+    route: notificationRouter,
   },
 ];
 

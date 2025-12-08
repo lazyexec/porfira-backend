@@ -4,6 +4,7 @@ import userService from "./user.service.ts";
 import ApiError from "../../utils/ApiError.ts";
 import httpStatus from "http-status";
 import response from "../../configs/response.ts";
+import stripeService from "../stripe/stripe.service.ts";
 
 const getProfile = catchAsync(async (req: Request, res: Response) => {
   console.log("Req User:", req.user);
@@ -22,9 +23,6 @@ const getProfile = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
-  // console.log("Req Body:", req.body);
-  // console.log("Req User:", req.user);
-  // console.log("Req File:", req.file);
   const userId = req.user?.id;
   const file = req.file;
   if (file) {

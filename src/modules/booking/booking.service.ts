@@ -36,6 +36,16 @@ const claimBooking = async (
   if (!priceId)
     throw new ApiError(400, "Teacher does not have a Stripe price ID");
 
+  const stripeAccountId = teacher.teacher?.stripeAccountId;
+  if (!stripeAccountId) {
+    // Fallback to standard flow if no connected account, or throw error depending on strictness
+    // Plan implies we should use Connect. I will throw if not present to enforce logic.
+    throw new ApiError(
+      httpStatus.BAD_REQUEST,
+      "Teacher has not set up payouts"
+    );
+  }
+
   const stripeSession = await stripe.createStripeSession({
     priceId: priceId,
     quantity: duration,
@@ -46,7 +56,10 @@ const claimBooking = async (
       teacherId: teacherId,
       teacherEarnings: teacherEarnings.toString(),
       platformFee: platformFee.toString(),
+      transactionId: "", // Will update later, but better to have it consistent or null
     },
+    applicationFeeAmount: platformFee, // Stripe Connect Application Fee
+    transferDestination: stripeAccountId, // Stripe Connect Destination
   });
 
   // Create transaction record
@@ -81,33 +94,72 @@ const claimBooking = async (
 };
 
 const confirmSession = async (stripeEvent: any) => {
-  const session = stripeEvent.data.object;
+  let session;
+  let paymentIntentId;
+  let amount;
+  let teacherId;
+  let studentId;
+  let teacherEarnings;
+  let platformFee;
 
-  const stripeSessionId = session.id;
-  const amount = session.amount_total / 100; // Convert from cents to dollars
-  const teacherId = session.metadata.teacherId;
-  const studentId = session.metadata.studentId;
-  const teacherEarnings = parseFloat(session.metadata.teacherEarnings);
-  const platformFee = parseFloat(session.metadata.platformFee);
+  if (stripeEvent.type === "payment_intent.succeeded") {
+    session = stripeEvent.data.object;
+    paymentIntentId = session.id;
+    amount = session.amount / 100;
+    // Payment Intent metadata is flat, session metadata is nested in session object
+    teacherId = session.metadata.teacherId;
+    studentId = session.metadata.studentId;
+    teacherEarnings = parseFloat(session.metadata.teacherEarnings);
+    platformFee = parseFloat(session.metadata.platformFee);
+  } else {
+    // Default to checkout.session.completed
+    session = stripeEvent.data.object;
+    paymentIntentId = session.payment_intent as string; // in session it is referenced
+    amount = session.amount_total / 100;
+    teacherId = session.metadata.teacherId;
+    studentId = session.metadata.studentId;
+    teacherEarnings = parseFloat(session.metadata.teacherEarnings);
+    platformFee = parseFloat(session.metadata.platformFee);
+  }
 
   if (!teacherId || !studentId) {
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "Missing metadata in Stripe session"
+      "Missing metadata in Stripe session/intent"
     );
   }
 
-  const transaction = await Transaction.findOneAndUpdate(
-    { transactionId: stripeSessionId },
-    {
-      status: "completed",
-      meta: {
-        paymentIntent: session.payment_intent,
-        completedAt: new Date(),
-      },
-    },
-    { new: true }
-  );
+  // Find transaction by transactionId (session ID) OR by paymentIntentId if we stored it?
+  // Original logic used transactionId = session.id.
+  // Connect logic: we stored session.id as transactionId.
+  // If event is payment_intent.succeeded, session.id is payment_intent_id.
+  // BUT the transaction stored the CHECKOUT SESSION ID.
+  // So if we receive payment_intent.succeeded, we might NOT match transactionId directly unless we stored PI too.
+  // WE DO store paymentIntent in meta.paymentIntent AFTER completion in existing logic.
+  // If we receive payment_intent.succeeded, we need to find transaction by ... what?
+  // We can find it by metadata.transactionId if we added it (which I did in claimBooking!)
+
+  let transaction;
+  if (
+    stripeEvent.type === "payment_intent.succeeded" &&
+    session.metadata.transactionId
+  ) {
+    transaction = await Transaction.findOne({
+      _id: session.metadata.transactionId,
+    });
+  } else {
+    transaction = await Transaction.findOne({ transactionId: session.id });
+  }
+
+  if (!transaction) {
+    // Try finding by payment intent if we already saved it partially? Unlikely.
+    // Or try finding by metadata transactionId if present in session too
+    if (session.metadata?.transactionId) {
+      transaction = await Transaction.findOne({
+        _id: session.metadata.transactionId,
+      });
+    }
+  }
 
   if (!transaction) {
     throw new ApiError(
@@ -116,9 +168,30 @@ const confirmSession = async (stripeEvent: any) => {
     );
   }
 
+  // Idempotency check: if already completed, return
+  if (transaction.status === "completed") {
+    return await Booking.findOne({ transaction: transaction._id });
+  }
+
+  const updatedTransaction = await Transaction.findByIdAndUpdate(
+    transaction._id,
+    {
+      status: "completed",
+      meta: {
+        paymentIntent: paymentIntentId,
+        completedAt: new Date(),
+      },
+    },
+    { new: true }
+  );
+
+  if (!updatedTransaction) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Failed to update transaction");
+  }
+
   // 2. Update the booking status to scheduled
   const booking = await Booking.findOneAndUpdate(
-    { transaction: transaction._id },
+    { transaction: updatedTransaction._id },
     { status: "scheduled" },
     { new: true }
   );
@@ -179,8 +252,54 @@ const rePayment = async (bookingId: string) => {
   return { url: stripeSession.url };
 };
 
+const getBookingsTeacher = async (teacherId: string, options: any) => {
+  const bookings = await Booking.paginate({ teacher: teacherId }, options);
+  return bookings;
+};
+
+const getStudentBookings = async (studentId: string, options: any) => {
+  const bookings = await Booking.paginate({ student: studentId }, options);
+  return bookings;
+};
+
+const getBookings = async (options: any) => {
+  const bookings = await Booking.paginate({}, options);
+  return bookings;
+};
+
+const handleRefund = async (paymentIntentId: string) => {
+  // Find transaction by payment intent in meta or transactionId (if we store PI there?)
+  // Actually confirmSession stores paymentIntent in meta.paymentIntent
+
+  const transaction = await Transaction.findOne({
+    "meta.paymentIntent": paymentIntentId,
+  });
+
+  if (!transaction) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      "Transaction not found for refund"
+    );
+  }
+
+  transaction.status = "refunded"; // Assuming enum supports this, or 'failed'
+  await transaction.save();
+
+  const booking = await Booking.findOneAndUpdate(
+    { transaction: transaction._id },
+    { status: "cancelled" }, // or 'refunded' if enum supports
+    { new: true }
+  );
+
+  return booking;
+};
+
 export default {
   claimBooking,
   confirmSession,
   rePayment,
+  getBookingsTeacher,
+  getStudentBookings,
+  getBookings,
+  handleRefund,
 };
