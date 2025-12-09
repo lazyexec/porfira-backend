@@ -5,6 +5,8 @@ configDotenv();
 
 const validator = Joi.object({
   PORT: Joi.number().default(3000),
+  BACKEND_IP: Joi.string().default("localhost"),
+  SOCKET_PORT: Joi.number().default(3001),
   MONGO_URI: Joi.string().optional(),
   NODE_ENV: Joi.string()
     .required()
@@ -21,7 +23,10 @@ const validator = Joi.object({
   STRIPE_WEBHOOK_SECRET: Joi.string()
     .required()
     .description("Stripe Webhook Secret Key"),
-  FRONTEND_URL: Joi.string().required().description("Frontend URL"),
+  FRONTEND_URL: Joi.string()
+    .required()
+    .default("*")
+    .description("Frontend URL"),
   FIREBASE_PROJECT_ID: Joi.string()
     .required()
     .description("Firebase project Id"),
@@ -39,6 +44,8 @@ if (error) throw new Error(error.message);
 
 const env = {
   PORT: value.PORT,
+  BACKEND_IP: value.BACKEND_IP,
+  SOCKET_PORT: value.SOCKET_PORT,
   MONGO_URI: value.MONGO_URI,
   ENVIRONMENT: value.NODE_ENV,
   DEBUG: value.NODE_ENV === "development",

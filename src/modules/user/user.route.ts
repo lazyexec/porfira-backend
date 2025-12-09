@@ -3,10 +3,11 @@ import userController from "./user.controller.ts";
 import auth from "../../middlewares/auth.ts";
 import validate from "../../middlewares/validate.ts";
 import userValidation from "./user.validation.ts";
-import userFileUploadMiddleware from "../../middlewares/photoUploader.ts";
+import userFileUploadMiddleware from "../../middlewares/fileUploader.ts";
+import uploadTypes from "../../utils/fileTypes.ts";
 const UPLOADS_FOLDER_USERS = "./public/uploads/users";
 
-const uploadUsers = userFileUploadMiddleware(UPLOADS_FOLDER_USERS);
+const uploadUsers = userFileUploadMiddleware(UPLOADS_FOLDER_USERS, uploadTypes.avatarTypes);
 
 const router = express.Router();
 

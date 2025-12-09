@@ -7,7 +7,7 @@ import adminRouter from "../../admin/admin.route.ts";
 import bookingRouter from "../../booking/booking.route.ts";
 import notificationRouter from "../../notification/notification.route.ts";
 import transactionRouter from "../../transaction/transaction.route.ts";
-import stripeRouter from "../../stripe/stripe.route.ts";
+import messageRouter from "../../message/message.route.ts";
 
 const mainRouter: Router = express.Router();
 
@@ -49,7 +49,11 @@ const routes: routeObjects[] = [
     path: "/transaction",
     route: transactionRouter,
   },
-
+  // TODO: Test Messaging Properly.
+  {
+    path: "/message",
+    route: messageRouter,
+  },
 ];
 
 routes.forEach((routeProvide: routeObjects) => {

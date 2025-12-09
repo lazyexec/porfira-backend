@@ -2,7 +2,7 @@ import multer from "multer";
 import path from "path";
 import fs from "../utils/fs.ts";
 
-export default function (UPLOADS_FOLDER: string) {
+export default function (UPLOADS_FOLDER: string, types: string[]) {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       try {
@@ -33,17 +33,10 @@ export default function (UPLOADS_FOLDER: string) {
       fileSize: 200000000000000000000000000, // 20MB
     },
     fileFilter: (req, file, cb) => {
-      if (
-        file.mimetype == "image/jpg" ||
-        file.mimetype == "image/png" ||
-        file.mimetype == "image/jpeg" ||
-        file.mimetype == "image/heic" ||
-        file.mimetype == "image/heif"
-      ) {
-        cb(null, true);
-      } else {
-        cb(new Error("Only jpg, png, jpeg format allowed!"));
+      if (!types.includes(file.mimetype)) {
+        return cb(new Error("Invalid file type!"));
       }
+      cb(null, true);
     },
   });
 
