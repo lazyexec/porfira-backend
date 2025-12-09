@@ -21,5 +21,13 @@ router
     userController.updateProfile
   );
 
+// Admin Route
+router
+  .route("/all")
+  .get(
+    auth("admin"),
+    validate(userValidation.queryAllUsers),
+    userController.queryAllUsers
+  );
 
 export default router;

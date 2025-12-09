@@ -29,10 +29,40 @@ const syncTeacherBalance = async (teacherId: string, balance: number) => {
     { $inc: { "teacher.balance": balance } }
   );
 };
+
+const queryAllUsers = async (filter: any, options: object) => {
+  const query: any = {};
+
+  for (const key of Object.keys(filter)) {
+    if (
+      (key === "name" || key === "email" || key === "role") &&
+      filter[key] !== ""
+    ) {
+      query[key] = { $regex: filter[key], $options: "i" };
+    } else if (filter[key] !== "") {
+      query[key] = filter[key];
+    }
+  }
+  console.log({ query, options });
+  const users = await User.paginate(query, options);
+  return users;
+};
+
+const restrctUser = async (userId: string) => {
+  await User.updateOne({ _id: userId }, { isDeleted: true });
+};
+
+const unRestrctUser = async (userId: string) => {
+  await User.updateOne({ _id: userId }, { isDeleted: false });
+};
 export default {
   getUserByEmail,
   updateUser,
   getUserById,
   getGenuineTeacher,
   syncTeacherBalance,
+  // Admin Functions
+  queryAllUsers,
+  restrctUser,
+  unRestrctUser,
 };

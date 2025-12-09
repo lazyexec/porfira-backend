@@ -32,7 +32,7 @@ const rejectTeacher = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getPendingTeachers = catchAsync(async (req: Request, res: Response) => {
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const options = pick(req.query, ["sort", "limit", "page"]);
   const teachers = await adminService.getPendingTeachers(options);
 
   res.status(httpStatus.OK).json(
@@ -44,10 +44,9 @@ const getPendingTeachers = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
-
 const getAllTransactions = catchAsync(async (req: Request, res: Response) => {
   const filter = pick(req.query, ["status", "teacherId", "studentId"]);
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const options = pick(req.query, ["sort", "limit", "page"]);
   const transactions = await adminService.getAllTransactions(filter, options);
 
   res.status(httpStatus.OK).json(

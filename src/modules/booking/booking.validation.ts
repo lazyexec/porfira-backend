@@ -20,7 +20,7 @@ const getTeacherBookings = {
   query: Joi.object().keys({
     page: Joi.number().default(1),
     limit: Joi.number().default(10),
-    sortBy: Joi.string().default("createdAt:desc"),
+    sort: Joi.string().default("createdAt desc"),
     populate: Joi.string().default("student name avatar"),
     status: Joi.string().valid("pending", "completed", "scheduled"),
   }),
@@ -30,7 +30,7 @@ const getStudentBookings = {
   query: Joi.object().keys({
     page: Joi.number().default(1),
     limit: Joi.number().default(10),
-    sortBy: Joi.string().default("createdAt:desc"),
+    sort: Joi.string().default("createdAt desc"),
     populate: Joi.string().default("teacher name avatar"),
     status: Joi.string().valid("unpaid", "pending", "completed", "scheduled"),
   }),
@@ -40,7 +40,7 @@ const getBookings = {
   query: Joi.object().keys({
     page: Joi.number().default(1),
     limit: Joi.number().default(10),
-    sortBy: Joi.string().default("createdAt:desc"),
+    sort: Joi.string().default("createdAt desc"),
     populate: Joi.string().default("teacher,student,transaction"),
     status: Joi.string().valid(
       "unpaid",

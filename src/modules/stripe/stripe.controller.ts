@@ -63,11 +63,12 @@ const completeTeacherWalletIntent = catchAsync(
     if (!teacher || teacher?.role !== "teacher") {
       throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized");
     }
-    if (!teacher?.teacher?.stripeAccountId) {
-      await stripeService.createStripeAccount(teacher);
+    let stripeAccountId = teacher?.teacher?.stripeAccountId;
+    if (!stripeAccountId) {
+      stripeAccountId = await stripeService.createStripeAccount(teacher);
     }
     const intent = await stripeService.createOnboardingIntent(
-      teacher?.teacher?.stripeAccountId as string
+      stripeAccountId as string
     );
     res.status(httpStatus.OK).json(
       response({

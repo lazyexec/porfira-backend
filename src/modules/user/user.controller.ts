@@ -5,6 +5,7 @@ import ApiError from "../../utils/ApiError.ts";
 import httpStatus from "http-status";
 import response from "../../configs/response.ts";
 import stripeService from "../stripe/stripe.service.ts";
+import pick from "../../utils/pick.ts";
 
 const getProfile = catchAsync(async (req: Request, res: Response) => {
   console.log("Req User:", req.user);
@@ -41,4 +42,24 @@ const updateProfile = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
-export default { getProfile, updateProfile };
+const queryAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const filter = pick(req.query, [
+    "role",
+    "isDeleted",
+    "email",
+    "name",
+    "phoneNumber",
+  ]);
+  const options = pick(req.query, ["page", "limit", "sort"]);
+  console.log({ queries: req.query, options });
+  const users = await userService.queryAllUsers(filter, options);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Users retrieved successfully",
+      data: users,
+    })
+  );
+});
+
+export default { getProfile, updateProfile, queryAllUsers };

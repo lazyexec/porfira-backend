@@ -14,7 +14,7 @@ const rejectTeacher = {
 
 const getPendingTeachers = {
   query: Joi.object().keys({
-    sortBy: Joi.string(),
+    sort: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
@@ -30,7 +30,7 @@ const getAllBookings = {
     ),
     teacherId: Joi.string(),
     studentId: Joi.string(),
-    sortBy: Joi.string(),
+    sort: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
@@ -41,7 +41,7 @@ const getAllTransactions = {
     status: Joi.string().valid("pending", "completed", "failed"),
     teacherId: Joi.string(),
     studentId: Joi.string(),
-    sortBy: Joi.string(),
+    sort: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),

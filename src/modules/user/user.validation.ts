@@ -34,4 +34,18 @@ const updateProfile = {
   }).min(1),
 };
 
-export default { updateProfile };
+const queryAllUsers = {
+  query: Joi.object().keys({
+    page: Joi.number().default(1),
+    limit: Joi.number().default(10),
+    sort: Joi.string().default("createdAt desc"),
+    populate: Joi.string(),
+    role: Joi.string(),
+    isDeleted: Joi.boolean(),
+    email: Joi.string().email(),
+    name: Joi.string(),
+    phoneNumber: Joi.number(),
+  }),
+};
+
+export default { updateProfile, queryAllUsers };

@@ -12,7 +12,7 @@ import deviceMiddleware from "./middlewares/device.ts";
 import webhookRouter from "./modules/stripe/stripe.route.ts";
 const app: Application = express();
 
-app.use('/api/v1/webhook', webhookRouter);
+app.use("/api/v1/webhook", webhookRouter);
 app.use(express.json());
 // // set security HTTP headers
 app.use(helmet());

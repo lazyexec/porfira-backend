@@ -56,7 +56,7 @@ const getTeacherBookings = catchAsync(async (req: Request, res: Response) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, "User not authenticated");
   }
   const options = pick(req.query, [
-    "sortBy",
+    "sort",
     "limit",
     "page",
     "populate",
@@ -78,7 +78,7 @@ const getStudentBookings = catchAsync(async (req: Request, res: Response) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, "User not authenticated");
   }
   const options = pick(req.query, [
-    "sortBy",
+    "sort",
     "limit",
     "page",
     "populate",
@@ -96,7 +96,7 @@ const getStudentBookings = catchAsync(async (req: Request, res: Response) => {
 
 const getBookings = catchAsync(async (req: Request, res: Response) => {
   const options = pick(req.query, [
-    "sortBy",
+    "sort",
     "limit",
     "page",
     "populate",

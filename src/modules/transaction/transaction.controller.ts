@@ -9,8 +9,8 @@ import stripeService from "../stripe/stripe.service.ts";
 import type { IUser } from "../user/user.interface.ts";
 
 const getAllTransactions = catchAsync(async (req: Request, res: Response) => {
-  const filter = pick(req.query, ["studentId", "teacherId", "status"]);
-  const options = pick(req.query, ["sortBy", "limit", "page", "populate"]);
+  const filter = pick(req.query, []);
+  const options = pick(req.query, ["sort", "limit", "page", "populate"]);
   const transactions = await transactionService.getAllTransactions(
     filter,
     options
@@ -23,7 +23,6 @@ const getAllTransactions = catchAsync(async (req: Request, res: Response) => {
     })
   );
 });
-
 
 export default {
   getAllTransactions,

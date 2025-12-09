@@ -38,7 +38,7 @@ const deleteNotification = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllNotifications = catchAsync(async (req: Request, res: Response) => {
-  const options = pick(req.query, ["sortBy", "limit", "page", "populate"]);
+  const options = pick(req.query, ["sort", "limit", "page", "populate"]);
   const userId = req.user!.id;
   const notifications = await notificationService.getAllNotifications(
     userId,

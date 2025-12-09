@@ -4,7 +4,7 @@ const getNotification = {
   query: Joi.object().keys({
     page: Joi.number().default(1),
     limit: Joi.number().default(10),
-    sortBy: Joi.string().default("createdAt:desc"),
+    sort: Joi.string().default("createdAt desc"),
     populate: Joi.string(),
   }),
 };

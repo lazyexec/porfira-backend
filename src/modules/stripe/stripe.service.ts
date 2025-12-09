@@ -14,6 +14,10 @@ const createStripeAccount = async (user: IUser) => {
     logger.error(`Failed to create Stripe account for user ${user.email}`);
     return;
   }
+  await User.findOneAndUpdate(
+    { _id: user?.id as string },
+    { "teacher.stripeAccountId": account.id }
+  );
   return account.id;
 };
 

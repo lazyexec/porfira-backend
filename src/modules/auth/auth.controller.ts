@@ -1,4 +1,5 @@
 import catchAsync from "../../utils/catchAsync.ts";
+import { Types } from "mongoose";
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
 import userService from "../user/user.service.ts";
@@ -40,7 +41,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await authService.login(email, password);
   const token = await tokenService.generateUserTokens({
-    userId: user._id,
+    userId: user._id as Types.ObjectId,
     deviceId: req.device?.host || null,
     ip: req.device?.ip || null,
     userAgent: req.get("User-Agent") || null,
@@ -59,7 +60,7 @@ const verifyAccount = catchAsync(async (req: Request, res: Response) => {
   const { email, code } = req.body;
   const user = await authService.verifyAccount(email, code);
   const token = await tokenService.generateUserTokens({
-    userId: user._id,
+    userId: user._id as Types.ObjectId,
     deviceId: req.device?.host || null,
     ip: req.device?.ip || null,
     userAgent: req.get("User-Agent") || null,

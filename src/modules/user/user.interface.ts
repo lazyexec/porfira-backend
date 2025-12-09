@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 export interface IStudent {
   interestedSubjects?: string[] | null;
@@ -34,6 +34,8 @@ export interface IUser {
   avatar: string;
   isEmailVerified: boolean;
   isResetPassword: boolean;
+  id?: Types.ObjectId | string;
+  _id?: Types.ObjectId | string;
   isDeleted: boolean;
   name?: string | null;
   googleAuth?: string | null;
