@@ -1,4 +1,5 @@
 import Joi from "joi";
+import validator from "../../utils/validator.ts";
 
 const approveTeacher = {
   params: Joi.object().keys({
@@ -8,7 +9,7 @@ const approveTeacher = {
 
 const rejectTeacher = {
   params: Joi.object().keys({
-    id: Joi.string().required(),
+    id: Joi.custom(validator.objectId).required(),
   }),
 };
 
@@ -49,7 +50,7 @@ const getAllTransactions = {
 
 const getTeacherEarnings = {
   params: Joi.object().keys({
-    id: Joi.string().required(),
+    id: Joi.custom(validator.objectId).required(),
   }),
 };
 

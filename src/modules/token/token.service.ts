@@ -76,7 +76,7 @@ const generateUserTokens = async (opts: {
 
 const refreshAuth = async (
   refreshToken: string,
-  opts?: { ip?: string; userAgent?: string; deviceId?: string }
+  opts?: { ip?: string | null; userAgent?: string | null; deviceId?: string | null }
 ) => {
   let payload: any;
   try {

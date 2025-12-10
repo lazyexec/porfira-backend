@@ -35,6 +35,12 @@ const verifyCallback =
         return reject(new ApiError(httpStatus.FORBIDDEN, "Forbidden"));
       }
     }
+    if (user.isDeleted) {
+      return reject(new ApiError(httpStatus.FORBIDDEN, "Unauthorized Request"));
+    }
+    if (user.isRestricted) {
+      return reject(new ApiError(httpStatus.FORBIDDEN, "User is restricted"));
+    }
 
     resolve();
   };

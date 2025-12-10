@@ -1,8 +1,12 @@
 import multer from "multer";
+import type { FileFilterCallback } from "multer";
 import path from "path";
 import fs from "../utils/fs.ts";
+import allowedTypes from "../utils/fileTypes.ts";
+import ApiError from "../utils/ApiError.ts";
+import httpStatus from "http-status";
 
-export default function (UPLOADS_FOLDER: string, types: string[]) {
+export default function userUploadMiddleware(UPLOADS_FOLDER: string) {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       try {
@@ -17,7 +21,7 @@ export default function (UPLOADS_FOLDER: string, types: string[]) {
       const filename =
         file.originalname
           .replace(fileExt, "")
-          .toLocaleLowerCase()
+          .toLowerCase()
           .split(" ")
           .join("-") +
         "-" +
@@ -28,17 +32,34 @@ export default function (UPLOADS_FOLDER: string, types: string[]) {
   });
 
   const upload = multer({
-    storage: storage,
+    storage,
     limits: {
-      fileSize: 200000000000000000000000000, // 20MB
+      fileSize: 20 * 1024 * 1024, // 20MB
     },
-    fileFilter: (req, file, cb) => {
-      if (!types.includes(file.mimetype)) {
-        return cb(new Error("Invalid file type!"));
+    fileFilter: (req, file, cb: FileFilterCallback) => {
+      const field: string = file.fieldname;
+      const allowed: string[] | undefined = allowedTypes[field];
+
+      if (!allowed) {
+        throw new ApiError(httpStatus.BAD_REQUEST, `Invalid field: ${field}`);
       }
+
+      const isValid = allowed.some((t: string) =>
+        t.endsWith("/*")
+          ? file.mimetype.startsWith(t.replace("/*", ""))
+          : file.mimetype === t
+      );
+
+      if (!isValid) {
+        throw new ApiError(
+          httpStatus.BAD_REQUEST,
+          `Invalid file type for ${field}`
+        );
+      }
+
       cb(null, true);
     },
   });
 
-  return upload; // Return the configured multer upload middleware
+  return upload;
 }

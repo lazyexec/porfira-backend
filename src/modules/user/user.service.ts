@@ -1,5 +1,13 @@
 import type { Types } from "mongoose";
 import User from "./user.model.ts";
+import email from "../../configs/email.ts";
+import ApiError from "../../utils/ApiError.ts";
+import httpStatus from "http-status";
+
+interface UploadedFiles {
+  avatar?: Express.Multer.File[];
+  content?: Express.Multer.File[];
+}
 
 const getUserByEmail = async (email: string) => {
   return User.findOne({ email });
@@ -14,8 +22,33 @@ const getGenuineTeacher = async (teacherId: string) => {
   });
 };
 
-const updateUser = async (userId: string, updateBody: object) => {
-  const user = await User.findByIdAndUpdate(userId, updateBody, { new: true });
+const updateUser = async (
+  userId: string,
+  updateBody: object,
+  files: UploadedFiles
+) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (files) {
+    if (files.avatar?.[0]) {
+      const file = files.avatar[0];
+      user.avatar = file.path;
+    }
+
+    if (user.role === "teacher" && files.content?.[0]) {
+      const file = files.content[0];
+      user.teacher = user.teacher ?? {};
+      user.teacher.content = file.path;
+    }
+  }
+
+  Object.assign(user, updateBody);
+
+  await user.save();
+
   return user;
 };
 
@@ -48,13 +81,28 @@ const queryAllUsers = async (filter: any, options: object) => {
   return users;
 };
 
-const restrctUser = async (userId: string) => {
-  await User.updateOne({ _id: userId }, { isDeleted: true });
+const restrictUser = async (userId: string, reason: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+  await email.sendRestrictionEmail(user.email, reason);
+  await user.updateOne({ isRestricted: true, restrictionReason: reason });
 };
 
-const unRestrctUser = async (userId: string) => {
-  await User.updateOne({ _id: userId }, { isDeleted: false });
+const unRestrictUser = async (userId: string) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+  }
+  await email.sendUnrestrictionEmail(user.email);
+  await user.updateOne({
+    _id: userId,
+    isRestricted: false,
+    restrictionReason: null,
+  });
 };
+
 export default {
   getUserByEmail,
   updateUser,
@@ -63,6 +111,6 @@ export default {
   syncTeacherBalance,
   // Admin Functions
   queryAllUsers,
-  restrctUser,
-  unRestrctUser,
+  restrictUser,
+  unRestrictUser,
 };

@@ -27,7 +27,7 @@ const deleteNotification = catchAsync(async (req: Request, res: Response) => {
   if (!notificationId) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Notification ID is required");
   }
-  await notificationService.deleteNotification(req.user!.id, notificationId);
+  await notificationService.deleteNotification(req.user?.id!, notificationId);
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,
@@ -39,7 +39,7 @@ const deleteNotification = catchAsync(async (req: Request, res: Response) => {
 
 const getAllNotifications = catchAsync(async (req: Request, res: Response) => {
   const options = pick(req.query, ["sort", "limit", "page", "populate"]);
-  const userId = req.user!.id;
+  const userId = req.user?.id!;
   const notifications = await notificationService.getAllNotifications(
     userId,
     options

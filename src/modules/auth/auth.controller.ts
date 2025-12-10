@@ -17,11 +17,15 @@ const register = catchAsync(async (req: Request, res: Response) => {
   }
 
   if (user && user.isDeleted) {
-    await userService.updateUser(user._id?.toString(), {
-      name,
-      email,
-      ...rest,
-    });
+    await userService.updateUser(
+      user._id?.toString(),
+      {
+        name,
+        email,
+        ...rest,
+      },
+      {}
+    );
   } else {
     await authService.register({
       name,
@@ -85,7 +89,11 @@ const logout = catchAsync(async (req: Request, res: Response) => {
 
 const refreshTokens = catchAsync(async (req: Request, res: Response) => {
   const refreshToken = req.body.refreshToken;
-  const token = await tokenService.generateUserTokens(refreshToken);
+  const token = await tokenService.refreshAuth(refreshToken, {
+    ip: req.device?.ip || null,
+    userAgent: req.get("User-Agent") || null,
+    deviceId: req.device?.host || null,
+  });
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,
@@ -111,8 +119,8 @@ const forgotPassword = catchAsync(async (req: Request, res: Response) => {
 });
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  const { email, otp, newPassword } = req.body;
-  await authService.resetPassword(email, otp, newPassword);
+  const { email, otp, password } = req.body;
+  await authService.resetPassword(email, otp, password);
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,
@@ -133,6 +141,17 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const deleteAccount = catchAsync(async (req: Request, res: Response) => {
+  const user: any = req.user;
+  await authService.deleteAccount(user?.id);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Account deleted successfully",
+    })
+  );
+});
+
 export default {
   register,
   login,
@@ -142,4 +161,5 @@ export default {
   forgotPassword,
   resetPassword,
   changePassword,
+  deleteAccount,
 };

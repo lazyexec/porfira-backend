@@ -13,54 +13,64 @@ import type {
   IConversationModel,
   IMessage,
   IMessageModel,
-} from "./message.interface";
+} from "./message.interface.ts";
 
-const conversationSchema = new Schema<IConversation>({
-  participants: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    required: true,
+const conversationSchema = new Schema<IConversation>(
+  {
+    participants: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      required: true,
+    },
+    lastMessage: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+      ref: "Message",
+    },
+    lastMessageAt: {
+      type: Date,
+      required: false,
+    },
   },
-  lastMessage: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: false,
-    ref: "Message",
-  },
-  lastMessageAt: {
-    type: Date,
-    required: false,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
-const messageSchema = new Schema<IMessage>({
-  conversation: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "Conversation",
+const messageSchema = new Schema<IMessage>(
+  {
+    conversation: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Conversation",
+    },
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    type: {
+      type: String,
+      required: true,
+      enum: ["text", "image", "video", "file"],
+      default: "text",
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+    isRead: {
+      type: Boolean,
+      required: false,
+    },
+    readAt: {
+      type: Date,
+      required: false,
+    },
   },
-  sender: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "User",
-  },
-  type: {
-    type: String,
-    required: true,
-    enum: ["text", "image", "video", "file"],
-    default: "text",
-  },
-  content: {
-    type: String,
-    required: true,
-  },
-  isRead: {
-    type: Boolean,
-    required: false,
-  },
-  readAt: {
-    type: Date,
-    required: false,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 conversationSchema.plugin(mongoosePaginate);
 

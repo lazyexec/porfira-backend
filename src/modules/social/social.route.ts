@@ -1,8 +1,8 @@
 import express from "express";
 import auth from "../../middlewares/auth.ts";
 import validate from "../../middlewares/validate.ts";
-import feedController from "./feed.controller.ts";
-import feedValidation from "./feed.validation.ts";
+import feedController from "./social.controller.ts";
+import feedValidation from "./social.validation.ts";
 
 const router = express.Router();
 

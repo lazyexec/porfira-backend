@@ -6,6 +6,7 @@ import httpStatus from "http-status";
 import response from "../../configs/response.ts";
 import stripeService from "../stripe/stripe.service.ts";
 import pick from "../../utils/pick.ts";
+import type multer from "multer";
 
 const getProfile = catchAsync(async (req: Request, res: Response) => {
   console.log("Req User:", req.user);
@@ -25,14 +26,12 @@ const getProfile = catchAsync(async (req: Request, res: Response) => {
 
 const updateProfile = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
-  const file = req.file;
-  if (file) {
-    req.body.avatar = file.path;
-  }
+  const files: any = req.files;
+  const body = req.body;
   if (!userId) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized");
   }
-  const user = await userService.updateUser(userId, req.body);
+  const user = await userService.updateUser(userId, body, files);
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,
@@ -62,4 +61,34 @@ const queryAllUsers = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
-export default { getProfile, updateProfile, queryAllUsers };
+const restrictUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params?.userId;
+  const user = await userService.restrictUser(userId!, req.body.reason);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "User restricted successfully",
+      data: user,
+    })
+  );
+});
+
+const unrestrictUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params?.userId;
+  const user = await userService.unRestrictUser(userId!);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "User unrestricted successfully",
+      data: user,
+    })
+  );
+});
+
+export default {
+  getProfile,
+  updateProfile,
+  queryAllUsers,
+  restrictUser,
+  unrestrictUser,
+};

@@ -4,6 +4,7 @@ import messageService from "./message.service.ts";
 import ApiError from "../../utils/ApiError.ts";
 import httpStatus from "http-status";
 import response from "../../configs/response.ts";
+import pick from "../../utils/pick.ts";
 
 const createConversation = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
@@ -60,14 +61,12 @@ const sendMessage = catchAsync(async (req: Request, res: Response) => {
 
 const getMessages = catchAsync(async (req: Request, res: Response) => {
   const conversationId = req.params.conversationId;
-  const { page, limit } = req.query;
+  const filter = pick(req.query, ["search"]);
+  const options = pick(req.query, ["page", "limit", "sort"]);
   if (!conversationId) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Invalid conversation id");
   }
-  const messages = await messageService.getMessages(conversationId, {
-    page: Number(page) || 1,
-    limit: Number(limit) || 10,
-  });
+  const messages = await messageService.getMessages(conversationId, filter, options);
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,

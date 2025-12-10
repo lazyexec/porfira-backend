@@ -1,8 +1,9 @@
 import Joi from "joi";
+import validator from "../../utils/validator.ts";
 
 const claimBooking = {
   body: Joi.object().keys({
-    teacherId: Joi.string().required(),
+    teacherId: Joi.custom(validator.objectId).required(),
     duration: Joi.number().min(1).required(),
     date: Joi.date().required(),
     time: Joi.date().required(),
@@ -12,7 +13,7 @@ const claimBooking = {
 
 const rePayment = {
   body: Joi.object().keys({
-    bookingId: Joi.string().required(),
+    bookingId: Joi.custom(validator.objectId).required(),
   }),
 };
 

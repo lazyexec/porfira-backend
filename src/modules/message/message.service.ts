@@ -99,11 +99,17 @@ const getMessage = async (id: string) => {
   return message;
 };
 
-const getMessages = async (conversationId: string, options: any) => {
-  const messages = await messageModel.paginate(
-    { conversation: conversationId },
-    options
-  );
+const getMessages = async (
+  conversationId: string,
+  filter: any,
+  options: any
+) => {
+  const query = { conversation: conversationId, ...filter };
+  if (filter.search) {
+    query.content = { $regex: filter.search, $options: "i" };
+  }
+  console.log({query, options});
+  const messages = await messageModel.paginate(query, options);
   return messages;
 };
 

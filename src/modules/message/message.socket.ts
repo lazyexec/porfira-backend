@@ -13,9 +13,13 @@ const messageSocket = (io: Server, socket: Socket) => {
 
   // GET MESSAGES
   socket.on("get-messages", async ({ conversationId }) => {
+    const options = {
+      sort: "createdAt -1",
+    };
     const messages = await messageServices.getMessages(
       conversationId,
-      socket.user?.id
+      {},
+      options
     );
 
     socket.emit("get-messages", messages);

@@ -7,20 +7,21 @@ import userFileUploadMiddleware from "../../middlewares/fileUploader.ts";
 import uploadTypes from "../../utils/fileTypes.ts";
 const UPLOADS_FOLDER_USERS = "./public/uploads/users";
 
-const uploadUsers = userFileUploadMiddleware(UPLOADS_FOLDER_USERS, uploadTypes.avatarTypes);
+const upload = userFileUploadMiddleware(UPLOADS_FOLDER_USERS);
 
 const router = express.Router();
 
 router.route("/self/in").get(auth("common"), userController.getProfile);
 
-router
-  .route("/self/update")
-  .patch(
-    auth("common"),
-    validate(userValidation.updateProfile),
-    [uploadUsers.single("image")],
-    userController.updateProfile
-  );
+router.route("/self/update").patch(
+  auth("common"),
+  validate(userValidation.updateProfile),
+  upload.fields([
+    { name: "avatar", maxCount: 1 },
+    { name: "content", maxCount: 1 },
+  ]),
+  userController.updateProfile
+);
 
 // Admin Route
 router
@@ -29,6 +30,22 @@ router
     auth("admin"),
     validate(userValidation.queryAllUsers),
     userController.queryAllUsers
+  );
+
+router
+  .route("/restrict/:userId")
+  .post(
+    auth("admin"),
+    validate(userValidation.restrictUser),
+    userController.restrictUser
+  );
+
+router
+  .route("/unrestrict/:userId")
+  .post(
+    auth("admin"),
+    validate(userValidation.unrestrictUser),
+    userController.unrestrictUser
   );
 
 export default router;

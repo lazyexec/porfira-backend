@@ -1,8 +1,9 @@
 import Joi from "joi";
+import validator from "../../utils/validator.ts";
 
 const create = {
   body: Joi.object().keys({
-    toUser: Joi.string().required().label("To User"),
+    toUser: Joi.custom(validator.objectId).required().label("To User"),
     score: Joi.number().required().label("Score"),
     comment: Joi.string().required().label("Comment"),
   }),
@@ -10,7 +11,7 @@ const create = {
 
 const update = {
   params: Joi.object().keys({
-    reviewId: Joi.string().required().label("Review ID"),
+    reviewId: Joi.custom(validator.objectId).required().label("Review ID"),
   }),
   body: Joi.object().keys({
     score: Joi.number().required(),
@@ -20,7 +21,7 @@ const update = {
 
 const deleteReview = {
   params: Joi.object().keys({
-    reviewId: Joi.string().required().label("Review ID"),
+    reviewId: Joi.custom(validator.objectId).required().label("Review ID"),
   }),
 };
 
@@ -31,19 +32,19 @@ const getReviews = {
     sort: Joi.string().optional(),
   }),
   body: Joi.object().keys({
-    teacherId: Joi.string().optional(),
+    teacherId: Joi.custom(validator.objectId).optional(),
   }),
 };
 
 const queryReview = {
   query: Joi.object().keys({
-    page: Joi.number().required().label("Page"),
-    limit: Joi.number().required().label("Limit"),
-    sort: Joi.string().required().label("Sort"),
+    page: Joi.number().optional(),
+    limit: Joi.number().optional(),
+    sort: Joi.string().optional(),
   }),
   body: Joi.object().keys({
-    fromUser: Joi.string().optional(),
-    toUser: Joi.string().optional(),
+    fromUser: Joi.custom(validator.objectId).optional(),
+    toUser: Joi.custom(validator.objectId).optional(),
   }),
 };
 

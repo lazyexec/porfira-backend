@@ -39,8 +39,6 @@ const teacherSchema = new mongoose.Schema<ITeacher>({
   stripeAccountId: {
     type: String,
     unique: true,
-    sparse: true,
-    default: null,
   },
   stripeOnboardingComplete: {
     type: Boolean,
@@ -193,10 +191,6 @@ const userSchema = new mongoose.Schema<
       required: false,
       default: null,
     },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
     dateOfBirth: {
       type: Date,
       required: false,
@@ -226,6 +220,20 @@ const userSchema = new mongoose.Schema<
       type: teacherSchema,
       required: false,
       // default: null,
+    },
+    // STATUS
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    isRestricted: {
+      type: Boolean,
+      default: false,
+    },
+    restrictionReason: {
+      type: String,
+      required: false,
+      default: null,
     },
   },
   {

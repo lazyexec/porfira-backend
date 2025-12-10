@@ -5,10 +5,7 @@ import fileUploader from "../../middlewares/fileUploader.ts";
 import uploadTypes from "../../utils/fileTypes.ts";
 import validate from "../../middlewares/validate.ts";
 import messageValidation from "./message.validation.ts";
-const fileUploaderMessage = fileUploader(
-  "./public/uploads/messages",
-  uploadTypes.messageTypes
-);
+const fileUploaderMessage = fileUploader("./public/uploads/messages");
 
 const router = Router();
 
@@ -24,11 +21,11 @@ router
   .post(
     auth("common"),
     validate(messageValidation.sendMessage),
-    [fileUploaderMessage.single("attach")],
+    fileUploaderMessage.single("attachment"),
     messageController.sendMessage
   );
 router
-  .route("/:conversationId")
+  .route("/:conversationId/all")
   .get(
     auth("common"),
     validate(messageValidation.getMessages),

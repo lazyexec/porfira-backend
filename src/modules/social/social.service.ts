@@ -7,9 +7,7 @@ const queryTeachers = async (filter: any, options: object) => {
     isDeleted: false,
     role: "teacher",
     isEmailVerified: true,
-    teacher: {
-      status: "approved",
-    },
+    "teacher.status": "approved",
   };
 
   for (const key of Object.keys(filter)) {
@@ -36,7 +34,6 @@ const queryTeachers = async (filter: any, options: object) => {
       query[key] = filter[key];
     }
   }
-
   const users = await User.paginate(query, options);
   return users;
 };

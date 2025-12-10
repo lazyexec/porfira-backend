@@ -6,7 +6,7 @@ configDotenv();
 const validator = Joi.object({
   PORT: Joi.number().default(3000),
   BACKEND_IP: Joi.string().default("localhost"),
-  SOCKET_PORT: Joi.number().default(3001),
+  SOCKET_PORT: Joi.number().default(6001),
   MONGO_URI: Joi.string().optional(),
   NODE_ENV: Joi.string()
     .required()

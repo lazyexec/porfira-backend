@@ -47,12 +47,146 @@ const createOnBoardingIntent = async (teacherStripeAccountId: string) => {
   return intent;
 };
 
+const getTransaction = async (transactionId: string) => {
+  const transaction = await Transaction.findById(transactionId).populate([
+    {
+      path: "performedBy",
+      select: "name email",
+    },
+    {
+      path: "receivedBy",
+      select: "name email",
+    },
+  ]);
+  return transaction;
+};
+
+const getStudentWalletDashboard = async (studentId: string) => {
+  const studentObjectId = new Types.ObjectId(studentId);
+
+  const pendingPaymentsCountPromise = Transaction.aggregate([
+    { $match: { performedBy: studentObjectId, status: "pending" } },
+    { $count: "pendingCount" },
+  ]);
+
+  const totalSpentPromise = Transaction.aggregate([
+    { $match: { performedBy: studentObjectId, status: "completed" } },
+    { $group: { _id: null, totalSpent: { $sum: "$amount" } } },
+  ]);
+
+  const completedPaymentsPromise = Transaction.aggregate([
+    { $match: { performedBy: studentObjectId, status: "completed" } },
+    { $group: { _id: null, completedPayments: { $sum: "$amount" } } },
+  ]);
+
+  const lastTransactionsPromise = Transaction.find({
+    performedBy: studentObjectId,
+  })
+    .sort({ createdAt: -1 })
+    .limit(5);
+
+  const [pending, spent, completed, lastTransactions] = await Promise.all([
+    pendingPaymentsCountPromise,
+    totalSpentPromise,
+    completedPaymentsPromise,
+    lastTransactionsPromise,
+  ]);
+
+  return {
+    totalPendingPayments: pending[0]?.pendingCount || 0,
+    totalSpent: spent[0]?.totalSpent || 0,
+    completedPayments: completed[0]?.completedPayments || 0,
+    lastTransactions,
+  };
+};
+
+const getTeacherWalletDashboard = async (teacherId: string) => {
+  const teacherObjectId = new Types.ObjectId(teacherId);
+
+  const pendingPaymentsCountPromise = Transaction.aggregate([
+    { $match: { receivedBy: teacherObjectId, status: "pending" } },
+    { $count: "pendingCount" },
+  ]);
+
+  const totalEarningsPromise = Transaction.aggregate([
+    { $match: { receivedBy: teacherObjectId, status: "completed" } },
+    { $group: { _id: null, totalEarnings: { $sum: "$teacherEarnings" } } },
+  ]);
+
+  const lastTransactionsPromise = Transaction.find({
+    receivedBy: teacherObjectId,
+  })
+    .sort({ createdAt: -1 })
+    .limit(5);
+
+  const totalEarningsCurrentMonthPromise = Transaction.aggregate([
+    {
+      $match: {
+        receivedBy: teacherObjectId,
+        status: "completed",
+        createdAt: {
+          $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        },
+      },
+    },
+    {
+      $group: {
+        _id: null,
+        totalEarningsCurrentMonth: { $sum: "$teacherEarnings" },
+      },
+    },
+  ]);
+
+  const [pending, totalEarnings, lastTransactions, totalEarningsCurrentMonth] =
+    await Promise.all([
+      pendingPaymentsCountPromise,
+      totalEarningsPromise,
+      lastTransactionsPromise,
+      totalEarningsCurrentMonthPromise,
+    ]);
+
+  return {
+    totalPendingPayments: pending[0]?.pendingCount || 0,
+    totalEarnings: totalEarnings[0]?.totalEarnings || 0,
+    totalEarningsCurrentMonth:
+      totalEarningsCurrentMonth[0]?.totalEarningsCurrentMonth || 0,
+    lastTransactions,
+  };
+};
+
+const getTeacherTransactions = async (
+  teacherId: string,
+  filter: any,
+  options: any
+) => {
+  return await Transaction.paginate(
+    { receivedBy: teacherId, ...filter },
+    options
+  );
+};
+
+const getStudentTransactions = async (
+  studentId: string,
+  filter: any,
+  options: any
+) => {
+  return await Transaction.paginate(
+    { performedBy: studentId, ...filter },
+    options
+  );
+};
+
 export default {
   getTransactions,
   getTeacherEarnings,
   getSystemRevenues,
   createTransaction,
   getAllTransactions,
+  getTransaction,
+  getTeacherWalletDashboard,
+  getStudentWalletDashboard,
+  getTeacherTransactions,
+  getStudentTransactions,
   // Account completion
   createOnBoardingIntent,
 };

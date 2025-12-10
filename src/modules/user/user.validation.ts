@@ -48,4 +48,19 @@ const queryAllUsers = {
   }),
 };
 
-export default { updateProfile, queryAllUsers };
+const restrictUser = {
+  params: Joi.object({
+    userId: Joi.string().required(),
+  }),
+  body: Joi.object({
+    reason: Joi.string().required(),
+  }),
+};
+
+const unrestrictUser = {
+  params: Joi.object({
+    userId: Joi.string().required(),
+  }),
+};
+
+export default { updateProfile, queryAllUsers, restrictUser, unrestrictUser };

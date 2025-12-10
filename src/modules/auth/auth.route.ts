@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import authController from "./auth.controller.ts";
 import validate from "../../middlewares/validate.ts";
 import authValidation from "./auth.validation.ts";
+import auth from "../../middlewares/auth.ts";
 
 const router: Router = express.Router();
 
@@ -34,7 +35,10 @@ router.post(
 );
 router.post(
   "/change-password",
+  auth("common"),
   validate(authValidation.changePassword),
   authController.changePassword
 );
+
+router.delete("/delete-me", auth("common"), authController.deleteAccount);
 export default router;

@@ -20,8 +20,10 @@ const pick = <T extends object, K extends keyof T>(
       if (key === "sort" && typeof object[key] === "string") {
         const [field, order] = (object[key] as string).split(" ");
         if (field) {
+          const parsedOrder =
+            parseInt(order as string) || (order === "desc" ? -1 : 1);
           Object.assign(obj, {
-            [key]: { [field]: order === "desc" ? -1 : 1 },
+            [key]: { [field]: parsedOrder },
           });
         }
       } else {

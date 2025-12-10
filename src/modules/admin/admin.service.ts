@@ -31,7 +31,7 @@ const approveTeacher = async (teacherId: Types.ObjectId) => {
 
   const hourlyRate = teacher.teacher?.hourlyRate;
   if (!hourlyRate) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Hourly Rate ");
+    throw new ApiError(httpStatus.BAD_REQUEST, "Teacher Hourly Rate Not Set");
   }
 
   const product = await stripe.stripe.products.create({

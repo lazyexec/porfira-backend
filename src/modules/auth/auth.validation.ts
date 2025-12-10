@@ -1,11 +1,12 @@
 import Joi from "joi";
 import { roles } from "../../configs/roles.ts";
+import validator from "../../utils/validator.ts";
 
 const register = {
   body: Joi.object({
     name: Joi.string().min(3).max(30).required(),
     email: Joi.string().required(),
-    password: Joi.string().min(6).max(100).required(),
+    password: Joi.custom(validator.password).required(),
     role: Joi.string()
       .valid(...roles)
       .required(),
@@ -49,7 +50,7 @@ const resetPassword = {
   body: Joi.object({
     email: Joi.string().required(),
     otp: Joi.string().required(),
-    password: Joi.string().min(6).max(100).required(),
+    password: Joi.custom(validator.password).required(),
   }),
 };
 

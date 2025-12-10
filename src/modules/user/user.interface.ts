@@ -50,6 +50,8 @@ export interface IUser {
   phoneNumber?: number | null;
   countryCode?: string | null;
   bio?: string | null;
+  isRestricted?: boolean;
+  restrictionReason?: string | null;
 }
 
 export interface IUserMethods {

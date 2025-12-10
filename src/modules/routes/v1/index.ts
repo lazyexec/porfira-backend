@@ -2,12 +2,13 @@ import express, { Router } from "express";
 import authRouter from "../../auth/auth.route.ts";
 import userRouter from "../../user/user.route.ts";
 import reviewRouter from "../../review/review.route.ts";
-import feedRouter from "../../feed/feed.route.ts";
+import socialRouter from "../../social/social.route.ts";
 import adminRouter from "../../admin/admin.route.ts";
 import bookingRouter from "../../booking/booking.route.ts";
 import notificationRouter from "../../notification/notification.route.ts";
 import transactionRouter from "../../transaction/transaction.route.ts";
 import messageRouter from "../../message/message.route.ts";
+import dashboardRouter from "../../dashboard/dashboard.route.ts";
 
 const mainRouter: Router = express.Router();
 
@@ -30,8 +31,8 @@ const routes: routeObjects[] = [
     route: reviewRouter,
   },
   {
-    path: "/feed",
-    route: feedRouter,
+    path: "/social",
+    route: socialRouter,
   },
   {
     path: "/admin",
@@ -48,6 +49,10 @@ const routes: routeObjects[] = [
   {
     path: "/transaction",
     route: transactionRouter,
+  },
+  {
+    path: "/dashboard",
+    route: dashboardRouter,
   },
   // TODO: Test Messaging Properly.
   {

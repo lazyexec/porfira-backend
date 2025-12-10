@@ -1,4 +1,5 @@
 import Joi from "joi";
+import validator from "../../utils/validator.ts";
 
 const getNotification = {
   query: Joi.object().keys({
@@ -11,7 +12,7 @@ const getNotification = {
 
 const deleteNotification = {
   params: Joi.object().keys({
-    notificationId: Joi.string().required(),
+    notificationId: Joi.custom(validator.objectId).required(),
   }),
 };
 
