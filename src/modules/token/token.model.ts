@@ -1,4 +1,4 @@
-// token.model.ts
+// token.model
 import { Schema, model, Document, Types } from "mongoose";
 
 export interface IToken extends Document {

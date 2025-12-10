@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import jwt from "../utils/jwt.ts";
-import ApiError from "../utils/ApiError.ts";
-import { roleRights } from "../configs/roles.ts";
+import jwt from "../utils/jwt";
+import ApiError from "../utils/ApiError";
+import { roleRights } from "../configs/roles";
 import type { Request, Response, NextFunction } from "express";
 import passport from "passport";
 

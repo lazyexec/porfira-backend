@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import { roles } from "../../configs/roles.ts";
-import regex from "../../utils/regex.ts";
+import { roles } from "../../configs/roles";
+import regex from "../../utils/regex";
 import bcrypt from "bcrypt";
-import hideFieldsPlugin from "../../plugins/mongoose/hideFields.plugin.ts";
+import hideFieldsPlugin from "../../plugins/mongoose/hideFields.plugin";
 import mongoosePaginate from "mongoose-paginate-v2";
 import type {
   IStudent,
@@ -10,7 +10,7 @@ import type {
   IUser,
   IUserMethods,
   IUserModel,
-} from "./user.interface.ts";
+} from "./user.interface";
 
 const studentSchema = new mongoose.Schema<IStudent>({
   interestedSubjects: {

@@ -1,7 +1,7 @@
-import env from "../configs/env.ts";
+import env from "../configs/env";
 import httpStatus from "http-status";
-import ApiError from "../utils/ApiError.ts";
-import logger from "../utils/logger.ts";
+import ApiError from "../utils/ApiError";
+import logger from "../utils/logger";
 import mongoose from "mongoose";
 import type { Request, Response, NextFunction } from "express";
 

@@ -1,10 +1,10 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
-import ApiError from "../../utils/ApiError.ts";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
-import reviewService from "./review.service.ts";
-import pick from "../../utils/pick.ts";
+import response from "../../configs/response";
+import reviewService from "./review.service";
+import pick from "../../utils/pick";
 
 // creates a review (Student)
 const createReview = catchAsync(async (req: Request, res: Response) => {

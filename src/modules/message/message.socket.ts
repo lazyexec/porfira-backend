@@ -1,5 +1,5 @@
 import { Server, Socket } from "socket.io";
-import messageServices from "./message.service.ts";
+import messageServices from "./message.service";
 
 const messageSocket = (io: Server, socket: Socket) => {
   socket.on("join-conversation", async ({ conversationId }) => {

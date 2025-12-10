@@ -1,9 +1,9 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
-import pick from "../../utils/pick.ts";
-import adminService from "./admin.service.ts";
+import response from "../../configs/response";
+import pick from "../../utils/pick";
+import adminService from "./admin.service";
 
 const approveTeacher = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;

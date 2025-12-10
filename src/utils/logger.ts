@@ -1,7 +1,7 @@
 import winston from "winston";
 import path from "path";
-import fs from "./fs.ts";
-import env from "../configs/env.ts";
+import fs from "./fs";
+import env from "../configs/env";
 
 const logDir = "logs";
 // fs.createFolder(logDir);

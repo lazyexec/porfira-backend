@@ -1,12 +1,12 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
-import stripe from "../../configs/stripe.ts";
-import ApiError from "../../utils/ApiError.ts";
-import bookingService from "../booking/booking.service.ts";
-import type { IUser } from "../user/user.interface.ts";
-import stripeService from "./stripe.service.ts";
+import response from "../../configs/response";
+import stripe from "../../configs/stripe";
+import ApiError from "../../utils/ApiError";
+import bookingService from "../booking/booking.service";
+import type { IUser } from "../user/user.interface";
+import stripeService from "./stripe.service";
 
 const webhook = catchAsync(async (req: Request, res: Response) => {
   const signature = req.headers["stripe-signature"] as string;

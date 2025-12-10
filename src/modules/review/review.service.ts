@@ -1,7 +1,7 @@
-import ApiError from "../../utils/ApiError.ts";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import Review from "./review.model.ts";
-import User from "../user/user.model.ts";
+import Review from "./review.model";
+import User from "../user/user.model";
 
 const updateRating = async (userId: string) => {
   const teacherId = userId; // Assuming userId passed is the teacher's ID
@@ -60,7 +60,7 @@ const updateReview = async (
 };
 
 const deleteReview = async (reviewId: string) => {
-  const review = await Review.findOne({_id: reviewId});
+  const review = await Review.findOne({ _id: reviewId });
   if (!review) {
     throw new ApiError(httpStatus.NOT_FOUND, "Review not found");
   }

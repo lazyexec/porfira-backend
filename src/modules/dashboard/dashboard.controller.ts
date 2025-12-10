@@ -1,8 +1,8 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
-import { dashboardService } from "./dashboard.service.ts";
+import { dashboardService } from "./dashboard.service";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
+import response from "../../configs/response";
 
 const getStudentDashboard = catchAsync(async (req: Request, res: Response) => {
   const stats = await dashboardService.getStudentStats(req.user?.id as string);

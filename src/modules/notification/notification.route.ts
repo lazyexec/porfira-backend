@@ -1,8 +1,8 @@
 import express from "express";
-import auth from "../../middlewares/auth.ts";
-import notificationController from "./notification.controller.ts";
-import validate from "../../middlewares/validate.ts";
-import notificationValidation from "./notification.validation.ts";
+import auth from "../../middlewares/auth";
+import notificationController from "./notification.controller";
+import validate from "../../middlewares/validate";
+import notificationValidation from "./notification.validation";
 
 const router: express.Router = express.Router();
 

@@ -2,9 +2,9 @@
 import { Server, Socket } from "socket.io";
 
 declare global {
-  var io: Server | undefined;
-  var socket: Socket | undefined;
-  var user: any | undefined;
+  var io: Server;
+  var socket: Socket;
+  var user: any;
 }
 
 export {};

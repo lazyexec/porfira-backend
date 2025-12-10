@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-import hideFields from "../../plugins/mongoose/hideFields.plugin.ts";
-import type {
-  ITransaction,
-  ITransactionModel,
-} from "./transaction.interface.ts";
+import hideFields from "../../plugins/mongoose/hideFields.plugin";
+import type { ITransaction, ITransactionModel } from "./transaction.interface";
 
 const transactionSchema = new mongoose.Schema<ITransaction>(
   {

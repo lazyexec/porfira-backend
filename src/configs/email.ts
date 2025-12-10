@@ -1,5 +1,5 @@
-import env from "./env.ts";
-import logger from "../utils/logger.ts";
+import env from "./env";
+import logger from "../utils/logger";
 import nodemailer from "nodemailer";
 
 // Create a test account or replace with real credentials.

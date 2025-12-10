@@ -13,7 +13,7 @@ import type {
   IConversationModel,
   IMessage,
   IMessageModel,
-} from "./message.interface.ts";
+} from "./message.interface";
 
 const conversationSchema = new Schema<IConversation>(
   {

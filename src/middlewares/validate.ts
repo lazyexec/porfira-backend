@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
-import ApiError from "../utils/ApiError.ts";
+import ApiError from "../utils/ApiError";
 
 const validate =
   (schema: { body?: any; query?: any; params?: any }) =>

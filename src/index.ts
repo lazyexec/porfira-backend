@@ -1,10 +1,10 @@
 import http from "http";
-import { Server as SocketIOServer } from "socket.io";
-import app from "./app.ts";
-import logger from "./utils/logger.ts";
-import env from "./configs/env.ts";
-import database from "./configs/database.ts";
-import socketIO from "./utils/socket.ts";
+import { Server, Server as SocketIOServer } from "socket.io";
+import app from "./app";
+import logger from "./utils/logger";
+import env from "./configs/env";
+import database from "./configs/database";
+import socketIO from "./utils/socket";
 
 let server = http.createServer(app);
 const startServer = async () => {

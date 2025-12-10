@@ -1,10 +1,10 @@
 import express from "express";
-import userController from "./user.controller.ts";
-import auth from "../../middlewares/auth.ts";
-import validate from "../../middlewares/validate.ts";
-import userValidation from "./user.validation.ts";
-import userFileUploadMiddleware from "../../middlewares/fileUploader.ts";
-import uploadTypes from "../../utils/fileTypes.ts";
+import userController from "./user.controller";
+import auth from "../../middlewares/auth";
+import validate from "../../middlewares/validate";
+import userValidation from "./user.validation";
+import userFileUploadMiddleware from "../../middlewares/fileUploader";
+import uploadTypes from "../../utils/fileTypes";
 const UPLOADS_FOLDER_USERS = "./public/uploads/users";
 
 const upload = userFileUploadMiddleware(UPLOADS_FOLDER_USERS);

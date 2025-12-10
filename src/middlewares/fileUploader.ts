@@ -1,9 +1,9 @@
 import multer from "multer";
 import type { FileFilterCallback } from "multer";
 import path from "path";
-import fs from "../utils/fs.ts";
-import allowedTypes from "../utils/fileTypes.ts";
-import ApiError from "../utils/ApiError.ts";
+import fs from "../utils/fs";
+import allowedTypes from "../utils/fileTypes";
+import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
 
 export default function userUploadMiddleware(UPLOADS_FOLDER: string) {

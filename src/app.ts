@@ -1,17 +1,14 @@
 import express, { type Application } from "express";
-import v1Router from "./modules/routes/v1/index.ts";
-import {
-  errorConverter,
-  errorHandler,
-} from "./middlewares/globalErrorHandler.ts";
+import v1Router from "./modules/routes/v1/index";
+import { errorConverter, errorHandler } from "./middlewares/globalErrorHandler";
 import compresson from "compression";
 import helmet from "helmet";
-import "./configs/passport.ts";
+import "./configs/passport";
 import passport from "passport";
-import deviceMiddleware from "./middlewares/device.ts";
-import webhookRouter from "./modules/stripe/stripe.route.ts";
+import deviceMiddleware from "./middlewares/device";
+import webhookRouter from "./modules/stripe/stripe.route";
 import morgan from "morgan";
-import env from "./configs/env.ts";
+import env from "./configs/env";
 import cors from "cors";
 
 const app: Application = express();

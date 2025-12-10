@@ -1,7 +1,7 @@
-import Transaction from "../transaction/transaction.model.ts";
-import Booking from "../booking/booking.model.ts";
-import Review from "../review/review.model.ts";
-import User from "../user/user.model.ts";
+import Transaction from "../transaction/transaction.model";
+import Booking from "../booking/booking.model";
+import Review from "../review/review.model";
+import User from "../user/user.model";
 import mongoose from "mongoose";
 
 /**

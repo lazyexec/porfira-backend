@@ -1,10 +1,10 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
-import notificationService from "./notification.service.ts";
-import ApiError from "../../utils/ApiError.ts";
-import pick from "../../utils/pick.ts";
+import response from "../../configs/response";
+import notificationService from "./notification.service";
+import ApiError from "../../utils/ApiError";
+import pick from "../../utils/pick";
 
 const createNotification = catchAsync(async (req: Request, res: Response) => {
   const notification = await notificationService.createNotification(

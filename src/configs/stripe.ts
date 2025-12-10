@@ -1,5 +1,5 @@
 import Stripe from "stripe";
-import env from "../configs/env.ts";
+import env from "../configs/env";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-11-17.clover",
@@ -109,7 +109,7 @@ const createAccountForTeacher = async ({
 const createOnboardingLink = async (teacherStripeAccountId: string) => {
   return await stripe.accountLinks.create({
     account: teacherStripeAccountId,
-    refresh_url: `${env.FRONTEND_URL}/teacher/wallet`, 
+    refresh_url: `${env.FRONTEND_URL}/teacher/wallet`,
     return_url: `${env.FRONTEND_URL}/teacher/wallet?stripe_connect=success`,
     type: "account_onboarding",
   });

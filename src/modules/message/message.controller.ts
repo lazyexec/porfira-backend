@@ -1,10 +1,10 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
-import messageService from "./message.service.ts";
-import ApiError from "../../utils/ApiError.ts";
+import messageService from "./message.service";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
-import pick from "../../utils/pick.ts";
+import response from "../../configs/response";
+import pick from "../../utils/pick";
 
 const createConversation = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
@@ -66,7 +66,11 @@ const getMessages = catchAsync(async (req: Request, res: Response) => {
   if (!conversationId) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Invalid conversation id");
   }
-  const messages = await messageService.getMessages(conversationId, filter, options);
+  const messages = await messageService.getMessages(
+    conversationId,
+    filter,
+    options
+  );
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,

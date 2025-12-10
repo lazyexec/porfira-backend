@@ -1,5 +1,5 @@
-import User from "../modules/user/user.model.ts";
-import env from "../configs/env.ts";
+import User from "../modules/user/user.model";
+import env from "../configs/env";
 import mongoose from "mongoose";
 
 const password = "$2a$08$cUQ3uMdbQjlyDF/dgn5mNuEt9fLJZqq8TaT9aKabrFuG5wND3/mPO"; // password: 1qazxsw2

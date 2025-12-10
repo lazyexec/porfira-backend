@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 import type {
   INotification,
   INotificationModel,
-} from "./notification.interface.ts";
+} from "./notification.interface";
 import mongoosePaginate from "mongoose-paginate-v2";
-import hideFields from "../../plugins/mongoose/hideFields.plugin.ts";
+import hideFields from "../../plugins/mongoose/hideFields.plugin";
 
 const notificationSchema = new mongoose.Schema<INotification>(
   {

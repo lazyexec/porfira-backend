@@ -1,10 +1,10 @@
 import * as admin from "firebase-admin";
-import "../../configs/firebase.ts";
-import ApiError from "../../utils/ApiError.ts";
-import logger from "../../utils/logger.ts";
+import "../../configs/firebase";
+import ApiError from "../../utils/ApiError";
+import logger from "../../utils/logger";
 import httpStatus from "http-status";
-import Notification from "./notification.model.ts";
-import User from "../user/user.model.ts";
+import Notification from "./notification.model";
+import User from "../user/user.model";
 
 /**
  * Sends a push notification to one or more FCM tokens.

@@ -1,10 +1,10 @@
-import ApiError from "../../utils/ApiError.ts";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import Transaction from "./transaction.model.ts";
+import Transaction from "./transaction.model";
 import { Types } from "mongoose";
-import type { ITransaction } from "./transaction.interface.ts";
-import stripe from "../../configs/stripe.ts";
-import userService from "../user/user.service.ts";
+import type { ITransaction } from "./transaction.interface";
+import stripe from "../../configs/stripe";
+import userService from "../user/user.service";
 
 const getTransactions = async (filter: any, options: any) => {
   const transactions = await Transaction.paginate(filter, options);

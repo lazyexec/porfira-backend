@@ -1,9 +1,9 @@
-import emailHelper from "../../configs/email.ts";
-import ApiError from "../../utils/ApiError.ts";
-import { randomOtp } from "../../utils/otp.ts";
-import User from "../user/user.model.ts";
+import emailHelper from "../../configs/email";
+import ApiError from "../../utils/ApiError";
+import { randomOtp } from "../../utils/otp";
+import User from "../user/user.model";
 import http from "http-status";
-import Token from "../token/token.model.ts";
+import Token from "../token/token.model";
 
 const register = async (userData: object) => {
   const otp = randomOtp();

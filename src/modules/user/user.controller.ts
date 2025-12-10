@@ -1,11 +1,11 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
-import userService from "./user.service.ts";
-import ApiError from "../../utils/ApiError.ts";
+import userService from "./user.service";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
-import stripeService from "../stripe/stripe.service.ts";
-import pick from "../../utils/pick.ts";
+import response from "../../configs/response";
+import stripeService from "../stripe/stripe.service";
+import pick from "../../utils/pick";
 import type multer from "multer";
 
 const getProfile = catchAsync(async (req: Request, res: Response) => {

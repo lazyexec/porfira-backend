@@ -1,10 +1,10 @@
-import ApiError from "../../utils/ApiError.ts";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import userService from "../user/user.service.ts";
-import transactionService from "../transaction/transaction.service.ts";
-import Booking from "./booking.model.ts";
-import stripe from "../../configs/stripe.ts";
-import Transaction from "../transaction/transaction.model.ts";
+import userService from "../user/user.service";
+import transactionService from "../transaction/transaction.service";
+import Booking from "./booking.model";
+import stripe from "../../configs/stripe";
+import Transaction from "../transaction/transaction.model";
 
 function addHours(date: Date, hoursToAdd: number) {
   const newDate = new Date(date);

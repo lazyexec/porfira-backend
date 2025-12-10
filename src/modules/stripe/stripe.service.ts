@@ -1,8 +1,8 @@
-import type { IUser } from "../user/user.interface.ts";
-import logger from "../../utils/logger.ts";
-import stripe from "../../configs/stripe.ts";
-import User from "../user/user.model.ts";
-import bookingService from "../booking/booking.service.ts";
+import type { IUser } from "../user/user.interface";
+import logger from "../../utils/logger";
+import stripe from "../../configs/stripe";
+import User from "../user/user.model";
+import bookingService from "../booking/booking.service";
 
 const createStripeAccount = async (user: IUser) => {
   const account = await stripe.createAccountForTeacher({

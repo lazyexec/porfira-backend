@@ -1,10 +1,13 @@
 import type { Socket } from "socket.io";
-import ApiError from "../utils/ApiError.ts";
+import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
-import auth from "./auth.ts";
+import auth from "./auth";
 import type { NextFunction, Request, Response } from "express";
 
-export default async function socketAuth(socket: Socket, next: (err?: Error) => void) {
+export default async function socketAuth(
+  socket: Socket,
+  next: (err?: Error) => void
+) {
   try {
     const token =
       socket.handshake.auth.token || socket.handshake.headers.authorization;

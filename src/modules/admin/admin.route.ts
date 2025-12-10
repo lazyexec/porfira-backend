@@ -1,8 +1,8 @@
 import express from "express";
-import adminController from "./admin.controller.ts";
-import auth from "../../middlewares/auth.ts";
-import validate from "../../middlewares/validate.ts";
-import adminValidation from "./admin.validation.ts";
+import adminController from "./admin.controller";
+import auth from "../../middlewares/auth";
+import validate from "../../middlewares/validate";
+import adminValidation from "./admin.validation";
 
 const router = express.Router();
 
@@ -50,8 +50,6 @@ router
   );
 
 // System revenue
-router
-  .route("/revenue")
-  .get(auth("admin"), adminController.getSystemRevenue);
+router.route("/revenue").get(auth("admin"), adminController.getSystemRevenue);
 
 export default router;

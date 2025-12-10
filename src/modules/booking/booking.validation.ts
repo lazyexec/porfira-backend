@@ -1,5 +1,5 @@
 import Joi from "joi";
-import validator from "../../utils/validator.ts";
+import validator from "../../utils/validator";
 
 const claimBooking = {
   body: Joi.object().keys({

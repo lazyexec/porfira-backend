@@ -1,7 +1,7 @@
-import ApiError from "../../utils/ApiError.ts";
-import { conversationModel, messageModel } from "./message.model.ts";
+import ApiError from "../../utils/ApiError";
+import { conversationModel, messageModel } from "./message.model";
 import httpStatus from "http-status";
-import User from "../user/user.model.ts";
+import User from "../user/user.model";
 
 /*
     Conversation Services
@@ -108,7 +108,7 @@ const getMessages = async (
   if (filter.search) {
     query.content = { $regex: filter.search, $options: "i" };
   }
-  console.log({query, options});
+  console.log({ query, options });
   const messages = await messageModel.paginate(query, options);
   return messages;
 };

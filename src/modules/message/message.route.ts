@@ -1,10 +1,10 @@
 import { Router } from "express";
-import auth from "../../middlewares/auth.ts";
-import messageController from "./message.controller.ts";
-import fileUploader from "../../middlewares/fileUploader.ts";
-import uploadTypes from "../../utils/fileTypes.ts";
-import validate from "../../middlewares/validate.ts";
-import messageValidation from "./message.validation.ts";
+import auth from "../../middlewares/auth";
+import messageController from "./message.controller";
+import fileUploader from "../../middlewares/fileUploader";
+import uploadTypes from "../../utils/fileTypes";
+import validate from "../../middlewares/validate";
+import messageValidation from "./message.validation";
 const fileUploaderMessage = fileUploader("./public/uploads/messages");
 
 const router = Router();

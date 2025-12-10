@@ -1,8 +1,8 @@
 import express from "express";
-import reviewController from "./review.controller.ts";
-import auth from "../../middlewares/auth.ts";
-import validate from "../../middlewares/validate.ts";
-import reviewValidation from "./review.validation.ts";
+import reviewController from "./review.controller";
+import auth from "../../middlewares/auth";
+import validate from "../../middlewares/validate";
+import reviewValidation from "./review.validation";
 
 const router = express.Router();
 

@@ -1,7 +1,7 @@
 import firebase from "firebase-admin";
 import { initializeApp } from "firebase-admin/app";
-import env from "./env.ts";
-import logger from "../utils/logger.ts";
+import env from "./env";
+import logger from "../utils/logger";
 
 let admin: any;
 

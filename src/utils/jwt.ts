@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import env from "../configs/env.ts";
-import ApiError from "./ApiError.ts";
+import env from "../configs/env";
+import ApiError from "./ApiError";
 import status from "http-status";
 
 const decodeToken = (token: string): any => {

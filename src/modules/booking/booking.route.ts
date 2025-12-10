@@ -1,8 +1,8 @@
 import express from "express";
-import bookingController from "./booking.controller.ts";
-import auth from "../../middlewares/auth.ts";
-import validate from "../../middlewares/validate.ts";
-import bookingValidation from "./booking.validation.ts";
+import bookingController from "./booking.controller";
+import auth from "../../middlewares/auth";
+import validate from "../../middlewares/validate";
+import bookingValidation from "./booking.validation";
 
 const router = express.Router();
 

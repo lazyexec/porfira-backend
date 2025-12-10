@@ -1,6 +1,6 @@
 import Joi from "joi";
-import { roles } from "../../configs/roles.ts";
-import validator from "../../utils/validator.ts";
+import { roles } from "../../configs/roles";
+import validator from "../../utils/validator";
 
 const register = {
   body: Joi.object({

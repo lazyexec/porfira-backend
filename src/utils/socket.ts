@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
-import logger from "./logger.ts";
-import socketAuth from "../middlewares/socketAuth.ts";
-import messageSocket from "../modules/message/message.socket.ts";
+import logger from "./logger";
+import socketAuth from "../middlewares/socketAuth";
+import messageSocket from "../modules/message/message.socket";
 
 export default function socketIO(io: Server) {
   io.use(async (socket: Socket, next: (err?: Error) => void) => {

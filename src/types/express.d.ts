@@ -1,4 +1,4 @@
-import { IUser } from "../modules/user/user.model.ts";
+import { IUser } from "../modules/user/user.model";
 
 interface DeviceInfo {
   userAgent: string;

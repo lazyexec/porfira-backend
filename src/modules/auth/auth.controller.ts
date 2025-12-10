@@ -1,12 +1,12 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import { Types } from "mongoose";
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
-import userService from "../user/user.service.ts";
-import authService from "./auth.service.ts";
-import ApiError from "../../utils/ApiError.ts";
-import response from "../../configs/response.ts";
-import tokenService from "../token/token.service.ts";
+import userService from "../user/user.service";
+import authService from "./auth.service";
+import ApiError from "../../utils/ApiError";
+import response from "../../configs/response";
+import tokenService from "../token/token.service";
 
 const register = catchAsync(async (req: Request, res: Response) => {
   const { email, name, ...rest } = req.body;

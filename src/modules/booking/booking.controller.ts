@@ -1,11 +1,11 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
-import ApiError from "../../utils/ApiError.ts";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
-import pick from "../../utils/pick.ts";
-import bookingService from "./booking.service.ts";
-import stripe from "../../configs/stripe.ts";
+import response from "../../configs/response";
+import pick from "../../utils/pick";
+import bookingService from "./booking.service";
+import stripe from "../../configs/stripe";
 
 const claimBooking = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;

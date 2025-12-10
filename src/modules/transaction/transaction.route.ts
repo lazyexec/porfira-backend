@@ -1,9 +1,9 @@
 import express from "express";
-import auth from "../../middlewares/auth.ts";
-import validate from "../../middlewares/validate.ts";
-import transactionValidation from "./transaction.validation.ts";
-import transactionController from "./transaction.controller.ts";
-import stripeController from "../stripe/stripe.controller.ts";
+import auth from "../../middlewares/auth";
+import validate from "../../middlewares/validate";
+import transactionValidation from "./transaction.validation";
+import transactionController from "./transaction.controller";
+import stripeController from "../stripe/stripe.controller";
 
 const router = express.Router();
 

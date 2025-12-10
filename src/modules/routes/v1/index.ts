@@ -1,14 +1,14 @@
 import express, { Router } from "express";
-import authRouter from "../../auth/auth.route.ts";
-import userRouter from "../../user/user.route.ts";
-import reviewRouter from "../../review/review.route.ts";
-import socialRouter from "../../social/social.route.ts";
-import adminRouter from "../../admin/admin.route.ts";
-import bookingRouter from "../../booking/booking.route.ts";
-import notificationRouter from "../../notification/notification.route.ts";
-import transactionRouter from "../../transaction/transaction.route.ts";
-import messageRouter from "../../message/message.route.ts";
-import dashboardRouter from "../../dashboard/dashboard.route.ts";
+import authRouter from "../../auth/auth.route";
+import userRouter from "../../user/user.route";
+import reviewRouter from "../../review/review.route";
+import socialRouter from "../../social/social.route";
+import adminRouter from "../../admin/admin.route";
+import bookingRouter from "../../booking/booking.route";
+import notificationRouter from "../../notification/notification.route";
+import transactionRouter from "../../transaction/transaction.route";
+import messageRouter from "../../message/message.route";
+import dashboardRouter from "../../dashboard/dashboard.route";
 
 const mainRouter: Router = express.Router();
 

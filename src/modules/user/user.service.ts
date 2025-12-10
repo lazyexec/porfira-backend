@@ -1,7 +1,7 @@
 import type { Types } from "mongoose";
-import User from "./user.model.ts";
-import email from "../../configs/email.ts";
-import ApiError from "../../utils/ApiError.ts";
+import User from "./user.model";
+import email from "../../configs/email";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
 
 interface UploadedFiles {

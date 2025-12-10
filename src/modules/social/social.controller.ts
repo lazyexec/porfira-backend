@@ -1,10 +1,10 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
-import ApiError from "../../utils/ApiError.ts";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
-import pick from "../../utils/pick.ts";
-import feedService from "./social.service.ts";
+import response from "../../configs/response";
+import pick from "../../utils/pick";
+import feedService from "./social.service";
 
 const queryTeachers = catchAsync(async (req: Request, res: Response) => {
   const options = pick(req.query, ["page", "limit", "sort"]);
@@ -30,11 +30,7 @@ const queryTeachers = catchAsync(async (req: Request, res: Response) => {
 
 const queryStudents = catchAsync(async (req: Request, res: Response) => {
   const options = pick(req.query, ["page", "limit", "sort"]);
-  const filter = pick(req.query, [
-    "name",
-    "subject",
-    "language",
-  ]);
+  const filter = pick(req.query, ["name", "subject", "language"]);
   const review = await feedService.queryStudents(filter, options);
 
   res.status(httpStatus.OK).json(

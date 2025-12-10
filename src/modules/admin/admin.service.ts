@@ -1,11 +1,11 @@
-import User from "../user/user.model.ts";
-import Transaction from "../transaction/transaction.model.ts";
-import transactionService from "../transaction/transaction.service.ts";
-import ApiError from "../../utils/ApiError.ts";
+import User from "../user/user.model";
+import Transaction from "../transaction/transaction.model";
+import transactionService from "../transaction/transaction.service";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
 import type { Types } from "mongoose";
-import Lesson from "../booking/booking.model.ts";
-import stripe from "../../configs/stripe.ts";
+import Lesson from "../booking/booking.model";
+import stripe from "../../configs/stripe";
 
 /**
  * Approve teacher application

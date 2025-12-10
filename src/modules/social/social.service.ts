@@ -1,6 +1,6 @@
-import ApiError from "../../utils/ApiError.ts";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import User from "../user/user.model.ts";
+import User from "../user/user.model";
 
 const queryTeachers = async (filter: any, options: object) => {
   const query: any = {

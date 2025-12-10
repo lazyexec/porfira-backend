@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import type { IReview, IReviewModel } from "./review.interface.ts";
+import type { IReview, IReviewModel } from "./review.interface";
 import mongoosePaginate from "mongoose-paginate-v2";
-import hideFields from "../../plugins/mongoose/hideFields.plugin.ts";
+import hideFields from "../../plugins/mongoose/hideFields.plugin";
 
 const reviewSchema = new mongoose.Schema(
   {

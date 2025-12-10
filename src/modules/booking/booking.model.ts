@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
-import hideFields from "../../plugins/mongoose/hideFields.plugin.ts";
-import type { IBooking, IBookingModel } from "./booking.interface.ts";
+import hideFields from "../../plugins/mongoose/hideFields.plugin";
+import type { IBooking, IBookingModel } from "./booking.interface";
 
 const bookingSchema = new mongoose.Schema<IBooking>(
   {
@@ -43,7 +43,14 @@ const bookingSchema = new mongoose.Schema<IBooking>(
     },
     status: {
       type: String,
-      enum: ["unpaid", "pending", "rejected", "completed", "scheduled", "cancelled"],
+      enum: [
+        "unpaid",
+        "pending",
+        "rejected",
+        "completed",
+        "scheduled",
+        "cancelled",
+      ],
       default: "unpaid",
     },
   },
