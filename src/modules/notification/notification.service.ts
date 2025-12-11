@@ -72,21 +72,17 @@ const pushNotification = async (
 };
 
 const createNotification = async (
-  sender: string,
-  receiver: string,
+  user: string,
   title: string,
   description: string
 ): Promise<void> => {
   try {
     const notification = new Notification({
-      sender,
-      receiver,
+      user,
       title,
       description,
     });
-    const receiverToken = await User.findOne({ _id: receiver }).select(
-      "fcmToken"
-    );
+    const receiverToken = await User.findOne({ _id: user }).select("fcmToken");
     if (receiverToken?.fcmToken) {
       await pushNotification(receiverToken.fcmToken, {
         title,
@@ -104,7 +100,7 @@ const deleteNotification = async (
   notificationId: string
 ): Promise<void> => {
   try {
-    await Notification.deleteOne({ _id: notificationId, receiver: userId });
+    await Notification.deleteOne({ _id: notificationId, user: userId });
   } catch (error: any) {
     throw new ApiError(httpStatus.BAD_REQUEST, error.message);
   }
@@ -116,7 +112,7 @@ const getAllNotifications = async (
 ): Promise<any> => {
   try {
     const notifications = await Notification.paginate(
-      { receiver: userId },
+      { user: userId },
       options
     );
     return notifications;
@@ -125,9 +121,31 @@ const getAllNotifications = async (
   }
 };
 
+const clearAllNotification = async (userId: string) => {
+  return await Notification.deleteMany({ user: userId });
+};
+
+const lessonConfirmationNotification = async (
+  student: string,
+  teacher: string
+) => {
+  await createNotification(
+    student,
+    "Lesson Confirmation",
+    "Your lesson has been confirmed"
+  );
+  await createNotification(
+    teacher,
+    "Lesson Confirmation",
+    "Your lesson has been confirmed"
+  );
+};
+
 export default {
   pushNotification,
   createNotification,
   deleteNotification,
   getAllNotifications,
+  clearAllNotification,
+  lessonConfirmationNotification,
 };

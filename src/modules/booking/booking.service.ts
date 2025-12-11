@@ -5,6 +5,7 @@ import transactionService from "../transaction/transaction.service";
 import Booking from "./booking.model";
 import stripe from "../../configs/stripe";
 import Transaction from "../transaction/transaction.model";
+import notificationService from "../notification/notification.service";
 function addHours(date: Date, hoursToAdd: number) {
   const newDate = new Date(date);
   newDate.setHours(newDate.getHours() + hoursToAdd);
@@ -115,6 +116,10 @@ const confirmSession = async (stripeEvent: any) => {
           { status: "scheduled" },
           { new: true }
         );
+        await notificationService.lessonConfirmationNotification(
+          booking?.student?.toString()!,
+          booking?.teacher?.toString()!
+        );
       }
       break;
     default:
@@ -142,7 +147,15 @@ const rePayment = async (bookingId: string) => {
   }
 
   const user = await userService.getUserById(booking?.teacher.toString());
-  const stripeAccountId = user?.teacher?.stripeAccountId;
+  const stripeAccountId =
+    user?.teacher?.stripeAccountId || "ca_FkyHCg7X8mlvCUdMDao4mMxagUfhIwXb";
+  // TODO: Change Business logic, for now removing stripeAccountId
+  console.log({
+    transaction,
+    priceId: transaction?.priceId,
+    stripeAccountId,
+    platformFee: transaction?.platformFee,
+  });
 
   if (
     !transaction ||

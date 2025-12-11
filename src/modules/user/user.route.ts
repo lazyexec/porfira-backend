@@ -4,35 +4,24 @@ import auth from "../../middlewares/auth";
 import validate from "../../middlewares/validate";
 import userValidation from "./user.validation";
 import userFileUploadMiddleware from "../../middlewares/fileUploader";
-import uploadTypes from "../../utils/fileTypes";
-
-const UPLOADS_FOLDER_AVATARS = "./public/uploads/avatars";
-const UPLOADS_FOLDER_CONTENT = "./public/uploads/content";
-const UPLOADS_FOLDER_DOCUMENTS = "./public/uploads/documents";
-
-const uploadAvatar = userFileUploadMiddleware(UPLOADS_FOLDER_AVATARS);
-const uploadContent = userFileUploadMiddleware(UPLOADS_FOLDER_CONTENT);
-const uploadDocuments = userFileUploadMiddleware(UPLOADS_FOLDER_DOCUMENTS);
+const uploadAll = userFileUploadMiddleware("./public/uploads/all").fields([
+  { name: "avatar", maxCount: 1 },
+  { name: "content", maxCount: 1 },
+  { name: "documents", maxCount: 2 },
+]);
 
 const router = express.Router();
 
 router.route("/self/in").get(auth("common"), userController.getProfile);
 
-router.route("/self/update").patch(
-  auth("common"),
-  validate(userValidation.updateProfile),
-  (req, res, next) => {
-    // Chain uploads: avatar -> content -> documents
-    uploadAvatar.fields([{ name: "avatar", maxCount: 1 }])(req, res, (err) => {
-      if (err) return next(err);
-      uploadContent.fields([{ name: "content", maxCount: 1 }])(req, res, (err) => {
-        if (err) return next(err);
-        uploadDocuments.fields([{ name: "documents", maxCount: 2 }])(req, res, next);
-      });
-    });
-  },
-  userController.updateProfile
-);
+router
+  .route("/self/update")
+  .patch(
+    auth("common"),
+    uploadAll,
+    validate(userValidation.updateProfile),
+    userController.updateProfile
+  );
 
 // Admin Route
 router

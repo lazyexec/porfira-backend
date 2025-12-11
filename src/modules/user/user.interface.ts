@@ -8,7 +8,7 @@ export interface ITeacher {
   yearsOfTeachingExp?: number | null;
   subjectsTaught?: string[] | null;
   stripePriceId?: string | null;
-  stripeAccountId?: string | null;
+  stripeAccountId?: string| null;
   stripeOnboardingComplete?: boolean;
   stripePayoutsEnabled?: boolean;
   hourlyRate?: number | null;

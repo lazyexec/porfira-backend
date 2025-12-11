@@ -8,8 +8,7 @@ import hideFields from "../../plugins/mongoose/hideFields.plugin";
 
 const notificationSchema = new mongoose.Schema<INotification>(
   {
-    sender: mongoose.Types.ObjectId,
-    receiver: mongoose.Types.ObjectId,
+    user: mongoose.Types.ObjectId,
     title: String,
     description: String,
     transactionId: String,

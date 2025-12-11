@@ -18,7 +18,7 @@ import type {
 const conversationSchema = new Schema<IConversation>(
   {
     participants: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
       required: true,
     },
     lastMessage: {
@@ -46,7 +46,7 @@ const messageSchema = new Schema<IMessage>(
     sender: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "User",
+      ref: "user",
     },
     type: {
       type: String,
@@ -85,7 +85,7 @@ conversationSchema.statics.findByParticipants = async function (
 ) {
   return this.findOne({
     participants: { $all: [userId1, userId2], $size: 2 },
-  });
+  }).populate("participants", "name email avatar");
 };
 
 const conversationModel = mongoose.model<IConversation, IConversationModel>(

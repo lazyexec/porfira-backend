@@ -1,8 +1,7 @@
 import { Model, Types } from "mongoose";
 
 export interface INotification {
-  sender: Types.ObjectId | string;
-  receiver: Types.ObjectId | string;
+  user: Types.ObjectId | string;
   title: string;
   description: string;
   transactionId: string | null;

@@ -7,7 +7,7 @@ import pick from "../../utils/pick";
 
 const getAllTransactions = catchAsync(async (req: Request, res: Response) => {
   const filter = pick(req.query, []);
-  const options = pick(req.query, ["sort", "limit", "page", "populate"]);
+  const options = pick(req.query, ["sort", "limit", "page"]);
   const transactions = await transactionService.getAllTransactions(
     filter,
     options

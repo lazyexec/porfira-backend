@@ -11,7 +11,6 @@ const createNotification = catchAsync(async (req: Request, res: Response) => {
     "",
     "",
     "",
-    ""
   );
   res.status(httpStatus.OK).json(
     response({
@@ -38,7 +37,7 @@ const deleteNotification = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllNotifications = catchAsync(async (req: Request, res: Response) => {
-  const options = pick(req.query, ["sort", "limit", "page", "populate"]);
+  const options = pick(req.query, ["sort", "limit", "page"]);
   const userId = req.user?.id!;
   const notifications = await notificationService.getAllNotifications(
     userId,
@@ -53,8 +52,22 @@ const getAllNotifications = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const deleteAllNotification = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.user?.id as string;
+    await notificationService.clearAllNotification(userId);
+    res.status(httpStatus.OK).json(
+      response({
+        status: httpStatus.OK,
+        message: "Notifications Cleared Successfully",
+        data: {},
+      })
+    );
+  }
+);
 export default {
   createNotification,
   deleteNotification,
   getAllNotifications,
+  deleteAllNotification
 };

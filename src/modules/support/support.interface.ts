@@ -4,7 +4,6 @@ export interface ISupportTicket extends Document {
     user: Types.ObjectId | string;
     subject: string;
     status: "open" | "in-progress" | "resolved" | "closed";
-    priority: "low" | "medium" | "high";
     lastMessage?: Types.ObjectId | string;
     lastMessageAt?: Date;
     createdAt?: Date;

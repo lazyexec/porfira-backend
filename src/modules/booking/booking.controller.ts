@@ -64,7 +64,6 @@ const getTeacherBookings = catchAsync(async (req: Request, res: Response) => {
     "sort",
     "limit",
     "page",
-    "populate",
     "status",
   ]);
   const booking = await bookingService.getBookingsTeacher(teacherId, options);
@@ -86,7 +85,6 @@ const getStudentBookings = catchAsync(async (req: Request, res: Response) => {
     "sort",
     "limit",
     "page",
-    "populate",
     "status",
   ]);
   const booking = await bookingService.getStudentBookings(studentId, options);
@@ -104,7 +102,6 @@ const getBookings = catchAsync(async (req: Request, res: Response) => {
     "sort",
     "limit",
     "page",
-    "populate",
     "status",
   ]);
   const booking = await bookingService.getBookings(options);

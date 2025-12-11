@@ -19,6 +19,7 @@ declare global {
       id?: string;
       role?: string;
       name?: string;
+      fcmToken?: string
     }
 
     interface Request {

@@ -9,19 +9,18 @@ import pick from "../../utils/pick";
  * @route POST /api/v1/support/tickets
  */
 const createTicket = catchAsync(async (req: Request, res: Response) => {
-    const { subject, priority, initialMessage } = req.body;
-    const ticket = await supportService.createTicket(
-        req.user?.id!,
-        subject,
-        priority || "medium",
-        initialMessage
-    );
+  const { subject, initialMessage } = req.body;
+  const ticket = await supportService.createTicket(
+    req.user?.id!,
+    subject,
+    initialMessage
+  );
 
-    res.status(httpStatus.CREATED).json({
-        success: true,
-        message: "Support ticket created successfully",
-        data: ticket,
-    });
+  res.status(httpStatus.CREATED).json({
+    success: true,
+    message: "Support ticket created successfully",
+    data: ticket,
+  });
 });
 
 /**
@@ -29,22 +28,22 @@ const createTicket = catchAsync(async (req: Request, res: Response) => {
  * @route GET /api/v1/support/tickets
  */
 const getTickets = catchAsync(async (req: Request, res: Response) => {
-    const filter = pick(req.query, ["status", "priority"]);
-    const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const filter = pick(req.query, ["status"]);
+  const options = pick(req.query, ["sort", "limit", "page"]);
 
-    const isAdmin = req.user?.role === "admin";
-    const tickets = await supportService.getTickets(
-        filter,
-        options,
-        req.user?.id,
-        isAdmin
-    );
+  const isAdmin = req.user?.role === "admin";
+  const tickets = await supportService.getTickets(
+    filter,
+    options,
+    req.user?.id,
+    isAdmin
+  );
 
-    res.status(httpStatus.OK).json({
-        success: true,
-        message: "Tickets retrieved successfully",
-        data: tickets,
-    });
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Tickets retrieved successfully",
+    data: tickets,
+  });
 });
 
 /**
@@ -52,18 +51,18 @@ const getTickets = catchAsync(async (req: Request, res: Response) => {
  * @route GET /api/v1/support/tickets/:ticketId
  */
 const getTicket = catchAsync(async (req: Request, res: Response) => {
-    const isAdmin = req.user?.role === "admin";
-    const ticket = await supportService.getTicketById(
-        req.params.ticketId,
-        req.user?.id,
-        isAdmin
-    );
+  const isAdmin = req.user?.role === "admin";
+  const ticket = await supportService.getTicketById(
+    req.params.ticketId,
+    req.user?.id,
+    isAdmin
+  );
 
-    res.status(httpStatus.OK).json({
-        success: true,
-        message: "Ticket retrieved successfully",
-        data: ticket,
-    });
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Ticket retrieved successfully",
+    data: ticket,
+  });
 });
 
 /**
@@ -71,35 +70,37 @@ const getTicket = catchAsync(async (req: Request, res: Response) => {
  * @route PATCH /api/v1/support/tickets/:ticketId/status
  */
 const updateTicketStatus = catchAsync(async (req: Request, res: Response) => {
-    const { status } = req.body;
-    const user = req.user;
-    const isAdmin = user?.role === "admin";
+  const { status } = req.body;
+  const user = req.user;
+  const isAdmin = user?.role === "admin";
 
-    const ticket = await supportService.updateTicketStatus(
-        req.params.ticketId,
-        status,
-        user?.id!,
-        isAdmin
-    );
+  const ticket = await supportService.updateTicketStatus(
+    req.params.ticketId,
+    status,
+    user?.id!,
+    isAdmin
+  );
 
-    // Emit socket event for realtime update
-    if (global.io) {
-        global.io.to(`support-${req.params.ticketId}`).emit("support-status-changed", {
-            ticketId: req.params.ticketId,
-            status: ticket.status,
-            updatedBy: {
-                id: user?.id,
-                name: user?.name,
-                isAdmin,
-            },
-        });
-    }
+  // Emit socket event for realtime update
+  if (global.io) {
+    global.io
+      .to(`support-${req.params.ticketId}`)
+      .emit("support-status-changed", {
+        ticketId: req.params.ticketId,
+        status: ticket.status,
+        updatedBy: {
+          id: user?.id,
+          name: user?.name,
+          isAdmin,
+        },
+      });
+  }
 
-    res.status(httpStatus.OK).json({
-        success: true,
-        message: "Ticket status updated successfully",
-        data: ticket,
-    });
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Ticket status updated successfully",
+    data: ticket,
+  });
 });
 
 /**
@@ -107,29 +108,29 @@ const updateTicketStatus = catchAsync(async (req: Request, res: Response) => {
  * @route POST /api/v1/support/tickets/:ticketId/messages
  */
 const sendMessage = catchAsync(async (req: Request, res: Response) => {
-    const { content } = req.body;
-    const isAdmin = req.user?.role === "admin";
+  const { content } = req.body;
+  const isAdmin = req.user?.role === "admin";
 
-    const message = await supportService.createMessage(
-        req.params.ticketId,
-        req.user?.id!,
-        content,
-        isAdmin
-    );
+  const message = await supportService.createMessage(
+    req.params.ticketId,
+    req.user?.id!,
+    content,
+    isAdmin
+  );
 
-    // Emit socket event for realtime update
-    if (global.io) {
-        global.io.to(`support-${req.params.ticketId}`).emit("new-support-message", {
-            ticketId: req.params.ticketId,
-            message,
-        });
-    }
-
-    res.status(httpStatus.CREATED).json({
-        success: true,
-        message: "Message sent successfully",
-        data: message,
+  // Emit socket event for realtime update
+  if (global.io) {
+    global.io.to(`support-${req.params.ticketId}`).emit("new-support-message", {
+      ticketId: req.params.ticketId,
+      message,
     });
+  }
+
+  res.status(httpStatus.CREATED).json({
+    success: true,
+    message: "Message sent successfully",
+    data: message,
+  });
 });
 
 /**
@@ -137,28 +138,28 @@ const sendMessage = catchAsync(async (req: Request, res: Response) => {
  * @route GET /api/v1/support/tickets/:ticketId/messages
  */
 const getMessages = catchAsync(async (req: Request, res: Response) => {
-    const options = pick(req.query, ["sortBy", "limit", "page"]);
-    const isAdmin = req.user?.role === "admin";
+  const options = pick(req.query, ["sort", "limit", "page"]);
+  const isAdmin = req.user?.role === "admin";
 
-    const messages = await supportService.getMessages(
-        req.params.ticketId,
-        options,
-        req.user?.id,
-        isAdmin
-    );
+  const messages = await supportService.getMessages(
+    req.params.ticketId,
+    options,
+    req.user?.id,
+    isAdmin
+  );
 
-    res.status(httpStatus.OK).json({
-        success: true,
-        message: "Messages retrieved successfully",
-        data: messages,
-    });
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Messages retrieved successfully",
+    data: messages,
+  });
 });
 
 export default {
-    createTicket,
-    getTickets,
-    getTicket,
-    updateTicketStatus,
-    sendMessage,
-    getMessages,
+  createTicket,
+  getTickets,
+  getTicket,
+  updateTicketStatus,
+  sendMessage,
+  getMessages,
 };

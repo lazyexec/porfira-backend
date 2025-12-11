@@ -38,7 +38,8 @@ const teacherSchema = new mongoose.Schema<ITeacher>({
   },
   stripeAccountId: {
     type: String,
-    unique: true,
+    default: null,
+    required: false,
   },
   stripeOnboardingComplete: {
     type: Boolean,

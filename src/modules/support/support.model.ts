@@ -1,76 +1,70 @@
 import mongoose, { Schema } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2";
 import type {
-    ISupportTicket,
-    ISupportTicketModel,
-    ISupportMessage,
-    ISupportMessageModel,
+  ISupportTicket,
+  ISupportTicketModel,
+  ISupportMessage,
+  ISupportMessageModel,
 } from "./support.interface";
 
 const supportTicketSchema = new Schema<ISupportTicket>(
-    {
-        user: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "user",
-            required: true,
-        },
-        subject: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        status: {
-            type: String,
-            enum: ["open", "in-progress", "resolved", "closed"],
-            default: "open",
-            required: true,
-        },
-        priority: {
-            type: String,
-            enum: ["low", "medium", "high"],
-            default: "medium",
-            required: true,
-        },
-        lastMessage: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "SupportMessage",
-            required: false,
-        },
-        lastMessageAt: {
-            type: Date,
-            required: false,
-        },
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
     },
-    {
-        timestamps: true,
-    }
+    subject: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    status: {
+      type: String,
+      enum: ["open", "in-progress", "resolved", "closed"],
+      default: "open",
+      required: true,
+    },
+    lastMessage: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SupportMessage",
+      required: false,
+    },
+    lastMessageAt: {
+      type: Date,
+      required: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
 );
 
 const supportMessageSchema = new Schema<ISupportMessage>(
-    {
-        ticket: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "SupportTicket",
-            required: true,
-        },
-        sender: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "user",
-            required: true,
-        },
-        content: {
-            type: String,
-            required: true,
-        },
-        isAdminMessage: {
-            type: Boolean,
-            required: true,
-            default: false,
-        },
+  {
+    ticket: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "SupportTicket",
+      required: true,
     },
-    {
-        timestamps: true,
-    }
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+    content: {
+      type: String,
+      required: true,
+    },
+    isAdminMessage: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
+  }
 );
 
 // Add pagination plugin
@@ -83,13 +77,13 @@ supportTicketSchema.index({ status: 1, lastMessageAt: -1 });
 supportMessageSchema.index({ ticket: 1, createdAt: -1 });
 
 const SupportTicket = mongoose.model<ISupportTicket, ISupportTicketModel>(
-    "SupportTicket",
-    supportTicketSchema
+  "SupportTicket",
+  supportTicketSchema
 );
 
 const SupportMessage = mongoose.model<ISupportMessage, ISupportMessageModel>(
-    "SupportMessage",
-    supportMessageSchema
+  "SupportMessage",
+  supportMessageSchema
 );
 
 export { SupportTicket, SupportMessage };

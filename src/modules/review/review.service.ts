@@ -55,7 +55,7 @@ const updateReview = async (
   }
   Object.assign(review, reviewData);
   await review.save();
-  updateRating(reviewData.toUser.toString());
+  updateRating(review.toUser.toString());
   return review;
 };
 
@@ -73,9 +73,13 @@ const deleteReview = async (reviewId: string) => {
 };
 
 const queryReview = async (filter: object, options: object) => {
+  console.log(filter, options);
   const review = await Review.paginate(filter, {
     ...options,
-    populate: "toUser name avatar,fromUser name avatar",
+    populate: [
+      { path: "fromUser", select: "name avatar" },
+      { path: "toUser", select: "name avatar" },
+    ],
   });
   return review;
 };

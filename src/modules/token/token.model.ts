@@ -21,7 +21,7 @@ const TokenSchema = new Schema<IToken>(
     token: { type: String, required: true }, // hashed token
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "user",
       required: true,
     },
     type: { type: String, required: true },

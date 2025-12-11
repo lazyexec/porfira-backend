@@ -39,7 +39,6 @@ const queryAllUsers = {
     page: Joi.number().default(1),
     limit: Joi.number().default(10),
     sort: Joi.string().default("createdAt desc"),
-    populate: Joi.string(),
     role: Joi.string(),
     isDeleted: Joi.boolean(),
     email: Joi.string().email(),

@@ -20,5 +20,10 @@ router
     validate(notificationValidation.getNotification),
     notificationController.getAllNotifications
   );
+router.delete(
+  "/clear",
+  auth("common"),
+  notificationController.deleteAllNotification
+);
 
 export default router;
