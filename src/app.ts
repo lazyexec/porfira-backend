@@ -1,3 +1,4 @@
+import env from "./configs/env";
 import express, { type Application } from "express";
 import v1Router from "./modules/routes/v1/index";
 import { errorConverter, errorHandler } from "./middlewares/globalErrorHandler";
@@ -8,7 +9,6 @@ import passport from "passport";
 import deviceMiddleware from "./middlewares/device";
 import webhookRouter from "./modules/stripe/stripe.route";
 import morgan from "morgan";
-import env from "./configs/env";
 import cors from "cors";
 
 const app: Application = express();
@@ -32,7 +32,7 @@ app.use(
 // Webhook Route for raw body
 app.use("/api/v1/webhook", webhookRouter);
 // parse json request body
-app.use(express.json());
+app.use(express.json({ limit: "20mb" }));
 // Set security HTTP headers
 app.use(helmet());
 // Parse urlencoded request body
