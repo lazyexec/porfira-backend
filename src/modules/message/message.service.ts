@@ -66,7 +66,7 @@ const getConversation = async (userId: string, conversationId: string) => {
 
 const getConversations = async (userId: string, options: any) => {
   const query = { participants: { $in: userId } };
-  const conversations = await conversationModel.paginate(query, options);
+  const conversations = await conversationModel.paginate(query, {...options, populate: {path: "participants", select: "name avatar"}});
   return conversations;
 };
 
