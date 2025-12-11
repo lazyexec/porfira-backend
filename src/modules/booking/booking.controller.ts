@@ -5,7 +5,6 @@ import httpStatus from "http-status";
 import response from "../../configs/response";
 import pick from "../../utils/pick";
 import bookingService from "./booking.service";
-import stripe from "../../configs/stripe";
 
 const claimBooking = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
@@ -23,7 +22,13 @@ const claimBooking = catchAsync(async (req: Request, res: Response) => {
     subject
   );
   if (claim.url) {
-    res.status(httpStatus.OK).json(claim.url);
+    res.status(httpStatus.OK).json(
+      response({
+        status: httpStatus.OK,
+        message: "Payment URL Generated Successfully",
+        data: claim.url,
+      })
+    );
   } else {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json(
       response({

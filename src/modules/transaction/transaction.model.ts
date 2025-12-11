@@ -17,11 +17,11 @@ const transactionSchema = new mongoose.Schema<ITransaction>(
     },
     transactionId: {
       type: String,
-      required: true,
+      required: false,
     },
     priceId: {
       type: String,
-      required: true,
+      required: false,
     },
     amount: {
       type: Number,

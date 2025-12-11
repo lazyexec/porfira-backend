@@ -1,12 +1,14 @@
 import { configDotenv } from "dotenv";
 import Joi from "joi";
 
-configDotenv();
+if (process.env.NODE_ENV !== "production") {
+  configDotenv();
+}
 
 const validator = Joi.object({
   PORT: Joi.number().default(3000),
   BACKEND_IP: Joi.string().default("localhost"),
-  SOCKET_PORT: Joi.number().default(6001),
+  SOCKET_PORT: Joi.number().default(3001), // This is for only testing purpose
   MONGO_URI: Joi.string().optional(),
   NODE_ENV: Joi.string()
     .required()
