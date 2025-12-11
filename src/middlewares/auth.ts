@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import jwt from "../utils/jwt.ts";
-import ApiError from "../utils/ApiError.ts";
-import { roleRights } from "../configs/roles.ts";
+import jwt from "../utils/jwt";
+import ApiError from "../utils/ApiError";
+import { roleRights } from "../configs/roles";
 import type { Request, Response, NextFunction } from "express";
 import passport from "passport";
 
@@ -34,6 +34,12 @@ const verifyCallback =
       if (!hasRequiredRights && req.params.userId !== user.id) {
         return reject(new ApiError(httpStatus.FORBIDDEN, "Forbidden"));
       }
+    }
+    if (user.isDeleted) {
+      return reject(new ApiError(httpStatus.FORBIDDEN, "Unauthorized Request"));
+    }
+    if (user.isRestricted) {
+      return reject(new ApiError(httpStatus.FORBIDDEN, "User is restricted"));
     }
 
     resolve();

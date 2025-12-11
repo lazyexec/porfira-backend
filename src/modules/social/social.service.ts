@@ -1,15 +1,13 @@
-import ApiError from "../../utils/ApiError.ts";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import User from "../user/user.model.ts";
+import User from "../user/user.model";
 
 const queryTeachers = async (filter: any, options: object) => {
   const query: any = {
     isDeleted: false,
     role: "teacher",
     isEmailVerified: true,
-    teacher: {
-      isAccepted: true,
-    },
+    "teacher.status": "approved",
   };
 
   for (const key of Object.keys(filter)) {
@@ -36,7 +34,6 @@ const queryTeachers = async (filter: any, options: object) => {
       query[key] = filter[key];
     }
   }
-
   const users = await User.paginate(query, options);
   return users;
 };
@@ -46,27 +43,10 @@ const queryStudents = async (filter: any, options: object) => {
     isDeleted: false,
     role: "student",
     isEmailVerified: true,
-    teacher: {
-      isAccepted: true,
-    },
   };
 
   for (const key of Object.keys(filter)) {
-    if (key === "minPrice" || key === "maxPrice") {
-      query.teacher.hourlyRate = {
-        $gte: filter.minPrice,
-        $lte: filter.maxPrice,
-      };
-    } else if (key === "minExperience" || key === "maxExperience") {
-      query.teacher.yearsOfTeachingExp = {
-        $gte: filter.minExperience,
-        $lte: filter.maxExperience,
-      };
-    } else if (key === "minRating" || key === "maxRating") {
-      query.teacher.rating = { $gte: filter.minRating, $lte: filter.maxRating };
-    } else if (key === "subjects") {
-      query.teacher.subjectsTaught = { $in: filter.subjects };
-    } else if (
+    if (
       (key === "name" || key === "subject" || key === "language") &&
       filter[key] !== ""
     ) {
@@ -82,5 +62,5 @@ const queryStudents = async (filter: any, options: object) => {
 
 export default {
   queryTeachers,
-  queryStudents
+  queryStudents,
 };

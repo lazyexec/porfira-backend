@@ -1,16 +1,16 @@
 import mongoose from "mongoose";
-import { roles } from "../../configs/roles.ts";
-import regex from "../../utils/regex.ts";
+import { roles } from "../../configs/roles";
+import regex from "../../utils/regex";
 import bcrypt from "bcrypt";
-import hideFieldsPlugin from "../../plugins/mongoose/hideFields.plugin.ts";
-import paginate from "../../plugins/mongoose/paginate.plugin.ts";
+import hideFieldsPlugin from "../../plugins/mongoose/hideFields.plugin";
+import mongoosePaginate from "mongoose-paginate-v2";
 import type {
   IStudent,
   ITeacher,
   IUser,
   IUserMethods,
   IUserModel,
-} from "./user.interface.ts";
+} from "./user.interface";
 
 const studentSchema = new mongoose.Schema<IStudent>({
   interestedSubjects: {
@@ -35,6 +35,18 @@ const teacherSchema = new mongoose.Schema<ITeacher>({
     type: String,
     default: null,
     required: false,
+  },
+  stripeAccountId: {
+    type: String,
+    unique: true,
+  },
+  stripeOnboardingComplete: {
+    type: Boolean,
+    default: false,
+  },
+  stripePayoutsEnabled: {
+    type: Boolean,
+    default: false,
   },
   hourlyRate: {
     type: Number,
@@ -71,7 +83,7 @@ const teacherSchema = new mongoose.Schema<ITeacher>({
   rating: {
     type: Number,
     required: false,
-    default: null,
+    default: 0,
   },
   balance: {
     type: Number,
@@ -96,10 +108,11 @@ const teacherSchema = new mongoose.Schema<ITeacher>({
       },
     },
   ],
-  isAccepted: {
-    type: Boolean,
+  status: {
+    type: String,
     required: false,
-    default: false,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
   },
 });
 
@@ -178,10 +191,6 @@ const userSchema = new mongoose.Schema<
       required: false,
       default: null,
     },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
     dateOfBirth: {
       type: Date,
       required: false,
@@ -212,13 +221,27 @@ const userSchema = new mongoose.Schema<
       required: false,
       // default: null,
     },
+    // STATUS
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    isRestricted: {
+      type: Boolean,
+      default: false,
+    },
+    restrictionReason: {
+      type: String,
+      required: false,
+      default: null,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-userSchema.plugin(paginate);
+userSchema.plugin(mongoosePaginate);
 userSchema.plugin(hideFieldsPlugin);
 
 // Middleware and Methods

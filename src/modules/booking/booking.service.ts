@@ -1,11 +1,10 @@
-import ApiError from "../../utils/ApiError.ts";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import userService from "../user/user.service.ts";
-import transactionService from "../transaction/transaction.service.ts";
-import Booking from "./booking.model.ts";
-import stripe from "../../configs/stripe.ts";
-import Transaction from "../transaction/transaction.model.ts";
-
+import userService from "../user/user.service";
+import transactionService from "../transaction/transaction.service";
+import Booking from "./booking.model";
+import stripe from "../../configs/stripe";
+import Transaction from "../transaction/transaction.model";
 function addHours(date: Date, hoursToAdd: number) {
   const newDate = new Date(date);
   newDate.setHours(newDate.getHours() + hoursToAdd);
@@ -36,24 +35,22 @@ const claimBooking = async (
   if (!priceId)
     throw new ApiError(400, "Teacher does not have a Stripe price ID");
 
-  const stripeSession = await stripe.createStripeSession({
-    priceId: priceId,
-    quantity: duration,
-    successUrl: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancelUrl: `${process.env.FRONTEND_URL}/cancel`,
-    metadata: {
-      studentId: userId,
-      teacherId: teacherId,
-      teacherEarnings: teacherEarnings.toString(),
-      platformFee: platformFee.toString(),
-    },
-  });
+  //TODO: Handle in different way
+
+  // const stripeAccountId = teacher.teacher?.stripeAccountId;
+  // if (!stripeAccountId) {
+  //   // Fallback to standard flow if no connected account, or throw error depending on strictness
+  //   // Plan implies we should use Connect. I will throw if not present to enforce logic.
+  //   throw new ApiError(
+  //     httpStatus.BAD_REQUEST,
+  //     "Teacher has not set up payouts"
+  //   );
+  // }
 
   // Create transaction record
   const transaction = await transactionService.createTransaction({
     performedBy: userId,
     receivedBy: teacherId,
-    transactionId: stripeSession.id,
     amount: totalAmount,
     platformFee: platformFee,
     teacherEarnings: teacherEarnings,
@@ -62,6 +59,19 @@ const claimBooking = async (
     description: `Booking for ${subject} - ${duration} hour(s)`,
     priceId: priceId,
     meta: {},
+  });
+
+  const stripeSession = await stripe.createStripeSession({
+    priceId: priceId,
+    quantity: duration,
+    successUrl: `${process.env.FRONTEND_URL}/loading`,
+    cancelUrl: `${process.env.FRONTEND_URL}/`,
+    metadata: {
+      transactionId: transaction._id.toString(),
+      app: "porfira-payment",
+    },
+    applicationFeeAmount: platformFee, // Stripe Connect Application Fee
+    transferDestination: "", //stripeAccountId, // Stripe Connect Destination
   });
 
   // Create booking with transaction reference
@@ -81,56 +91,38 @@ const claimBooking = async (
 };
 
 const confirmSession = async (stripeEvent: any) => {
-  const session = stripeEvent.data.object;
+  let session;
+  let booking;
 
-  const stripeSessionId = session.id;
-  const amount = session.amount_total / 100; // Convert from cents to dollars
-  const teacherId = session.metadata.teacherId;
-  const studentId = session.metadata.studentId;
-  const teacherEarnings = parseFloat(session.metadata.teacherEarnings);
-  const platformFee = parseFloat(session.metadata.platformFee);
+  switch (stripeEvent.type) {
+    case "payment_intent.succeeded":
+      session = stripeEvent.data.object;
+      if (
+        session.metadata.app === "porfira-payment" &&
+        session.metadata.transactionId
+      ) {
+        const updatedTransaction = await Transaction.findByIdAndUpdate(
+          session.metadata.transactionId,
+          {
+            status: "completed",
+            transactionId: session.id,
+          },
+          { new: true }
+        );
 
-  if (!teacherId || !studentId) {
-    throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "Missing metadata in Stripe session"
-    );
+        booking = await Booking.findOneAndUpdate(
+          { transaction: updatedTransaction?._id },
+          { status: "scheduled" },
+          { new: true }
+        );
+      }
+      break;
+    default:
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "Invalid event type received from Stripe"
+      );
   }
-
-  const transaction = await Transaction.findOneAndUpdate(
-    { transactionId: stripeSessionId },
-    {
-      status: "completed",
-      meta: {
-        paymentIntent: session.payment_intent,
-        completedAt: new Date(),
-      },
-    },
-    { new: true }
-  );
-
-  if (!transaction) {
-    throw new ApiError(
-      httpStatus.NOT_FOUND,
-      "Transaction not found for this session"
-    );
-  }
-
-  // 2. Update the booking status to scheduled
-  const booking = await Booking.findOneAndUpdate(
-    { transaction: transaction._id },
-    { status: "scheduled" },
-    { new: true }
-  );
-
-  if (!booking) {
-    throw new ApiError(
-      httpStatus.NOT_FOUND,
-      "Booking not found for this transaction"
-    );
-  }
-
-  await userService.syncTeacherBalance(teacherId, teacherEarnings);
 
   return booking;
 };
@@ -145,14 +137,17 @@ const rePayment = async (bookingId: string) => {
     _id: booking.transaction,
   });
 
-  if (booking.status === "unpaid" && transaction?.status === "completed") {
+  if (booking.status !== "unpaid" && transaction?.status === "completed") {
     throw new ApiError(httpStatus.BAD_REQUEST, "Booking is Already Paid");
   }
+
+  const user = await userService.getUserById(booking?.teacher.toString());
+  const stripeAccountId = user?.teacher?.stripeAccountId;
 
   if (
     !transaction ||
     !transaction?.priceId ||
-    !transaction?.teacherEarnings ||
+    !stripeAccountId ||
     !transaction?.platformFee
   ) {
     throw new ApiError(
@@ -164,23 +159,67 @@ const rePayment = async (bookingId: string) => {
   const stripeSession = await stripe.createStripeSession({
     priceId: transaction?.priceId,
     quantity: booking.duration,
-    successUrl: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancelUrl: `${process.env.FRONTEND_URL}/cancel`,
+    successUrl: `${process.env.FRONTEND_URL}/loading`,
+    cancelUrl: `${process.env.FRONTEND_URL}/`,
     metadata: {
-      studentId: booking.student.toString(),
-      teacherId: booking.teacher.toString(),
-      teacherEarnings: transaction.teacherEarnings.toString(),
-      platformFee: transaction.platformFee.toString(),
+      transactionId: transaction._id.toString(),
+      app: "porfira-payment",
     },
+    applicationFeeAmount: transaction.platformFee, // Stripe Connect Application Fee
+    transferDestination: stripeAccountId, // Stripe Connect Destination
   });
 
-  transaction.transactionId = stripeSession.id;
-  await transaction.save();
   return { url: stripeSession.url };
+};
+
+const getBookingsTeacher = async (teacherId: string, options: any) => {
+  const bookings = await Booking.paginate({ teacher: teacherId }, options);
+  return bookings;
+};
+
+const getStudentBookings = async (studentId: string, options: any) => {
+  const bookings = await Booking.paginate({ student: studentId }, options);
+  return bookings;
+};
+
+const getBookings = async (options: any) => {
+  const bookings = await Booking.paginate({}, options);
+  return bookings;
+};
+
+const handleRefund = async (paymentIntentId: string) => {
+  // Find transaction by payment intent in meta or transactionId (if we store PI there?)
+  // Actually confirmSession stores paymentIntent in meta.paymentIntent
+
+  const transaction = await Transaction.findOne({
+    "meta.paymentIntent": paymentIntentId,
+  });
+
+  if (!transaction) {
+    throw new ApiError(
+      httpStatus.NOT_FOUND,
+      "Transaction not found for refund"
+    );
+  }
+
+  transaction.status = "refunded"; // Assuming enum supports this, or 'failed'
+  await transaction.save();
+
+  const booking = await Booking.findOneAndUpdate(
+    { transaction: transaction._id },
+    { status: "cancelled" }, // or 'refunded' if enum supports
+    { new: true }
+  );
+
+  return booking;
 };
 
 export default {
   claimBooking,
   confirmSession,
   rePayment,
+  getBookingsTeacher,
+  getStudentBookings,
+  getBookings,
+  handleRefund,
 };

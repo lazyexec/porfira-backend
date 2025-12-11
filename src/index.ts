@@ -1,14 +1,76 @@
-import database from "./configs/database.ts";
-import env from "./configs/env.ts";
-import app from "./app.ts";
-import logger from "./utils/logger.ts";
+import http from "http";
+import { Server, Server as SocketIOServer } from "socket.io";
+import app from "./app";
+import logger from "./utils/logger";
+import env from "./configs/env";
+import database from "./configs/database";
+import socketIO from "./utils/socket";
 
-if (env.DEBUG) {
-  database.connect();
-  // Adding listen for debugging purposes
-  app.listen(env.PORT, () => {
-    logger.info(`Server running on http://localhost:${env.PORT}`);
-  });
-}
+let server = http.createServer(app);
+const startServer = async () => {
+  try {
+    await database.connect();
+    let io;
+    if (env.DEBUG) {
+      const socketServer = http.createServer(app);
+      io = new SocketIOServer(socketServer, {
+        cors: {
+          origin: env.FRONTEND_URL,
+          // methods: ["GET", "POST"],
+        },
+      });
+      socketServer.listen(env.SOCKET_PORT, env.BACKEND_IP, () => {
+        logger.success(
+          `Socket server running on http://${env.BACKEND_IP}:${env.SOCKET_PORT}`
+        );
+      });
+    } else {
+      io = new SocketIOServer(server, {
+        cors: {
+          origin: env.FRONTEND_URL,
+          // methods: ["GET", "POST"],
+        },
+      });
+    }
 
-console.log(env);
+    global.io = io;
+    socketIO(io);
+
+    server.listen(env.PORT, env.BACKEND_IP, () => {
+      logger.success(
+        `API Server running on http://${env.BACKEND_IP}:${env.PORT}`
+      );
+    });
+  } catch (err) {
+    logger.error("Failed to start server:", err);
+    process.exit(1);
+  }
+};
+
+startServer();
+
+const exitHandler = () => {
+  if (server) {
+    server.close(() => {
+      logger.info("Server closed");
+      process.exit(1);
+    });
+  } else {
+    process.exit(1);
+  }
+};
+
+const unexpectedErrorHandler = (error: unknown) => {
+  logger.error("Unexpected Error:", error);
+  exitHandler();
+};
+
+process.on("uncaughtException", unexpectedErrorHandler);
+process.on("unhandledRejection", unexpectedErrorHandler);
+
+process.on("SIGTERM", () => {
+  logger.info("SIGTERM received");
+  if (server) {
+    server.close();
+  }
+});

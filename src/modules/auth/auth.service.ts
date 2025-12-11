@@ -1,8 +1,9 @@
-import emailHelper from "../../configs/email.ts";
-import ApiError from "../../utils/ApiError.ts";
-import { randomOtp } from "../../utils/otp.ts";
-import User from "../user/user.model.ts";
+import emailHelper from "../../configs/email";
+import ApiError from "../../utils/ApiError";
+import { randomOtp } from "../../utils/otp";
+import User from "../user/user.model";
 import http from "http-status";
+import Token from "../token/token.model";
 
 const register = async (userData: object) => {
   const otp = randomOtp();
@@ -23,6 +24,10 @@ const verifyAccount = async (email: string, code: string) => {
     throw new ApiError(http.BAD_REQUEST, "Email is already verified");
   }
   if (user.onTimeCodeExpires && user.onTimeCodeExpires < new Date()) {
+    await User.findOneAndUpdate(
+      { email, oneTimeCode: code },
+      { oneTimeCode: null, onTimeCodeExpires: null }
+    );
     throw new ApiError(http.FORBIDDEN, "OTP has expired");
   }
   user.isEmailVerified = true;
@@ -105,6 +110,21 @@ const changePassword = async (
   return user;
 };
 
+const deleteAccount = async (userId: any) => {
+  const user = await User.findOne({ _id: userId, isDeleted: false });
+  if (!user) {
+    throw new ApiError(http.UNAUTHORIZED, "User not found");
+  }
+  const token = await Token.findOne({ user: user._id });
+  if (!token) {
+    throw new ApiError(http.UNAUTHORIZED, "User not found");
+  }
+  token.deleteOne();
+  user.isDeleted = true;
+  await user.save();
+  return user;
+};
+
 export default {
   // Utility Functions
   // getUserByEmail,
@@ -115,4 +135,5 @@ export default {
   forgotPassword,
   resetPassword,
   changePassword,
+  deleteAccount,
 };

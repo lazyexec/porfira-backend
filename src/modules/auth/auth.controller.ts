@@ -1,11 +1,12 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
+import { Types } from "mongoose";
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
-import userService from "../user/user.service.ts";
-import authService from "./auth.service.ts";
-import ApiError from "../../utils/ApiError.ts";
-import response from "../../configs/response.ts";
-import tokenService from "../token/token.service.ts";
+import userService from "../user/user.service";
+import authService from "./auth.service";
+import ApiError from "../../utils/ApiError";
+import response from "../../configs/response";
+import tokenService from "../token/token.service";
 
 const register = catchAsync(async (req: Request, res: Response) => {
   const { email, name, ...rest } = req.body;
@@ -16,11 +17,15 @@ const register = catchAsync(async (req: Request, res: Response) => {
   }
 
   if (user && user.isDeleted) {
-    await userService.updateUser(user._id?.toString(), {
-      name,
-      email,
-      ...rest,
-    });
+    await userService.updateUser(
+      user._id?.toString(),
+      {
+        name,
+        email,
+        ...rest,
+      },
+      {}
+    );
   } else {
     await authService.register({
       name,
@@ -40,7 +45,7 @@ const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await authService.login(email, password);
   const token = await tokenService.generateUserTokens({
-    userId: user._id,
+    userId: user._id as Types.ObjectId,
     deviceId: req.device?.host || null,
     ip: req.device?.ip || null,
     userAgent: req.get("User-Agent") || null,
@@ -59,7 +64,7 @@ const verifyAccount = catchAsync(async (req: Request, res: Response) => {
   const { email, code } = req.body;
   const user = await authService.verifyAccount(email, code);
   const token = await tokenService.generateUserTokens({
-    userId: user._id,
+    userId: user._id as Types.ObjectId,
     deviceId: req.device?.host || null,
     ip: req.device?.ip || null,
     userAgent: req.get("User-Agent") || null,
@@ -84,7 +89,11 @@ const logout = catchAsync(async (req: Request, res: Response) => {
 
 const refreshTokens = catchAsync(async (req: Request, res: Response) => {
   const refreshToken = req.body.refreshToken;
-  const token = await tokenService.generateUserTokens(refreshToken);
+  const token = await tokenService.refreshAuth(refreshToken, {
+    ip: req.device?.ip || null,
+    userAgent: req.get("User-Agent") || null,
+    deviceId: req.device?.host || null,
+  });
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,
@@ -110,8 +119,8 @@ const forgotPassword = catchAsync(async (req: Request, res: Response) => {
 });
 
 const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  const { email, otp, newPassword } = req.body;
-  await authService.resetPassword(email, otp, newPassword);
+  const { email, otp, password } = req.body;
+  await authService.resetPassword(email, otp, password);
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,
@@ -132,6 +141,17 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const deleteAccount = catchAsync(async (req: Request, res: Response) => {
+  const user: any = req.user;
+  await authService.deleteAccount(user?.id);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Account deleted successfully",
+    })
+  );
+});
+
 export default {
   register,
   login,
@@ -141,4 +161,5 @@ export default {
   forgotPassword,
   resetPassword,
   changePassword,
+  deleteAccount,
 };

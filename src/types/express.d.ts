@@ -1,4 +1,4 @@
-import { IUser } from "../modules/user/user.model.ts";
+import { IUser } from "../modules/user/user.model";
 
 interface DeviceInfo {
   userAgent: string;
@@ -16,8 +16,8 @@ interface DeviceInfo {
 declare global {
   namespace Express {
     interface User extends IUser {
-      id: string;
-      role: string;
+      id?: string;
+      role?: string;
     }
 
     interface Request {

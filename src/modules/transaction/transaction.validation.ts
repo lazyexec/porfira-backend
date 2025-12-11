@@ -1,56 +1,41 @@
 import Joi from "joi";
+import validator from "../../utils/validator";
 
-const create = {
-  body: Joi.object().keys({
-    toUser: Joi.string().required().label("To User"),
-    score: Joi.number().required().label("Score"),
-    comment: Joi.string().required().label("Comment"),
-  }),
-};
-
-const update = {
-  params: Joi.object().keys({
-    reviewId: Joi.string().required().label("Review ID"),
-  }),
-  body: Joi.object().keys({
-    score: Joi.number().required(),
-    comment: Joi.string().required(),
-  }),
-};
-
-const deleteReview = {
-  params: Joi.object().keys({
-    reviewId: Joi.string().required().label("Review ID"),
-  }),
-};
-
-const getReviews = {
+const getAllTransactions = {
   query: Joi.object().keys({
     page: Joi.number().optional(),
     limit: Joi.number().optional(),
-    sort: Joi.string().optional(),
-  }),
-  body: Joi.object().keys({
-    teacherId: Joi.string().optional(),
+    sort: Joi.string().default("createdAt desc"),
   }),
 };
 
-const queryReview = {
-  query: Joi.object().keys({
-    page: Joi.number().required().label("Page"),
-    limit: Joi.number().required().label("Limit"),
-    sort: Joi.string().required().label("Sort"),
+const getTransaction = {
+  params: Joi.object().keys({
+    transactionId: Joi.custom(validator.objectId).required(),
   }),
-  body: Joi.object().keys({
-    fromUser: Joi.string().optional(),
-    toUser: Joi.string().optional(),
+};
+
+const getTeacherTransactions = {
+  query: Joi.object().keys({
+    page: Joi.number().optional(),
+    limit: Joi.number().optional(),
+    sort: Joi.string().default("createdAt desc"),
+    status: Joi.string().optional(),
+  }),
+};
+
+const getStudentTransactions = {
+  query: Joi.object().keys({
+    page: Joi.number().optional(),
+    limit: Joi.number().optional(),
+    sort: Joi.string().default("createdAt desc"),
+    status: Joi.string().optional(),
   }),
 };
 
 export default {
-  create,
-  update,
-  deleteReview,
-  getReviews,
-  queryReview,
+  getAllTransactions,
+  getTransaction,
+  getTeacherTransactions,
+  getStudentTransactions,
 };

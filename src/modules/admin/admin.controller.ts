@@ -1,9 +1,9 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
-import pick from "../../utils/pick.ts";
-import adminService from "./admin.service.ts";
+import response from "../../configs/response";
+import pick from "../../utils/pick";
+import adminService from "./admin.service";
 
 const approveTeacher = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -32,7 +32,7 @@ const rejectTeacher = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getPendingTeachers = catchAsync(async (req: Request, res: Response) => {
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const options = pick(req.query, ["sort", "limit", "page"]);
   const teachers = await adminService.getPendingTeachers(options);
 
   res.status(httpStatus.OK).json(
@@ -44,23 +44,9 @@ const getPendingTeachers = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
-const getAllBookings = catchAsync(async (req: Request, res: Response) => {
-  const filter = pick(req.query, ["status", "teacherId", "studentId"]);
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
-  const bookings = await adminService.getAllBookings(filter, options);
-
-  res.status(httpStatus.OK).json(
-    response({
-      status: httpStatus.OK,
-      message: "All bookings retrieved successfully",
-      data: bookings,
-    })
-  );
-});
-
 const getAllTransactions = catchAsync(async (req: Request, res: Response) => {
   const filter = pick(req.query, ["status", "teacherId", "studentId"]);
-  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const options = pick(req.query, ["sort", "limit", "page"]);
   const transactions = await adminService.getAllTransactions(filter, options);
 
   res.status(httpStatus.OK).json(
@@ -101,7 +87,6 @@ export default {
   approveTeacher,
   rejectTeacher,
   getPendingTeachers,
-  getAllBookings,
   getAllTransactions,
   getTeacherEarnings,
   getSystemRevenue,

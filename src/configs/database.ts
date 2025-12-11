@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import env from "./env.ts";
-import ApiError from "../utils/ApiError.ts";
+import env from "./env";
+import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
-import logger from "../utils/logger.ts";
+import logger from "../utils/logger";
 
 const connect = async () => {
   try {

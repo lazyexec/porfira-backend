@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
-import Token from "./token.model.ts";
-import jwt from "../../utils/jwt.ts";
-import ApiError from "../../utils/ApiError.ts";
+import Token from "./token.model";
+import jwt from "../../utils/jwt";
+import ApiError from "../../utils/ApiError";
 import status from "http-status";
-import env from "../../configs/env.ts";
+import env from "../../configs/env";
 
 const saveRefreshToken = async (opts: {
   userId: Types.ObjectId;
@@ -76,7 +76,11 @@ const generateUserTokens = async (opts: {
 
 const refreshAuth = async (
   refreshToken: string,
-  opts?: { ip?: string; userAgent?: string; deviceId?: string }
+  opts?: {
+    ip?: string | null;
+    userAgent?: string | null;
+    deviceId?: string | null;
+  }
 ) => {
   let payload: any;
   try {

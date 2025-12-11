@@ -34,4 +34,33 @@ const updateProfile = {
   }).min(1),
 };
 
-export default { updateProfile };
+const queryAllUsers = {
+  query: Joi.object().keys({
+    page: Joi.number().default(1),
+    limit: Joi.number().default(10),
+    sort: Joi.string().default("createdAt desc"),
+    populate: Joi.string(),
+    role: Joi.string(),
+    isDeleted: Joi.boolean(),
+    email: Joi.string().email(),
+    name: Joi.string(),
+    phoneNumber: Joi.number(),
+  }),
+};
+
+const restrictUser = {
+  params: Joi.object({
+    userId: Joi.string().required(),
+  }),
+  body: Joi.object({
+    reason: Joi.string().required(),
+  }),
+};
+
+const unrestrictUser = {
+  params: Joi.object({
+    userId: Joi.string().required(),
+  }),
+};
+
+export default { updateProfile, queryAllUsers, restrictUser, unrestrictUser };

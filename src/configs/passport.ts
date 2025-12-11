@@ -1,7 +1,7 @@
 import { ExtractJwt, Strategy as JwtStrategy } from "passport-jwt";
-import config from "./env.ts";
-import User from "../modules/user/user.model.ts";
-import { tokenType } from "./tokens.ts";
+import config from "./env";
+import User from "../modules/user/user.model";
+import { tokenType } from "./tokens";
 import passport from "passport";
 
 const jwtOptions = {

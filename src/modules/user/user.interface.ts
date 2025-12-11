@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 
 export interface IStudent {
   interestedSubjects?: string[] | null;
@@ -8,6 +8,9 @@ export interface ITeacher {
   yearsOfTeachingExp?: number | null;
   subjectsTaught?: string[] | null;
   stripePriceId?: string | null;
+  stripeAccountId?: string | null;
+  stripeOnboardingComplete?: boolean;
+  stripePayoutsEnabled?: boolean;
   hourlyRate?: number | null;
   availableTime?: {
     startTime?: string | null;
@@ -16,13 +19,13 @@ export interface ITeacher {
   availableDays?: string[] | null;
   content?: string | null;
   documents?: string[] | null;
-  rating?: number | null;
+  rating?: number | 0;
   qualification?: {
     title: string;
     institution: string;
     year: number;
   }[];
-  isAccepted?: boolean;
+  status?: string;
   balance?: number | null;
 }
 
@@ -31,6 +34,8 @@ export interface IUser {
   avatar: string;
   isEmailVerified: boolean;
   isResetPassword: boolean;
+  id?: Types.ObjectId | string;
+  _id?: Types.ObjectId | string;
   isDeleted: boolean;
   name?: string | null;
   googleAuth?: string | null;
@@ -45,6 +50,8 @@ export interface IUser {
   phoneNumber?: number | null;
   countryCode?: string | null;
   bio?: string | null;
+  isRestricted?: boolean;
+  restrictionReason?: string | null;
 }
 
 export interface IUserMethods {

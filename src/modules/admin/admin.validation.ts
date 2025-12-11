@@ -1,4 +1,5 @@
 import Joi from "joi";
+import validator from "../../utils/validator";
 
 const approveTeacher = {
   params: Joi.object().keys({
@@ -8,13 +9,13 @@ const approveTeacher = {
 
 const rejectTeacher = {
   params: Joi.object().keys({
-    id: Joi.string().required(),
+    id: Joi.custom(validator.objectId).required(),
   }),
 };
 
 const getPendingTeachers = {
   query: Joi.object().keys({
-    sortBy: Joi.string(),
+    sort: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
@@ -30,7 +31,7 @@ const getAllBookings = {
     ),
     teacherId: Joi.string(),
     studentId: Joi.string(),
-    sortBy: Joi.string(),
+    sort: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
@@ -41,7 +42,7 @@ const getAllTransactions = {
     status: Joi.string().valid("pending", "completed", "failed"),
     teacherId: Joi.string(),
     studentId: Joi.string(),
-    sortBy: Joi.string(),
+    sort: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
   }),
@@ -49,7 +50,7 @@ const getAllTransactions = {
 
 const getTeacherEarnings = {
   params: Joi.object().keys({
-    id: Joi.string().required(),
+    id: Joi.custom(validator.objectId).required(),
   }),
 };
 

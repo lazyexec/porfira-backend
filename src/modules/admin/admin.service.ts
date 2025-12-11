@@ -1,11 +1,11 @@
-import User from "../user/user.model.ts";
-import Transaction from "../transaction/transaction.model.ts";
-import transactionService from "../transaction/transaction.service.ts";
-import ApiError from "../../utils/ApiError.ts";
+import User from "../user/user.model";
+import Transaction from "../transaction/transaction.model";
+import transactionService from "../transaction/transaction.service";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
 import type { Types } from "mongoose";
-import Lesson from "../booking/booking.model.ts";
-import stripe from "../../configs/stripe.ts";
+import Lesson from "../booking/booking.model";
+import stripe from "../../configs/stripe";
 
 /**
  * Approve teacher application
@@ -25,13 +25,13 @@ const approveTeacher = async (teacherId: Types.ObjectId) => {
     throw new ApiError(httpStatus.BAD_REQUEST, "User is not a teacher");
   }
 
-  if (teacher.teacher.isAccepted) {
+  if (teacher.teacher.status === "approved") {
     throw new ApiError(httpStatus.BAD_REQUEST, "Teacher is Already Accepted");
   }
 
   const hourlyRate = teacher.teacher?.hourlyRate;
   if (!hourlyRate) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Hourly Rate ");
+    throw new ApiError(httpStatus.BAD_REQUEST, "Teacher Hourly Rate Not Set");
   }
 
   const product = await stripe.stripe.products.create({
@@ -45,7 +45,7 @@ const approveTeacher = async (teacherId: Types.ObjectId) => {
   });
 
   teacher.teacher.stripePriceId = price.id;
-  teacher.teacher.isAccepted = true;
+  teacher.teacher.status = "approved";
   await teacher.save();
 
   return teacher;
@@ -66,7 +66,7 @@ const rejectTeacher = async (teacherId: Types.ObjectId) => {
     throw new ApiError(httpStatus.BAD_REQUEST, "User is not a teacher");
   }
 
-  teacher.teacher.isAccepted = false;
+  teacher.teacher.status = "rejected";
   await teacher.save();
 
   return teacher;
@@ -76,7 +76,7 @@ const getPendingTeachers = async (options: Record<string, any>) => {
   const teachers = await User.paginate(
     {
       role: "teacher",
-      "teacher.isAccepted": false,
+      "teacher.status": "pending",
       isDeleted: false,
     },
     {
@@ -86,24 +86,6 @@ const getPendingTeachers = async (options: Record<string, any>) => {
   );
 
   return teachers;
-};
-
-/**
- * Get all bookings (admin view)
- */
-const getAllBookings = async (
-  filter: Record<string, any>,
-  options: Record<string, any>
-) => {
-  const bookings = await Lesson.paginate(filter, {
-    ...options,
-    populate: [
-      { path: "studentId", select: "name email avatar" },
-      { path: "teacherId", select: "name email avatar teacher" },
-    ],
-  });
-
-  return bookings;
 };
 
 /**
@@ -134,7 +116,6 @@ export default {
   approveTeacher,
   rejectTeacher,
   getPendingTeachers,
-  getAllBookings,
   getAllTransactions,
   getTeacherEarnings,
   getSystemRevenue,

@@ -1,11 +1,10 @@
-import catchAsync from "../../utils/catchAsync.ts";
+import catchAsync from "../../utils/catchAsync";
 import type { Request, Response } from "express";
-import ApiError from "../../utils/ApiError.ts";
+import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
-import response from "../../configs/response.ts";
-import pick from "../../utils/pick.ts";
-import bookingService from "./booking.service.ts";
-import stripe from "../../configs/stripe.ts";
+import response from "../../configs/response";
+import pick from "../../utils/pick";
+import bookingService from "./booking.service";
 
 const claimBooking = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
@@ -23,7 +22,13 @@ const claimBooking = catchAsync(async (req: Request, res: Response) => {
     subject
   );
   if (claim.url) {
-    res.status(httpStatus.OK).json(claim.url);
+    res.status(httpStatus.OK).json(
+      response({
+        status: httpStatus.OK,
+        message: "Payment URL Generated Successfully",
+        data: claim.url,
+      })
+    );
   } else {
     res.status(httpStatus.INTERNAL_SERVER_ERROR).json(
       response({
@@ -33,22 +38,6 @@ const claimBooking = catchAsync(async (req: Request, res: Response) => {
       })
     );
   }
-});
-
-const confirmBooking = catchAsync(async (req: Request, res: Response) => {
-  const signature = req.headers["stripe-signature"] as string;
-  if (!signature) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Payment Signature is Invalid");
-  }
-  const verify = stripe.verifyWebhook(req, signature);
-  const booking = await bookingService.confirmSession(verify);
-  res.status(httpStatus.OK).json(
-    response({
-      status: httpStatus.OK,
-      message: "Booking Created Successfully",
-      data: booking,
-    })
-  );
 });
 
 const rePayment = catchAsync(async (req: Request, res: Response) => {
@@ -66,7 +55,67 @@ const rePayment = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
-const getBooking = catchAsync(async (req: Request, res: Response) => {});
+const getTeacherBookings = catchAsync(async (req: Request, res: Response) => {
+  const teacherId = req.user?.id;
+  if (!teacherId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "User not authenticated");
+  }
+  const options = pick(req.query, [
+    "sort",
+    "limit",
+    "page",
+    "populate",
+    "status",
+  ]);
+  const booking = await bookingService.getBookingsTeacher(teacherId, options);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Booking Teacher Retrieved Successfully",
+      data: booking,
+    })
+  );
+});
+
+const getStudentBookings = catchAsync(async (req: Request, res: Response) => {
+  const studentId = req.user?.id;
+  if (!studentId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "User not authenticated");
+  }
+  const options = pick(req.query, [
+    "sort",
+    "limit",
+    "page",
+    "populate",
+    "status",
+  ]);
+  const booking = await bookingService.getStudentBookings(studentId, options);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Booking Student Retrieved Successfully",
+      data: booking,
+    })
+  );
+});
+
+const getBookings = catchAsync(async (req: Request, res: Response) => {
+  const options = pick(req.query, [
+    "sort",
+    "limit",
+    "page",
+    "populate",
+    "status",
+  ]);
+  const booking = await bookingService.getBookings(options);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Booking Retrieved Successfully",
+      data: booking,
+    })
+  );
+});
 
 const updateBooking = catchAsync(async (req: Request, res: Response) => {});
 
@@ -74,9 +123,10 @@ const deleteBooking = catchAsync(async (req: Request, res: Response) => {});
 
 export default {
   claimBooking,
-  getBooking,
+  getTeacherBookings,
+  getStudentBookings,
+  getBookings,
   updateBooking,
   deleteBooking,
-  confirmBooking,
   rePayment,
 };

@@ -1,10 +1,14 @@
 import { configDotenv } from "dotenv";
 import Joi from "joi";
 
-configDotenv();
+if (process.env.NODE_ENV !== "production") {
+  configDotenv();
+}
 
 const validator = Joi.object({
   PORT: Joi.number().default(3000),
+  BACKEND_IP: Joi.string().default("localhost"),
+  SOCKET_PORT: Joi.number().default(3001), // This is for only testing purpose
   MONGO_URI: Joi.string().optional(),
   NODE_ENV: Joi.string()
     .required()
@@ -18,8 +22,22 @@ const validator = Joi.object({
   SMTP_PASSWORD: Joi.string().required().description("SMTP Password"),
   EMAIL_FROM: Joi.string().email().required().description("Email From Address"),
   STRIPE_SECRET_KEY: Joi.string().required().description("Stripe Secret Key"),
-  STRIPE_WEBHOOK_SECRET: Joi.string().required().description("Stripe Webhook Secret Key"),
-  FRONTEND_URL: Joi.string().required().description("Frontend URL"),
+  STRIPE_WEBHOOK_SECRET: Joi.string()
+    .required()
+    .description("Stripe Webhook Secret Key"),
+  FRONTEND_URL: Joi.string()
+    .required()
+    .default("*")
+    .description("Frontend URL"),
+  FIREBASE_PROJECT_ID: Joi.string()
+    .required()
+    .description("Firebase project Id"),
+  FIREBASE_PRIVATE_KEY: Joi.string()
+    .required()
+    .description("Firebase Private Key"),
+  FIREBASE_CLIENT_EMAIL: Joi.string()
+    .required()
+    .description("Firebase Client Email"),
 }).unknown();
 
 const { value, error } = validator.validate(process.env);
@@ -28,6 +46,8 @@ if (error) throw new Error(error.message);
 
 const env = {
   PORT: value.PORT,
+  BACKEND_IP: value.BACKEND_IP,
+  SOCKET_PORT: value.SOCKET_PORT,
   MONGO_URI: value.MONGO_URI,
   ENVIRONMENT: value.NODE_ENV,
   DEBUG: value.NODE_ENV === "development",
@@ -39,7 +59,7 @@ const env = {
     provider: {
       host: value.SMTP_HOST,
       port: value.SMTP_PORT,
-      secure: false, // true for 465, false for other ports
+      secure: value.SMTP_PORT === 465, // true for 465, false for other ports
       auth: {
         user: value.SMTP_USERNAME,
         pass: value.SMTP_PASSWORD,
@@ -50,5 +70,12 @@ const env = {
   STRIPE_SECRET_KEY: value.STRIPE_SECRET_KEY,
   STRIPE_WEBHOOK_SECRET: value.STRIPE_WEBHOOK_SECRET,
   FRONTEND_URL: value.FRONTEND_URL,
+  firebase: {
+    projectId: value.FIREBASE_PROJECT_ID || "",
+    clientEmail: value.FIREBASE_CLIENT_EMAIL || "",
+    privateKey: value.FIREBASE_PRIVATE_KEY
+      ? value.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n")
+      : undefined,
+  },
 };
 export default env;
