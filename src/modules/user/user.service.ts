@@ -7,6 +7,7 @@ import httpStatus from "http-status";
 interface UploadedFiles {
   avatar?: Express.Multer.File[];
   content?: Express.Multer.File[];
+  documents?: Express.Multer.File[];
 }
 
 const getUserByEmail = async (email: string) => {
@@ -42,6 +43,18 @@ const updateUser = async (
       const file = files.content[0];
       user.teacher = user.teacher ?? {};
       user.teacher.content = file.path;
+    }
+
+    // Handle teacher documents (max 2 PDFs)
+    if (user.role === "teacher" && files.documents) {
+      if (files.documents.length > 2) {
+        throw new ApiError(
+          httpStatus.BAD_REQUEST,
+          "Maximum 2 documents allowed"
+        );
+      }
+      user.teacher = user.teacher ?? {};
+      user.teacher.documents = files.documents.map((file) => file.path);
     }
   }
 

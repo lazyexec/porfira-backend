@@ -9,6 +9,7 @@ import notificationRouter from "../../notification/notification.route";
 import transactionRouter from "../../transaction/transaction.route";
 import messageRouter from "../../message/message.route";
 import dashboardRouter from "../../dashboard/dashboard.route";
+import supportRouter from "../../support/support.route";
 
 const mainRouter: Router = express.Router();
 
@@ -54,10 +55,13 @@ const routes: routeObjects[] = [
     path: "/dashboard",
     route: dashboardRouter,
   },
-  // TODO: Test Messaging Properly.
   {
     path: "/message",
     route: messageRouter,
+  },
+  {
+    path: "/support",
+    route: supportRouter,
   },
 ];
 

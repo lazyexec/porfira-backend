@@ -18,6 +18,7 @@ declare global {
     interface User extends IUser {
       id?: string;
       role?: string;
+      name?: string;
     }
 
     interface Request {

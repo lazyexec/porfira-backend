@@ -1,9 +1,9 @@
 import { configDotenv } from "dotenv";
 import Joi from "joi";
 
-if (process.env.NODE_ENV !== "production") {
-  configDotenv();
-}
+// if (process.env.NODE_ENV !== "production") {
+configDotenv();
+// }
 
 const validator = Joi.object({
   PORT: Joi.number().default(3000),
@@ -11,7 +11,6 @@ const validator = Joi.object({
   SOCKET_PORT: Joi.number().default(3001), // This is for only testing purpose
   MONGO_URI: Joi.string().optional(),
   NODE_ENV: Joi.string()
-    .required()
     .valid("development", "production")
     .default("development"),
   JWT_SECRET: Joi.string().required().description("JWT Secret key"),

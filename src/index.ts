@@ -12,7 +12,8 @@ const startServer = async () => {
     await database.connect();
     let io;
     if (env.DEBUG) {
-      const socketServer = http.createServer(app);
+      // Development: Separate socket server on different port
+      const socketServer = http.createServer();
       io = new SocketIOServer(socketServer, {
         cors: {
           origin: env.FRONTEND_URL,
@@ -25,6 +26,7 @@ const startServer = async () => {
         );
       });
     } else {
+      // Production: Socket.IO on same server as Express
       io = new SocketIOServer(server, {
         cors: {
           origin: env.FRONTEND_URL,

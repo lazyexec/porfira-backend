@@ -1,7 +1,7 @@
 import express, { type Application } from "express";
 import v1Router from "./modules/routes/v1/index";
 import { errorConverter, errorHandler } from "./middlewares/globalErrorHandler";
-import compresson from "compression";
+import compression from "compression";
 import helmet from "helmet";
 import "./configs/passport";
 import passport from "passport";
@@ -22,7 +22,7 @@ if (env.DEBUG) {
   app.use(morgan("combined"));
 }
 
-// enable corsy
+// Enable CORS
 app.use(
   cors({
     origin: env.FRONTEND_URL,
@@ -33,17 +33,15 @@ app.use(
 app.use("/api/v1/webhook", webhookRouter);
 // parse json request body
 app.use(express.json());
-// // set security HTTP headers
+// Set security HTTP headers
 app.use(helmet());
-// malter for file upload
-app.use(express.static("public"));
-// // parse urlencoded request body
+// Parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
 // // gzip compression
 app.use(deviceMiddleware);
-app.use(compresson());
+app.use(compression());
 app.use("/api/v1", v1Router);
 
 app.use(errorConverter);

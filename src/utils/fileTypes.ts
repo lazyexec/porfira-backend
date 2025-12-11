@@ -32,9 +32,19 @@ const contentTypes = [
   "video/webm",
 ];
 
+const documentTypes = [
+  "application/pdf",
+  "image/jpeg",
+  "image/png",
+  "image/jpg",
+  "image/heic",
+  "image/heif",
+];
+
 const allowedTypes: AllowedTypes = {
   avatar: avatarTypes,
   message: messageTypes,
   content: contentTypes,
+  documents: documentTypes,
 };
 export default allowedTypes;

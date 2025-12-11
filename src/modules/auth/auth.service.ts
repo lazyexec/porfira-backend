@@ -51,7 +51,7 @@ const login = async (email: string, password: string) => {
 const forgotPassword = async (email: string) => {
   const user = await User.findOne({ email, isDeleted: false });
   if (!user) {
-    throw new ApiError(http.UNAUTHORIZED, "Incorrect email or password");
+    throw new ApiError(http.NOT_FOUND, "User not found");
   }
   const otp = randomOtp();
   user.oneTimeCode = otp;
@@ -73,7 +73,8 @@ const resetPassword = async (email: any, otp: string, newPassword: string) => {
   if (user.onTimeCodeExpires && user.onTimeCodeExpires < new Date()) {
     throw new ApiError(http.FORBIDDEN, "OTP has expired");
   }
-  if (!user.isPasswordMatch(newPassword)) {
+  // Check if new password is same as old password
+  if (await user.isPasswordMatch(newPassword)) {
     throw new ApiError(
       http.BAD_REQUEST,
       "New password must be different from the old password"
@@ -94,7 +95,7 @@ const changePassword = async (
   if (!user) {
     throw new ApiError(http.UNAUTHORIZED, "User not found");
   }
-  if (!user.isPasswordMatch(oldPassword)) {
+  if (!(await user.isPasswordMatch(oldPassword))) {
     throw new ApiError(http.BAD_REQUEST, "Old password is incorrect");
   }
 
@@ -119,7 +120,7 @@ const deleteAccount = async (userId: any) => {
   if (!token) {
     throw new ApiError(http.UNAUTHORIZED, "User not found");
   }
-  token.deleteOne();
+  await token.deleteOne();
   user.isDeleted = true;
   await user.save();
   return user;

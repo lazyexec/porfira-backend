@@ -52,6 +52,8 @@ export interface IUser {
   bio?: string | null;
   isRestricted?: boolean;
   restrictionReason?: string | null;
+  isOnline?: boolean;
+  lastSeen?: Date;
 }
 
 export interface IUserMethods {

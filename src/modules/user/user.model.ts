@@ -235,6 +235,15 @@ const userSchema = new mongoose.Schema<
       required: false,
       default: null,
     },
+    // ONLINE STATUS
+    isOnline: {
+      type: Boolean,
+      default: false,
+    },
+    lastSeen: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,

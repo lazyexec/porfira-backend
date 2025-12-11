@@ -58,7 +58,7 @@ const createConversation = async (userId1: string, userId2: string) => {
 
 const getConversation = async (userId: string, conversationId: string) => {
   const conversation = await conversationModel.findOne({
-    participant: { $in: userId },
+    participants: { $in: [userId] },
     _id: conversationId,
   });
   return conversation;
@@ -91,6 +91,13 @@ const createMessage = async (
     type,
     content,
   });
+
+  // Update conversation's last message
+  await conversationModel.findByIdAndUpdate(conversation, {
+    lastMessage: message._id,
+    lastMessageAt: message.createdAt,
+  });
+
   return message;
 };
 
@@ -108,7 +115,6 @@ const getMessages = async (
   if (filter.search) {
     query.content = { $regex: filter.search, $options: "i" };
   }
-  console.log({ query, options });
   const messages = await messageModel.paginate(query, options);
   return messages;
 };
@@ -124,7 +130,10 @@ const updateMessage = async (id: string, content: string) => {
 };
 
 const readMessage = async (id: string, userId: string) => {
-  const message = await messageModel.findByIdAndUpdate(id, { readBy: userId });
+  const message = await messageModel.findByIdAndUpdate(id, {
+    isRead: true,
+    readAt: new Date(),
+  });
   return message;
 };
 
