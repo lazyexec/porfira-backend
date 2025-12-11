@@ -32,4 +32,6 @@ router
     messageController.getMessages
   );
 
+router.route("/all").get(auth("common"), messageController.getConversations);
+
 export default router;

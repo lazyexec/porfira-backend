@@ -80,8 +80,21 @@ const getMessages = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const getConversations = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const options = pick(req.query, ["page", "limit", "sort"]);
+  const messages = await messageService.getConversations(userId!, options);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Messages",
+      data: messages,
+    })
+  );
+});
 export default {
   createConversation,
   sendMessage,
   getMessages,
+  getConversations,
 };

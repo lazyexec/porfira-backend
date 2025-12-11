@@ -2251,7 +2251,7 @@
 									},
 									"status": "Created",
 									"code": 201,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -2414,7 +2414,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -2567,7 +2567,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -2736,7 +2736,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -2905,7 +2905,7 @@
 									},
 									"status": "Created",
 									"code": 201,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -3084,7 +3084,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -3242,7 +3242,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -3429,7 +3429,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -3606,7 +3606,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -3693,8 +3693,155 @@
 									"body": "{\n    \"status\": 200,\n    \"message\": \"Messages\",\n    \"response\": {\n        \"data\": {\n            \"docs\": [\n                {\n                    \"_id\": \"693b03915567c604c1fabcad\",\n                    \"conversation\": \"693b020b35e6446bd0ae5b81\",\n                    \"sender\": \"693af84e8565e69fc2aba158\",\n                    \"type\": \"text\",\n                    \"content\": \"Hello!\",\n                    \"createdAt\": \"2025-12-11T17:46:57.268Z\",\n                    \"updatedAt\": \"2025-12-11T17:46:57.268Z\",\n                    \"__v\": 0\n                }\n            ],\n            \"totalDocs\": 1,\n            \"limit\": 50,\n            \"totalPages\": 1,\n            \"page\": 1,\n            \"pagingCounter\": 1,\n            \"hasPrevPage\": false,\n            \"hasNextPage\": false,\n            \"prevPage\": null,\n            \"nextPage\": null\n        }\n    }\n}"
 								}
 							]
+						},
+						{
+							"name": "Get Conversation",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": [
+								{
+									"name": "Get Conversation",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{baseUrl}}/message/all",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"message",
+												"all"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "http://localhost:3000"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin, Accept-Encoding"
+										},
+										{
+											"key": "Content-Security-Policy",
+											"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+										},
+										{
+											"key": "Cross-Origin-Opener-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Cross-Origin-Resource-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Origin-Agent-Cluster",
+											"value": "?1"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-DNS-Prefetch-Control",
+											"value": "off"
+										},
+										{
+											"key": "X-Download-Options",
+											"value": "noopen"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "SAMEORIGIN"
+										},
+										{
+											"key": "X-Permitted-Cross-Domain-Policies",
+											"value": "none"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "217"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"d9-rJr63riZRYDZ8KgdyVVd9idsqH8\""
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 11 Dec 2025 18:59:23 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"message\": \"Messages\",\n    \"response\": {\n        \"data\": {\n            \"docs\": [],\n            \"totalDocs\": 0,\n            \"offset\": 0,\n            \"limit\": 10,\n            \"totalPages\": 1,\n            \"page\": 1,\n            \"pagingCounter\": 1,\n            \"hasPrevPage\": false,\n            \"hasNextPage\": false,\n            \"prevPage\": null,\n            \"nextPage\": null\n        }\n    }\n}"
+								}
+							]
 						}
 					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
 				}
 			]
 		},
@@ -3751,7 +3898,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -3913,7 +4060,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -4050,7 +4197,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -4185,7 +4332,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -4415,7 +4562,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -4582,7 +4729,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -4711,7 +4858,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -5110,7 +5257,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -5270,7 +5417,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -5435,7 +5582,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -5681,7 +5828,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -5847,7 +5994,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -5995,7 +6142,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -6157,7 +6304,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",

@@ -36,7 +36,9 @@ export default function socketIO(io: Server) {
       User.findByIdAndUpdate(socket.user.id, {
         isOnline: true,
         lastSeen: new Date(),
-      }).catch((err) => logger.error("Error updating user online status:", err));
+      }).catch((err) =>
+        logger.error("Error updating user online status:", err)
+      );
     }
 
     messageSocket(io, socket);
@@ -53,7 +55,9 @@ export default function socketIO(io: Server) {
         User.findByIdAndUpdate(socket.user.id, {
           isOnline: false,
           lastSeen: new Date(),
-        }).catch((err) => logger.error("Error updating user offline status:", err));
+        }).catch((err) =>
+          logger.error("Error updating user offline status:", err)
+        );
       }
       logger.success(`${socket.id} disconnected`);
     });
