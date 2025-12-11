@@ -345,6 +345,7 @@
 											"    const response = pm.response.json().response;",
 											"    const role = response.data.role;",
 											"    pm.collectionVariables.set('accessToken', response.tokens.access.token);",
+											"    pm.environment.set('accessToken', response.tokens.access.token);",
 											"    pm.collectionVariables.set('refreshToken', response.tokens.refresh.token);",
 											"    pm.collectionVariables.set(`${role}AccessToken`,response.tokens.access.token);",
 											"    pm.collectionVariables.set(`${role}RefreshToken`,response.tokens.refresh.token);",
@@ -3698,7 +3699,17 @@
 							"name": "Get Conversation",
 							"request": {
 								"method": "GET",
-								"header": []
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/message/all",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"message",
+										"all"
+									]
+								}
 							},
 							"response": [
 								{
@@ -3719,7 +3730,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -5667,6 +5678,182 @@
 									],
 									"cookie": [],
 									"body": "{\n    \"status\": 200,\n    \"message\": \"Review updated successfully\",\n    \"response\": {\n        \"data\": {\n            \"_id\": \"693b04c75567c604c1fabce9\",\n            \"fromUser\": \"693af8168565e69fc2aba14f\",\n            \"toUser\": \"693b020b35e6446bd0ae5b81\",\n            \"score\": 4,\n            \"comment\": \"Very good teacher\",\n            \"createdAt\": \"2025-12-11T17:52:07.149Z\",\n            \"updatedAt\": \"2025-12-11T17:58:56.242Z\",\n            \"id\": \"693b04c75567c604c1fabce9\"\n        }\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Get Teacher Reviews",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"teacherId\": \"69345a003124b7c8082bcacd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/review/user?page=1&limit=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"review",
+										"user"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "limit",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Get User Reviews",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{accessToken}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"teacherId\": \"693af7104deda559f6d0a966\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/review/user?page=1&limit=10",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"review",
+												"user"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "http://localhost:3000"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin, Accept-Encoding"
+										},
+										{
+											"key": "Content-Security-Policy",
+											"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+										},
+										{
+											"key": "Cross-Origin-Opener-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Cross-Origin-Resource-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Origin-Agent-Cluster",
+											"value": "?1"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-DNS-Prefetch-Control",
+											"value": "off"
+										},
+										{
+											"key": "X-Download-Options",
+											"value": "noopen"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "SAMEORIGIN"
+										},
+										{
+											"key": "X-Permitted-Cross-Domain-Policies",
+											"value": "none"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "678"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"2a6-PW8UvTe2mnA/wK6TPD9X0zILhtQ\""
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 11 Dec 2025 20:03:37 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"message\": \"Review fetched successfully\",\n    \"response\": {\n        \"data\": {\n            \"docs\": [\n                {\n                    \"_id\": \"693b2376a5fb97f023725445\",\n                    \"fromUser\": {\n                        \"_id\": \"693af8168565e69fc2aba14f\",\n                        \"name\": \"Arif Hasan\",\n                        \"avatar\": \"/uploads/users/user.png\",\n                        \"id\": \"693af8168565e69fc2aba14f\"\n                    },\n                    \"toUser\": {\n                        \"_id\": \"693af7104deda559f6d0a966\",\n                        \"name\": \"Mahmudul Karim\",\n                        \"avatar\": \"/uploads/users/user.png\",\n                        \"id\": \"693af7104deda559f6d0a966\"\n                    },\n                    \"score\": 5,\n                    \"comment\": \"Excellent teacher!\",\n                    \"createdAt\": \"2025-12-11T20:03:02.995Z\",\n                    \"updatedAt\": \"2025-12-11T20:03:02.995Z\",\n                    \"id\": \"693b2376a5fb97f023725445\"\n                }\n            ],\n            \"totalDocs\": 1,\n            \"limit\": 10,\n            \"totalPages\": 1,\n            \"page\": 1,\n            \"pagingCounter\": 1,\n            \"hasPrevPage\": false,\n            \"hasNextPage\": false,\n            \"prevPage\": null,\n            \"nextPage\": null\n        }\n    }\n}"
 								}
 							]
 						}
