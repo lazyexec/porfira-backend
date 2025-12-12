@@ -5,6 +5,7 @@ import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
 import response from "../../configs/response";
 import pick from "../../utils/pick";
+import fs from "../../utils/fs";
 
 const createConversation = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
@@ -31,7 +32,7 @@ const sendMessage = catchAsync(async (req: Request, res: Response) => {
   const file = req.file;
   let { type, content } = req.body;
   if (type !== "text" && file) {
-    content = file.path;
+    content = fs.sanitizePath(file.path);
   }
 
   if (!type || !content) {

@@ -8,7 +8,7 @@ configDotenv();
 const validator = Joi.object({
   PORT: Joi.number().default(3000),
   BACKEND_IP: Joi.string().default("localhost"),
-  SOCKET_PORT: Joi.number().default(3001), // This is for only testing purpose
+  SOCKET_PORT: Joi.number().default(3001), // This is for only testing purpose (Development)
   MONGO_URI: Joi.string().optional(),
   NODE_ENV: Joi.string()
     .valid("development", "production")
@@ -24,9 +24,10 @@ const validator = Joi.object({
   STRIPE_WEBHOOK_SECRET: Joi.string()
     .required()
     .description("Stripe Webhook Secret Key"),
-  FRONTEND_URL: Joi.string()
-    .required()
-    .default("*")
+  // URLS
+  FRONTEND_URL: Joi.string().default("*").description("Frontend URL"),
+  BACKEND_URL: Joi.string()
+    .default(`https://${process.env.BACKEND_IP}:${process.env.PORT}`)
     .description("Frontend URL"),
   FIREBASE_PROJECT_ID: Joi.string()
     .required()
@@ -66,9 +67,13 @@ const env = {
     },
     from: value.EMAIL_FROM,
   },
+  // STRIPE ACCOUNT
   STRIPE_SECRET_KEY: value.STRIPE_SECRET_KEY,
   STRIPE_WEBHOOK_SECRET: value.STRIPE_WEBHOOK_SECRET,
+  // URLS
   FRONTEND_URL: value.FRONTEND_URL,
+  BACKEND_URL: value.BACKEND_URL,
+  // Firebase Config
   firebase: {
     projectId: value.FIREBASE_PROJECT_ID || "",
     clientEmail: value.FIREBASE_CLIENT_EMAIL || "",

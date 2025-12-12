@@ -10,25 +10,23 @@ import deviceMiddleware from "./middlewares/device";
 import webhookRouter from "./modules/stripe/stripe.route";
 import morgan from "morgan";
 import cors from "cors";
+import path from "path";
 
 const app: Application = express();
-
-app.use(express.static("public"));
-
+// For Exporting Public Files to User
+app.use("/public", express.static(path.join(__dirname, "../public")));
 // Morgan Logger for logging requests
 if (env.DEBUG) {
   app.use(morgan("dev"));
 } else {
   app.use(morgan("combined"));
 }
-
 // Enable CORS
 app.use(
   cors({
     origin: env.FRONTEND_URL,
   })
 );
-
 // Webhook Route for raw body
 app.use("/api/v1/webhook", webhookRouter);
 // parse json request body
@@ -43,12 +41,9 @@ app.use(passport.initialize());
 app.use(deviceMiddleware);
 app.use(compression());
 app.use("/api/v1", v1Router);
-
 app.use(errorConverter);
 app.use(errorHandler);
-
 app.get("/health", (req, res) => {
   res.send("Api is Healthy");
 });
-
 export default app;

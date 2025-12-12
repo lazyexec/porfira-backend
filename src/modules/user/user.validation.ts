@@ -31,7 +31,7 @@ const updateProfile = {
       content: Joi.string().allow(null).optional(),
       qualification: Joi.array().items(Joi.object()).allow(null).optional(),
     }).optional(),
-  }).min(1),
+  }),
 };
 
 const queryAllUsers = {

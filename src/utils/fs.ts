@@ -12,7 +12,12 @@ const deleteFolder = (folderPath: string) => {
   }
 };
 
+const sanitizePath = (path: string) => {
+  return path.replace(/\\/g, "/").replace("public", "");
+};
+
 export default {
   createFolder,
   deleteFolder,
+  sanitizePath
 };

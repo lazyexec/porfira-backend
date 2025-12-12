@@ -3,6 +3,7 @@ import User from "./user.model";
 import email from "../../configs/email";
 import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
+import fs from "../../utils/fs";
 
 interface UploadedFiles {
   avatar?: Express.Multer.File[];
@@ -36,13 +37,13 @@ const updateUser = async (
   if (files) {
     if (files.avatar?.[0]) {
       const file = files.avatar[0];
-      user.avatar = file.path;
+      user.avatar = fs.sanitizePath(file.path);
     }
 
     if (user.role === "teacher" && files.content?.[0]) {
       const file = files.content[0];
       user.teacher = user.teacher ?? {};
-      user.teacher.content = file.path;
+      user.teacher.content = fs.sanitizePath(file.path);
     }
 
     // Handle teacher documents (max 2 PDFs)
@@ -54,7 +55,9 @@ const updateUser = async (
         );
       }
       user.teacher = user.teacher ?? {};
-      user.teacher.documents = files.documents.map((file) => file.path);
+      user.teacher.documents = files.documents.map((file) =>
+        fs.sanitizePath(file.path)
+      );
     }
   }
 
@@ -108,7 +111,7 @@ const unRestrictUser = async (userId: string) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
-  await email.sendUnrestrictionEmail(user.email);
+  await email.sendUnrestrictedEmail(user.email);
   await user.updateOne({
     _id: userId,
     isRestricted: false,

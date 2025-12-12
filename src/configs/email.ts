@@ -1,20 +1,25 @@
 import env from "./env";
 import logger from "../utils/logger";
 import nodemailer from "nodemailer";
+import ApiError from "../utils/ApiError";
+import httpStatus from "http-status";
 
 // Create a test account or replace with real credentials.
 const transporter = nodemailer.createTransport(env.email.provider);
 
 const sendMail = async (options: nodemailer.SendMailOptions) => {
-  await transporter.sendMail({
-    from: env.email.from,
-    ...options,
-  });
+  try {
+    await transporter.sendMail({
+      from: env.email.from,
+      ...options,
+    });
+  } catch (error: any) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
+  }
 };
 
 const sendRegistrationEmail = async (to: string, token: string) => {
   logger.info(`Sending registration email to ${to} with token ${token}`);
-  console.log("Email sent successfully");
   await sendMail({
     to,
     subject: "Registration Confirmation",
@@ -42,7 +47,7 @@ const sendRestrictionEmail = async (to: string, reason: string) => {
   logger.info(`Sending restriction email to ${to}`);
 };
 
-const sendUnrestrictionEmail = async (to: string) => {
+const sendUnrestrictedEmail = async (to: string) => {
   await sendMail({
     to,
     subject: "Account Unrestricted",
@@ -55,5 +60,5 @@ export default {
   sendRegistrationEmail,
   sendResetPasswordEmail,
   sendRestrictionEmail,
-  sendUnrestrictionEmail,
+  sendUnrestrictedEmail,
 };

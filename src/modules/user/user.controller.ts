@@ -9,7 +9,6 @@ import pick from "../../utils/pick";
 import type multer from "multer";
 
 const getProfile = catchAsync(async (req: Request, res: Response) => {
-  console.log("Req User:", req.user);
   const userId = req.user?.id;
   if (!userId) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized");
