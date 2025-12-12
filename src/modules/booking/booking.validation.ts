@@ -50,10 +50,17 @@ const getBookings = {
     ),
   }),
 };
+
+const completeBookingState = {
+  params: {
+    bookingId: Joi.custom(validator.objectId).required(),
+  },
+};
 export default {
   claimBooking,
   rePayment,
   getTeacherBookings,
   getStudentBookings,
   getBookings,
+  completeBookingState,
 };

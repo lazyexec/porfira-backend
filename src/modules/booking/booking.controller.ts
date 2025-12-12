@@ -114,7 +114,16 @@ const getBookings = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
-const updateBooking = catchAsync(async (req: Request, res: Response) => {});
+const completeBookingState = catchAsync(async (req: Request, res: Response) => {
+  await bookingService.completeBookingState(req.params.bookingId);
+   res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Booking Completed Successfully",
+      data: {},
+    })
+  );
+});
 
 const deleteBooking = catchAsync(async (req: Request, res: Response) => {});
 
@@ -123,7 +132,7 @@ export default {
   getTeacherBookings,
   getStudentBookings,
   getBookings,
-  updateBooking,
+  completeBookingState,
   deleteBooking,
   rePayment,
 };

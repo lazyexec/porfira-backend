@@ -227,6 +227,15 @@ const handleRefund = async (paymentIntentId: string) => {
   return booking;
 };
 
+const completeBookingState = async (bookingId: string) => {
+  const booking = await Booking.findById(bookingId);
+  if (!booking) throw new ApiError(httpStatus.NOT_FOUND, "Invalid booking ID");
+  booking.status = "completed";
+  booking?.status === "completed";
+  await booking?.save();
+  return booking;
+};
+
 export default {
   claimBooking,
   confirmSession,
@@ -235,4 +244,5 @@ export default {
   getStudentBookings,
   getBookings,
   handleRefund,
+  completeBookingState,
 };

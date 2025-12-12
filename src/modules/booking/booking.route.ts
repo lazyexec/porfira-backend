@@ -34,6 +34,13 @@ router.get(
   bookingController.getTeacherBookings
 );
 
+router.post(
+  "/:bookingId/complete",
+  auth("admin"),
+  validate(bookingValidation.getBookings),
+  bookingController.completeBookingState
+);
+
 // Admin Routes
 router.get(
   "/",
