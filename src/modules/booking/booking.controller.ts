@@ -45,7 +45,11 @@ const rePayment = catchAsync(async (req: Request, res: Response) => {
   if (!bookingId) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Booking ID is required");
   }
-  const booking = await bookingService.rePayment(bookingId);
+  const userId = req.user?.id;
+  if (!userId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "User not authenticated");
+  }
+  const booking = await bookingService.rePayment(bookingId, userId);
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,
@@ -60,12 +64,7 @@ const getTeacherBookings = catchAsync(async (req: Request, res: Response) => {
   if (!teacherId) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "User not authenticated");
   }
-  const options = pick(req.query, [
-    "sort",
-    "limit",
-    "page",
-    "status",
-  ]);
+  const options = pick(req.query, ["sort", "limit", "page", "status"]);
   const booking = await bookingService.getBookingsTeacher(teacherId, options);
   res.status(httpStatus.OK).json(
     response({
@@ -81,12 +80,7 @@ const getStudentBookings = catchAsync(async (req: Request, res: Response) => {
   if (!studentId) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "User not authenticated");
   }
-  const options = pick(req.query, [
-    "sort",
-    "limit",
-    "page",
-    "status",
-  ]);
+  const options = pick(req.query, ["sort", "limit", "page", "status"]);
   const booking = await bookingService.getStudentBookings(studentId, options);
   res.status(httpStatus.OK).json(
     response({
@@ -98,12 +92,7 @@ const getStudentBookings = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getBookings = catchAsync(async (req: Request, res: Response) => {
-  const options = pick(req.query, [
-    "sort",
-    "limit",
-    "page",
-    "status",
-  ]);
+  const options = pick(req.query, ["sort", "limit", "page", "status"]);
   const booking = await bookingService.getBookings(options);
   res.status(httpStatus.OK).json(
     response({
@@ -116,7 +105,7 @@ const getBookings = catchAsync(async (req: Request, res: Response) => {
 
 const completeBookingState = catchAsync(async (req: Request, res: Response) => {
   await bookingService.completeBookingState(req.params.bookingId);
-   res.status(httpStatus.OK).json(
+  res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,
       message: "Booking Completed Successfully",
@@ -127,6 +116,56 @@ const completeBookingState = catchAsync(async (req: Request, res: Response) => {
 
 const deleteBooking = catchAsync(async (req: Request, res: Response) => {});
 
+const getBooking = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const booking = await bookingService.getBookingById(
+    req.params.bookingId,
+    userId!
+  );
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Booking Details Retrieved Successfully",
+      data: booking,
+    })
+  );
+});
+
+const cancelBooking = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const { reason } = req.body;
+  const booking = await bookingService.cancelBooking(
+    req.params.bookingId,
+    userId!,
+    reason
+  );
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Booking Cancelled Successfully",
+      data: booking,
+    })
+  );
+});
+
+const rescheduleBooking = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.user?.id;
+  const { date, time } = req.body;
+  const booking = await bookingService.rescheduleBooking(
+    req.params.bookingId,
+    userId!,
+    date,
+    time
+  );
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Booking Rescheduled Successfully",
+      data: booking,
+    })
+  );
+});
+
 export default {
   claimBooking,
   getTeacherBookings,
@@ -135,4 +174,7 @@ export default {
   completeBookingState,
   deleteBooking,
   rePayment,
+  getBooking,
+  cancelBooking,
+  rescheduleBooking,
 };

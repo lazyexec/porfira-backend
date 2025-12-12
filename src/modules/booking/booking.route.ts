@@ -37,8 +37,29 @@ router.get(
 router.post(
   "/:bookingId/complete",
   auth("admin"),
-  validate(bookingValidation.getBookings),
+  validate(bookingValidation.completeBookingState),
   bookingController.completeBookingState
+);
+
+router.post(
+  "/:bookingId/cancel",
+  auth("common"),
+  validate(bookingValidation.cancelBooking),
+  bookingController.cancelBooking
+);
+
+router.post(
+  "/:bookingId/reschedule",
+  auth("common"),
+  validate(bookingValidation.rescheduleBooking),
+  bookingController.rescheduleBooking
+);
+
+router.get(
+  "/:bookingId",
+  auth("common"),
+  validate(bookingValidation.getBooking),
+  bookingController.getBooking
 );
 
 // Admin Routes

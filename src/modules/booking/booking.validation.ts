@@ -51,6 +51,31 @@ const getBookings = {
   }),
 };
 
+const getBooking = {
+  params: Joi.object().keys({
+    bookingId: Joi.custom(validator.objectId).required(),
+  }),
+};
+
+const cancelBooking = {
+  params: Joi.object().keys({
+    bookingId: Joi.custom(validator.objectId).required(),
+  }),
+  body: Joi.object().keys({
+    reason: Joi.string().optional(),
+  }),
+};
+
+const rescheduleBooking = {
+  params: Joi.object().keys({
+    bookingId: Joi.custom(validator.objectId).required(),
+  }),
+  body: Joi.object().keys({
+    date: Joi.date().required(),
+    time: Joi.date().required(),
+  }),
+};
+
 const completeBookingState = {
   params: {
     bookingId: Joi.custom(validator.objectId).required(),
@@ -63,4 +88,7 @@ export default {
   getStudentBookings,
   getBookings,
   completeBookingState,
+  getBooking,
+  cancelBooking,
+  rescheduleBooking,
 };
