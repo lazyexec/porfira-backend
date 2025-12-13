@@ -21,7 +21,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"email\": \"student@example.com\",\n  \"password\": \"Password123!\",\n  \"name\": \"John Doe\",\n  \"role\": \"student\"\n}",
+									"raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"1qazxsw2\",\n  \"name\": \"John Doe\",\n  \"role\": \"admin\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -196,7 +196,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"email\": \"student@example.com\",\n  \"code\": \"491496\"\n}",
+									"raw": "{\n  \"email\": \"admin@example.com\",\n  \"code\": \"469096\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -364,7 +364,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"email\": \"student@example.com\",\n  \"password\": \"Password123!\"\n}",
+									"raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"1qazxsw2\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1527,7 +1527,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"System Admin\",\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"Admin123\",\r\n  \"role\": \"admin\",\r\n  \"avatar\": \"/uploads/users/user.png\",\r\n  \"isEmailVerified\": true,\r\n  \"bio\": \"Super admin of the platform.\",\r\n}\r\n",
+									"raw": "{\r\n  \"name\": \"Sharif Khan\",\r\n  \"avatar\": \"/uploads/users/user.png\",\r\n  \"bio\": \"Professional math tutor with 1 years of experience.\",\r\n  \"dateOfBirth\": \"1990-02-20T00:00:00.000Z\",\r\n  \"phoneNumber\": 8801622223344,\r\n  \"countryCode\": \"+880\",\r\n  \"teacher\": {\r\n    \"yearsOfTeachingExp\": 5,\r\n    \"subjectsTaught\": [\"Mathematics\", \"Algebra\", \"Geometry\"],\r\n    \"hourlyRate\": 1200,\r\n    \"availableTime\": {\r\n      \"startTime\": \"09:00 AM\",\r\n      \"endTime\": \"2025-01-01T17:00:00.000Z\"\r\n    },\r\n    \"availableDays\": [\"Monday\", \"Wednesday\", \"Friday\"],\r\n    \"content\": \"Experienced teacher offering 1-to-1 live sessions.\",\r\n    \"documents\": [\r\n      \"/uploads/teachers/cert1.pdf\",\r\n      \"/uploads/teachers/cert2.pdf\"\r\n    ],\r\n    \"qualification\": [\r\n      {\r\n        \"title\": \"B.Sc. in Mathematics\",\r\n        \"institution\": \"Dhaka University\",\r\n        \"year\": 2014\r\n      },\r\n      {\r\n        \"title\": \"M.Sc. in Applied Math\",\r\n        \"institution\": \"Dhaka University\",\r\n        \"year\": 2016\r\n      }\r\n    ]\r\n  }\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -3819,6 +3819,35 @@
 							]
 						}
 					]
+				},
+				{
+					"name": "Bookings",
+					"item": [
+						{
+							"name": "Complete Booking",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/:bookingId/complete",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										":bookingId",
+										"complete"
+									],
+									"variable": [
+										{
+											"key": "bookingId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			],
 			"auth": {
@@ -4469,6 +4498,38 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Re-schedule Booking",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/:bookingId/reschedule",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										":bookingId",
+										"reschedule"
+									],
+									"variable": [
+										{
+											"key": "bookingId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cancel Booking",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
 						}
 					]
 				},
@@ -4503,6 +4564,21 @@
 										{
 											"key": "limit",
 											"value": "10"
+										},
+										{
+											"key": "sort",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "subject",
+											"value": null,
+											"disabled": true
 										}
 									]
 								}
@@ -5191,6 +5267,30 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Cancel Booking",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/:bookingId/cancel",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										":bookingId",
+										"cancel"
+									],
+									"variable": [
+										{
+											"key": "bookingId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -5209,7 +5309,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/social/teachers?page=1&limit=10&subject=Mathematics",
+									"raw": "{{baseUrl}}/social/teachers?page=1&limit=10",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -5227,8 +5327,49 @@
 											"value": "10"
 										},
 										{
+											"key": "sort",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "Sharif",
+											"disabled": true
+										},
+										{
 											"key": "subject",
-											"value": "Mathematics"
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "language",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "minExperience",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "maxExperience",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "rating",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "minPrice",
+											"value": null,
+											"disabled": true
+										},
+										{
+											"key": "maxPrice",
+											"value": null,
+											"disabled": true
 										}
 									]
 								}
@@ -5357,6 +5498,175 @@
 									],
 									"cookie": [],
 									"body": "{\n    \"status\": 200,\n    \"message\": \"Teachers fetched successfully\",\n    \"response\": {\n        \"data\": {\n            \"docs\": [\n                {\n                    \"_id\": \"693af7104deda559f6d0a966\",\n                    \"name\": \"Mahmudul Karim\",\n                    \"email\": \"teacher@example.com\",\n                    \"avatar\": \"/uploads/users/user.png\",\n                    \"role\": \"teacher\",\n                    \"isEmailVerified\": true,\n                    \"isResetPassword\": false,\n                    \"fcmToken\": null,\n                    \"dateOfBirth\": \"1990-02-20T00:00:00.000Z\",\n                    \"phoneNumber\": 8801622223344,\n                    \"countryCode\": \"+880\",\n                    \"bio\": \"Professional math tutor with 5 years of experience.\",\n                    \"isDeleted\": false,\n                    \"isRestricted\": false,\n                    \"restrictionReason\": null,\n                    \"isOnline\": false,\n                    \"lastSeen\": \"2025-12-11T16:53:36.449Z\",\n                    \"createdAt\": \"2025-12-11T16:53:39.743Z\",\n                    \"updatedAt\": \"2025-12-11T17:49:45.581Z\",\n                    \"teacher\": {\n                        \"availableTime\": {\n                            \"startTime\": \"09:00 AM\",\n                            \"endTime\": \"2025-01-01T17:00:00.000Z\"\n                        },\n                        \"yearsOfTeachingExp\": 5,\n                        \"subjectsTaught\": [\n                            \"Mathematics\",\n                            \"Algebra\",\n                            \"Geometry\"\n                        ],\n                        \"stripePriceId\": \"price_1SdDg7ILIg2YKiibfTMLRh6x\",\n                        \"stripeOnboardingComplete\": false,\n                        \"stripePayoutsEnabled\": false,\n                        \"hourlyRate\": 1200,\n                        \"availableDays\": [\n                            \"Monday\",\n                            \"Wednesday\",\n                            \"Friday\"\n                        ],\n                        \"content\": \"Experienced teacher offering 1-to-1 live sessions.\",\n                        \"documents\": [\n                            \"/uploads/teachers/cert1.pdf\",\n                            \"/uploads/teachers/cert2.pdf\"\n                        ],\n                        \"rating\": 0,\n                        \"qualification\": [\n                            {\n                                \"title\": \"B.Sc. in Mathematics\",\n                                \"institution\": \"Dhaka University\",\n                                \"year\": 2014,\n                                \"_id\": \"693aff04a67e0f4302de7e84\",\n                                \"id\": \"693aff04a67e0f4302de7e84\"\n                            },\n                            {\n                                \"title\": \"M.Sc. in Applied Math\",\n                                \"institution\": \"Dhaka University\",\n                                \"year\": 2016,\n                                \"_id\": \"693aff04a67e0f4302de7e85\",\n                                \"id\": \"693aff04a67e0f4302de7e85\"\n                            }\n                        ],\n                        \"status\": \"approved\",\n                        \"_id\": \"693aff04a67e0f4302de7e83\",\n                        \"stripeAccountId\": \"acct_1SdDznEzd1bBuK95\"\n                    },\n                    \"id\": \"693af7104deda559f6d0a966\"\n                }\n            ],\n            \"totalDocs\": 1,\n            \"limit\": 10,\n            \"totalPages\": 1,\n            \"page\": 1,\n            \"pagingCounter\": 1,\n            \"hasPrevPage\": false,\n            \"hasNextPage\": false,\n            \"prevPage\": null,\n            \"nextPage\": null\n        }\n    }\n}"
+								},
+								{
+									"name": "Query Teachers (Student)",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{accessToken}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/social/teachers?page=1&limit=10",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"social",
+												"teachers"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1"
+												},
+												{
+													"key": "limit",
+													"value": "10"
+												},
+												{
+													"key": "sort",
+													"value": "teacher.rating 1",
+													"disabled": true
+												},
+												{
+													"key": "name",
+													"value": "Sharif",
+													"disabled": true
+												},
+												{
+													"key": "subject",
+													"value": null,
+													"disabled": true
+												},
+												{
+													"key": "language",
+													"value": null,
+													"disabled": true
+												},
+												{
+													"key": "minExperience",
+													"value": null,
+													"disabled": true
+												},
+												{
+													"key": "maxExperience",
+													"value": null,
+													"disabled": true
+												},
+												{
+													"key": "rating",
+													"value": null,
+													"disabled": true
+												},
+												{
+													"key": "minPrice",
+													"value": null,
+													"disabled": true
+												},
+												{
+													"key": "maxPrice",
+													"value": null,
+													"disabled": true
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "http://localhost:3000"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin, Accept-Encoding"
+										},
+										{
+											"key": "Content-Security-Policy",
+											"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+										},
+										{
+											"key": "Cross-Origin-Opener-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Cross-Origin-Resource-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Origin-Agent-Cluster",
+											"value": "?1"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-DNS-Prefetch-Control",
+											"value": "off"
+										},
+										{
+											"key": "X-Download-Options",
+											"value": "noopen"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "SAMEORIGIN"
+										},
+										{
+											"key": "X-Permitted-Cross-Domain-Policies",
+											"value": "none"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"c40-VBQZQnUNRsftYG6G4ewHnZT/zd0\""
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 13 Dec 2025 17:49:10 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"message\": \"Teachers fetched successfully\",\n    \"response\": {\n        \"data\": {\n            \"docs\": [\n                {\n                    \"_id\": \"693da0d59bc1fff06059876c\",\n                    \"name\": \"Sharif Khan\",\n                    \"email\": \"teacher@example.com\",\n                    \"avatar\": \"/uploads/users/user.png\",\n                    \"role\": \"teacher\",\n                    \"isEmailVerified\": true,\n                    \"isResetPassword\": false,\n                    \"fcmToken\": null,\n                    \"dateOfBirth\": \"1990-02-20T00:00:00.000Z\",\n                    \"phoneNumber\": 8801622223344,\n                    \"countryCode\": \"+880\",\n                    \"bio\": \"Professional math tutor with 1 years of experience.\",\n                    \"isDeleted\": false,\n                    \"isRestricted\": false,\n                    \"restrictionReason\": null,\n                    \"isOnline\": false,\n                    \"lastSeen\": \"2025-12-13T17:22:29.161Z\",\n                    \"createdAt\": \"2025-12-13T17:22:31.764Z\",\n                    \"updatedAt\": \"2025-12-13T17:30:08.721Z\",\n                    \"teacher\": {\n                        \"availableTime\": {\n                            \"startTime\": \"09:00 AM\",\n                            \"endTime\": \"2025-01-01T17:00:00.000Z\"\n                        },\n                        \"yearsOfTeachingExp\": 5,\n                        \"subjectsTaught\": [\n                            \"Mathematics\",\n                            \"Algebra\",\n                            \"Geometry\"\n                        ],\n                        \"stripePriceId\": \"price_1SdwdxILIg2YKiibLjWZKkF3\",\n                        \"stripeAccountId\": null,\n                        \"stripeOnboardingComplete\": false,\n                        \"stripePayoutsEnabled\": false,\n                        \"hourlyRate\": 1200,\n                        \"availableDays\": [\n                            \"Monday\",\n                            \"Wednesday\",\n                            \"Friday\"\n                        ],\n                        \"content\": \"Experienced teacher offering 1-to-1 live sessions.\",\n                        \"documents\": [\n                            \"/uploads/teachers/cert1.pdf\",\n                            \"/uploads/teachers/cert2.pdf\"\n                        ],\n                        \"rating\": 3,\n                        \"qualification\": [\n                            {\n                                \"title\": \"B.Sc. in Mathematics\",\n                                \"institution\": \"Dhaka University\",\n                                \"year\": 2014,\n                                \"_id\": \"693da1469bc1fff06059878e\",\n                                \"id\": \"693da1469bc1fff06059878e\"\n                            },\n                            {\n                                \"title\": \"M.Sc. in Applied Math\",\n                                \"institution\": \"Dhaka University\",\n                                \"year\": 2016,\n                                \"_id\": \"693da1469bc1fff06059878f\",\n                                \"id\": \"693da1469bc1fff06059878f\"\n                            }\n                        ],\n                        \"status\": \"approved\",\n                        \"_id\": \"693da1469bc1fff06059878d\"\n                    },\n                    \"id\": \"693da0d59bc1fff06059876c\"\n                },\n                {\n                    \"_id\": \"693da1049bc1fff060598780\",\n                    \"name\": \"Mahmudul Karim\",\n                    \"email\": \"teacher2@example.com\",\n                    \"avatar\": \"/uploads/users/user.png\",\n                    \"role\": \"teacher\",\n                    \"isEmailVerified\": true,\n                    \"isResetPassword\": false,\n                    \"fcmToken\": null,\n                    \"dateOfBirth\": \"1990-02-20T00:00:00.000Z\",\n                    \"phoneNumber\": 8801622223344,\n                    \"countryCode\": \"+880\",\n                    \"bio\": \"Professional math tutor with 5 years of experience.\",\n                    \"isDeleted\": false,\n                    \"isRestricted\": false,\n                    \"restrictionReason\": null,\n                    \"isOnline\": false,\n                    \"lastSeen\": \"2025-12-13T17:23:16.841Z\",\n                    \"createdAt\": \"2025-12-13T17:23:19.619Z\",\n                    \"updatedAt\": \"2025-12-13T17:31:57.660Z\",\n                    \"teacher\": {\n                        \"availableTime\": {\n                            \"startTime\": \"09:00 AM\",\n                            \"endTime\": \"2025-01-01T17:00:00.000Z\"\n                        },\n                        \"yearsOfTeachingExp\": 5,\n                        \"subjectsTaught\": [\n                            \"Mathematics\",\n                            \"Algebra\",\n                            \"Geometry\"\n                        ],\n                        \"stripePriceId\": \"price_1SdwfiILIg2YKiib3G6o1rlL\",\n                        \"stripeAccountId\": null,\n                        \"stripeOnboardingComplete\": false,\n                        \"stripePayoutsEnabled\": false,\n                        \"hourlyRate\": 1200,\n                        \"availableDays\": [\n                            \"Monday\",\n                            \"Wednesday\",\n                            \"Friday\"\n                        ],\n                        \"content\": \"Experienced teacher offering 1-to-1 live sessions.\",\n                        \"documents\": [\n                            \"/uploads/teachers/cert1.pdf\",\n                            \"/uploads/teachers/cert2.pdf\"\n                        ],\n                        \"rating\": 0,\n                        \"qualification\": [\n                            {\n                                \"title\": \"B.Sc. in Mathematics\",\n                                \"institution\": \"Dhaka University\",\n                                \"year\": 2014,\n                                \"_id\": \"693da16a9bc1fff060598797\",\n                                \"id\": \"693da16a9bc1fff060598797\"\n                            },\n                            {\n                                \"title\": \"M.Sc. in Applied Math\",\n                                \"institution\": \"Dhaka University\",\n                                \"year\": 2016,\n                                \"_id\": \"693da16a9bc1fff060598798\",\n                                \"id\": \"693da16a9bc1fff060598798\"\n                            }\n                        ],\n                        \"status\": \"approved\",\n                        \"_id\": \"693da16a9bc1fff060598796\"\n                    },\n                    \"id\": \"693da1049bc1fff060598780\"\n                }\n            ],\n            \"totalDocs\": 2,\n            \"limit\": 10,\n            \"totalPages\": 1,\n            \"page\": 1,\n            \"pagingCounter\": 1,\n            \"hasPrevPage\": false,\n            \"hasNextPage\": false,\n            \"prevPage\": null,\n            \"nextPage\": null\n        }\n    }\n}"
 								}
 							]
 						}
@@ -6603,7 +6913,8 @@
 									],
 									"variable": [
 										{
-											"key": "id"
+											"key": "id",
+											"value": "693da1049bc1fff060598780"
 										}
 									]
 								}

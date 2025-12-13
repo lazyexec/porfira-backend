@@ -26,7 +26,7 @@ const saveRefreshToken = async (opts: {
     token,
     user: userId,
     type: "refresh",
-    expires: expiresAt || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // default 7 days
+    expires: expiresAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // default 30 days
     blacklisted: false,
     deviceId,
     ip,
@@ -48,10 +48,10 @@ const generateUserTokens = async (opts: {
   );
   const token = jwt.generateToken(
     { _id: userId.toString(), type: "refresh" },
-    "7d"
+    "30d"
   );
 
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30Days
 
   await saveRefreshToken({
     userId,
@@ -129,11 +129,11 @@ const refreshAuth = async (
 
   const newAccessToken = jwt.generateToken(
     { _id: userId.toString(), type: "access" },
-    "15m"
+    "7d"
   );
   const newRefreshToken = jwt.generateToken(
     { _id: userId.toString(), type: "refresh" },
-    "7d"
+    "30d"
   );
 
   const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);

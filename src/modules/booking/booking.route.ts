@@ -36,7 +36,7 @@ router.get(
 
 router.post(
   "/:bookingId/complete",
-  auth("admin"),
+  auth("common"),
   validate(bookingValidation.completeBookingState),
   bookingController.completeBookingState
 );
@@ -50,7 +50,7 @@ router.post(
 
 router.post(
   "/:bookingId/reschedule",
-  auth("common"),
+  auth("teacher"),
   validate(bookingValidation.rescheduleBooking),
   bookingController.rescheduleBooking
 );

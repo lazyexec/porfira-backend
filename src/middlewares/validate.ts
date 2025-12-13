@@ -1,5 +1,6 @@
-import type { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
+import Joi from "joi";
 import ApiError from "../utils/ApiError";
 
 const validate =
@@ -16,14 +17,19 @@ const validate =
         const s = schema[part];
         if (!s) continue;
 
-        const { error, value } = s.validate((req as any)[part]);
+        // Validate and apply default values
+        const { error, value } = s.validate((req as any)[part], {
+          abortEarly: false,
+          stripUnknown: true,
+        });
+
         if (error) {
           return next(
             new ApiError(httpStatus.BAD_REQUEST, error.details[0].message)
           );
         }
 
-        // For query and params, use Object.assign since they are read-only getters
+        // Assign validated values (including defaults for query and params)
         if (part === "query" || part === "params") {
           Object.assign((req as any)[part], value);
         } else {
