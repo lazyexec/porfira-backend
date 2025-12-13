@@ -26,29 +26,6 @@ const createReview = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
-// Update or Modify a review (Student)
-const updateReview = catchAsync(async (req: Request, res: Response) => {
-  const userId = req.user?.id;
-  const reviewId = req.params.reviewId;
-  const { score, comment } = req.body;
-  const review = await reviewService.updateReview(
-    reviewId || "",
-    userId || "",
-    {
-      score,
-      comment,
-    }
-  );
-
-  res.status(httpStatus.OK).json(
-    response({
-      status: httpStatus.OK,
-      message: "Review updated successfully",
-      data: review,
-    })
-  );
-});
-
 // Get Reviews by Teacher ID
 const getReviews = catchAsync(async (req: Request, res: Response) => {
   let teacherId: string | undefined;
@@ -108,7 +85,7 @@ const queryReview = catchAsync(async (req: Request, res: Response) => {
 export default {
   createReview,
   getReviews,
-  updateReview,
+
   deleteReview,
   queryReview,
 };

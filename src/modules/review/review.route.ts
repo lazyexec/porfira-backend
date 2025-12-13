@@ -16,11 +16,6 @@ router
 
 router
   .route("/:reviewId")
-  .patch(
-    auth("student"),
-    validate(reviewValidation.update),
-    reviewController.updateReview
-  )
   .delete(
     auth("common"),
     validate(reviewValidation.deleteReview),

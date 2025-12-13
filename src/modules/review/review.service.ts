@@ -2,17 +2,17 @@ import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
 import Review from "./review.model";
 import User from "../user/user.model";
+import mongoose from "mongoose";
 
-const updateRating = async (userId: string) => {
-  const teacherId = userId; // Assuming userId passed is the teacher's ID
+const updateRating = async (teacherId: mongoose.Types.ObjectId) => {
   const result = await Review.aggregate([
     {
-      $match: { toUser: teacherId }, // Assuming 'toUser' field stores the ID of the user being reviewed (teacher)
+      $match: { toUser: new mongoose.Types.ObjectId(teacherId) }, // Assuming 'toUser' field stores the ID of the user being reviewed (teacher)
     },
     {
       $group: {
         _id: null,
-        averageRating: { $avg: "$rating" },
+        averageRating: { $avg: "$score" },
       },
     },
   ]);
@@ -34,28 +34,30 @@ const updateRating = async (userId: string) => {
 };
 
 const createReview = async (reviewData: any) => {
-  const review = await Review.create(reviewData);
-  updateRating(reviewData.toUser.toString());
-  return review;
+  const isExist = await Review.findOne({
+    fromUser: reviewData.fromUser,
+    toUser: reviewData.toUser,
+  });
+
+  if (isExist) {
+    const review = await Review.findOneAndUpdate(
+      { _id: isExist._id },
+      reviewData,
+      {
+        new: true,
+      }
+    );
+    await updateRating(reviewData.toUser);
+    return review;
+  } else {
+    const review = await Review.create(reviewData);
+    await updateRating(reviewData.toUser);
+    return review;
+  }
 };
 
 const getReview = async (reviewData: any) => {
   const review = await Review.findById(reviewData);
-  return review;
-};
-
-const updateReview = async (
-  reviewId: string,
-  userId: string,
-  reviewData: any
-) => {
-  const review = await Review.findOne({ _id: reviewId, fromUser: userId });
-  if (!review) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Review not found");
-  }
-  Object.assign(review, reviewData);
-  await review.save();
-  updateRating(review.toUser.toString());
   return review;
 };
 
@@ -67,7 +69,7 @@ const deleteReview = async (reviewId: string) => {
   if (!review.toUser) {
     throw new ApiError(httpStatus.NOT_FOUND, "Teacher not found");
   }
-  updateRating(review.toUser.toString());
+  await updateRating(review.toUser);
   await review.deleteOne();
   return review;
 };
@@ -87,7 +89,6 @@ const queryReview = async (filter: object, options: object) => {
 export default {
   createReview,
   getReview,
-  updateReview,
   deleteReview,
   queryReview,
 };
