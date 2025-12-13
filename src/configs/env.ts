@@ -14,7 +14,12 @@ const validator = Joi.object({
     .valid("development", "production")
     .default("development"),
   JWT_SECRET: Joi.string().required().description("JWT Secret key"),
-  JWT_EXPIRY: Joi.string().required().description("JWT Expiry time"),
+  JWT_ACCESS_EXPIRY: Joi.string()
+    .default("3d")
+    .description("JWT Access Expiry time"),
+  JWT_REFRESH_EXPIRY: Joi.string()
+    .default("30d")
+    .description("JWT Refresh Expiry time"),
   SMTP_HOST: Joi.string().required().description("SMTP Host"),
   SMTP_PORT: Joi.number().required().description("SMTP Port"),
   SMTP_USERNAME: Joi.string().required().description("SMTP Username"),
@@ -53,7 +58,8 @@ const env = {
   DEBUG: value.NODE_ENV === "development",
   jwt: {
     secret: value.JWT_SECRET,
-    expiry: value.JWT_EXPIRY,
+    expiryAccessToken: value.JWT_ACCESS_EXPIRY,
+    expiryRefreshToken: value.JWT_REFRESH_EXPIRY,
   },
   email: {
     provider: {

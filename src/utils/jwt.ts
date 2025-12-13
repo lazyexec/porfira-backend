@@ -17,7 +17,10 @@ const verifyToken = (token: string): any => {
   }
 };
 
-const generateToken = (payload: object, expiresIn = env.jwt.expiry): string => {
+const generateToken = (
+  payload: object,
+  expiresIn = env.jwt.expiryAccessToken
+): string => {
   return jwt.sign(payload, env.jwt.secret, { expiresIn });
 };
 

@@ -4,6 +4,7 @@ import jwt from "../../utils/jwt";
 import ApiError from "../../utils/ApiError";
 import status from "http-status";
 import env from "../../configs/env";
+import { daysToDate } from "../../utils/date";
 
 const saveRefreshToken = async (opts: {
   userId: Types.ObjectId;
@@ -44,18 +45,18 @@ const generateUserTokens = async (opts: {
 
   const accessToken = jwt.generateToken(
     { _id: userId.toString(), type: "access" },
-    env.DEBUG ? "7d" : "15m"
+    env.jwt.expiryAccessToken
   );
-  const token = jwt.generateToken(
+  const refreshToken = jwt.generateToken(
     { _id: userId.toString(), type: "refresh" },
-    "30d"
+    env.jwt.expiryRefreshToken
   );
 
-  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30Days
+  const expiresAt = daysToDate(env.jwt.expiryRefreshToken);
 
   await saveRefreshToken({
     userId,
-    token,
+    token: refreshToken,
     deviceId,
     ip,
     userAgent,
@@ -65,10 +66,10 @@ const generateUserTokens = async (opts: {
   return {
     access: {
       token: accessToken,
-      expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+      expiresAt: daysToDate(env.jwt.expiryAccessToken),
     },
     refresh: {
-      token: token,
+      token: refreshToken,
       expiresAt,
     },
   };
@@ -129,14 +130,14 @@ const refreshAuth = async (
 
   const newAccessToken = jwt.generateToken(
     { _id: userId.toString(), type: "access" },
-    "7d"
+    env.jwt.expiryAccessToken
   );
   const newRefreshToken = jwt.generateToken(
     { _id: userId.toString(), type: "refresh" },
-    "30d"
+    env.jwt.expiryRefreshToken
   );
 
-  const newExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  const newExpiresAt = daysToDate(env.jwt.expiryRefreshToken);
 
   await saveRefreshToken({
     userId,
@@ -150,7 +151,7 @@ const refreshAuth = async (
   return {
     access: {
       token: newAccessToken,
-      expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+      expiresAt: newExpiresAt,
     },
     refresh: {
       token: newRefreshToken,
