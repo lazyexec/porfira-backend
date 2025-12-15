@@ -72,22 +72,34 @@ const pushNotification = async (
 };
 
 const createNotification = async (
-  user: string,
+  user: string | null,
   title: string,
-  description: string
+  description: string,
+  type: "personal" | "admin" | "global" = "personal"
 ): Promise<void> => {
   try {
     const notification = new Notification({
       user,
       title,
       description,
+      type,
     });
-    const receiverToken = await User.findOne({ _id: user }).select("fcmToken");
-    if (receiverToken?.fcmToken) {
-      await pushNotification(receiverToken.fcmToken, {
-        title,
-        body: description,
-      });
+    // Send push notification only if it's a personal notification with a user
+    if (user && type === "personal") {
+      try {
+        const receiverToken = await User.findOne({ _id: user }).select(
+          "fcmToken"
+        );
+        if (receiverToken?.fcmToken) {
+          await pushNotification(receiverToken.fcmToken, {
+            title,
+            body: description,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to send push notification:", error);
+        // Continue to save notification in DB even if push fails
+      }
     }
     await notification.save();
   } catch (error: any) {
@@ -108,13 +120,19 @@ const deleteNotification = async (
 
 const getAllNotifications = async (
   userId: string,
+  userRole: string,
   options: any
 ): Promise<any> => {
   try {
-    const notifications = await Notification.paginate(
-      { user: userId },
-      options
-    );
+    let filter: any = { user: userId };
+
+    if (userRole === "admin") {
+      filter = {
+        $or: [{ user: userId }, { type: "admin" }],
+      };
+    }
+
+    const notifications = await Notification.paginate(filter, options);
     return notifications;
   } catch (error: any) {
     throw new ApiError(httpStatus.BAD_REQUEST, error.message);
@@ -132,12 +150,14 @@ const lessonConfirmationNotification = async (
   await createNotification(
     student,
     "Lesson Confirmation",
-    "Your lesson has been confirmed"
+    "Your lesson has been confirmed",
+    "personal"
   );
   await createNotification(
     teacher,
     "Lesson Confirmation",
-    "Your lesson has been confirmed"
+    "Your lesson has been confirmed",
+    "personal"
   );
 };
 

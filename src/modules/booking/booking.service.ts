@@ -367,7 +367,19 @@ const cancelBooking = async (
   booking.status = "cancelled";
   await booking.save();
 
-  // TODO: Send Notification (reason)
+  // Send Notification
+  const receiverId = isTeacher
+    ? booking.student.toString()
+    : booking.teacher.toString();
+
+  await notificationService.createNotification(
+    receiverId,
+    "Booking Cancelled",
+    `Your booking for ${booking.subject} has been cancelled by the ${
+      isTeacher ? "teacher" : "student"
+    }.${reason ? ` Reason: ${reason}` : ""}`,
+    "personal"
+  );
 
   return booking;
 };
@@ -428,6 +440,21 @@ const rescheduleBooking = async (
   // Status remains same (e.g. scheduled)
 
   await booking.save();
+
+  // Send Notification
+  const receiverId = isTeacher
+    ? booking.student.toString()
+    : booking.teacher.toString();
+
+  await notificationService.createNotification(
+    receiverId,
+    "Booking Rescheduled",
+    `Your booking for ${
+      booking.subject
+    } has been rescheduled to ${newFromTime.toLocaleString()}.`,
+    "personal"
+  );
+
   return booking;
 };
 

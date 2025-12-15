@@ -26,4 +26,5 @@ router.delete(
   notificationController.deleteAllNotification
 );
 
+
 export default router;

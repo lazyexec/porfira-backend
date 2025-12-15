@@ -8,10 +8,18 @@ import hideFields from "../../plugins/mongoose/hideFields.plugin";
 
 const notificationSchema = new mongoose.Schema<INotification>(
   {
-    user: mongoose.Types.ObjectId,
+    user: {
+      type: mongoose.Types.ObjectId,
+      required: false,
+    },
     title: String,
     description: String,
     transactionId: String,
+    type: {
+      type: String,
+      enum: ["personal", "admin", "global"],
+      default: "personal",
+    },
   },
   {
     timestamps: true,

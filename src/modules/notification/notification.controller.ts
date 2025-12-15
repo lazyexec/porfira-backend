@@ -8,9 +8,10 @@ import pick from "../../utils/pick";
 
 const createNotification = catchAsync(async (req: Request, res: Response) => {
   const notification = await notificationService.createNotification(
-    "",
-    "",
-    "",
+    req.user?.id || null, // Example: usually dummy endpoint, but making it consistent
+    "Test Notification",
+    "This is a test notification",
+    "personal"
   );
   res.status(httpStatus.OK).json(
     response({
@@ -39,8 +40,10 @@ const deleteNotification = catchAsync(async (req: Request, res: Response) => {
 const getAllNotifications = catchAsync(async (req: Request, res: Response) => {
   const options = pick(req.query, ["sort", "limit", "page"]);
   const userId = req.user?.id!;
+  const userRole = req.user?.role!;
   const notifications = await notificationService.getAllNotifications(
     userId,
+    userRole,
     options
   );
   res.status(httpStatus.OK).json(
@@ -69,5 +72,5 @@ export default {
   createNotification,
   deleteNotification,
   getAllNotifications,
-  deleteAllNotification
+  deleteAllNotification,
 };
