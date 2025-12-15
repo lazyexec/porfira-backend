@@ -27,7 +27,7 @@ const supportTicketSchema = new Schema<ISupportTicket>(
     },
     lastMessage: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "SupportMessage",
+      ref: "Message",
       required: false,
     },
     lastMessageAt: {

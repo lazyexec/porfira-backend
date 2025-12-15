@@ -5,6 +5,7 @@ import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
 import fs from "../../utils/fs";
 import mongoose from "mongoose";
+import env from "../../configs/env";
 
 interface UploadedFiles {
   avatar?: Express.Multer.File[];
@@ -35,16 +36,20 @@ const updateUser = async (
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
 
+  console.log({ files: files.avatar?.[0] });
+
   if (files) {
     if (files.avatar?.[0]) {
       const file = files.avatar[0];
-      user.avatar = fs.sanitizePath(file.path);
+      user.avatar = env.BACKEND_URL + "/public" + fs.sanitizePath(file.path);
+      console.log(user.avatar);
     }
 
     if (user.role === "teacher" && files.content?.[0]) {
       const file = files.content[0];
       user.teacher = user.teacher ?? {};
-      user.teacher.content = fs.sanitizePath(file.path);
+      user.teacher.content =
+        env.BACKEND_URL + "/public" + fs.sanitizePath(file.path);
     }
 
     // Handle teacher documents (max 2 PDFs)
@@ -56,8 +61,8 @@ const updateUser = async (
         );
       }
       user.teacher = user.teacher ?? {};
-      user.teacher.documents = files.documents.map((file) =>
-        fs.sanitizePath(file.path)
+      user.teacher.documents = files.documents.map(
+        (file) => env.BACKEND_URL + "/public" + fs.sanitizePath(file.path)
       );
     }
   }

@@ -32,7 +32,7 @@ const validator = Joi.object({
   // URLS
   FRONTEND_URL: Joi.string().default("*").description("Frontend URL"),
   BACKEND_URL: Joi.string()
-    .default(`https://${process.env.BACKEND_IP}:${process.env.PORT}`)
+    .default(`http://${process.env.BACKEND_IP}:${process.env.PORT}`)
     .description("Frontend URL"),
   FIREBASE_PROJECT_ID: Joi.string()
     .required()
