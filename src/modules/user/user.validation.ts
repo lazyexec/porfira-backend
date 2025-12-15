@@ -3,7 +3,6 @@ import Joi from "joi";
 const updateProfile = {
   body: Joi.object({
     name: Joi.string().trim().allow(null).optional(),
-    email: Joi.string().email().lowercase().trim().optional(),
     avatar: Joi.string().optional(),
     fcmToken: Joi.string().allow(null).optional(),
     dateOfBirth: Joi.date().allow(null).optional(),
