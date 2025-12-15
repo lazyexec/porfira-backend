@@ -364,7 +364,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"1qazxsw2\"\n}",
+									"raw": "{\n  \"email\": \"student2@example.com\",\n  \"password\": \"1qazxsw2\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -2062,6 +2062,37 @@
 									"body": "{\n    \"status\": 200,\n    \"message\": \"User profile Updated successfully\",\n    \"response\": {\n        \"data\": {\n            \"_id\": \"693af8168565e69fc2aba14f\",\n            \"name\": \"Arif Hasan\",\n            \"email\": \"student@example.com\",\n            \"avatar\": \"/uploads/users/user.png\",\n            \"role\": \"student\",\n            \"isEmailVerified\": true,\n            \"isResetPassword\": false,\n            \"fcmToken\": null,\n            \"dateOfBirth\": \"2005-06-15T00:00:00.000Z\",\n            \"phoneNumber\": 8801777001122,\n            \"countryCode\": \"+880\",\n            \"bio\": \"Highly motivated student eager to learn math and science.\",\n            \"isDeleted\": false,\n            \"isRestricted\": false,\n            \"restrictionReason\": null,\n            \"isOnline\": false,\n            \"lastSeen\": \"2025-12-11T16:57:58.025Z\",\n            \"createdAt\": \"2025-12-11T16:58:01.291Z\",\n            \"updatedAt\": \"2025-12-11T17:28:36.256Z\",\n            \"student\": {\n                \"interestedSubjects\": [\n                    \"Mathematics\",\n                    \"Physics\",\n                    \"Chemistry\"\n                ],\n                \"_id\": \"693aff44a67e0f4302de7e89\"\n            },\n            \"id\": \"693af8168565e69fc2aba14f\"\n        }\n    }\n}"
 								}
 							]
+						},
+						{
+							"name": "Get Users By ID",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"student2@example.com\",\n  \"password\": \"1qazxsw2\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user/:userId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "693da0d59bc1fff06059876c"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -5184,7 +5215,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"teacherId\": \"693af7104deda559f6d0a966\",\n  \"date\": \"2025-12-15\",\n  \"duration\": 1,\n  \"time\": \"2015-06-22T13:17:21+0000\",\n  \"subject\": \"Mathematics\"\n}",
+									"raw": "{\n  \"teacherId\": \"693da0d59bc1fff06059876c\",\n  \"date\": \"2025-12-15\",\n  \"duration\": 1,\n  \"time\": \"2015-06-22T13:17:21+0000\",\n  \"subject\": \"Mathematics\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5328,7 +5359,7 @@
 										},
 										{
 											"key": "sort",
-											"value": null,
+											"value": "teacher.rating 1",
 											"disabled": true
 										},
 										{
@@ -5578,7 +5609,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -5688,7 +5719,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"toUser\": \"693b020b35e6446bd0ae5b81\",\n  \"score\": 5,\n  \"comment\": \"Excellent teacher!\"\n}",
+									"raw": "{\n  \"toUser\": \"693da1049bc1fff060598780\",\n  \"score\": 4,\n  \"comment\": \"Excellent teacher!\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -5842,7 +5873,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"teacherId\": \"69345a003124b7c8082bcacd\"\r\n}",
+									"raw": "{\r\n    \"teacherId\": \"693da1049bc1fff060598780\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -6097,7 +6128,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{baseUrl}}/user/all?role=student&page=1&limit=10",
+									"raw": "{{baseUrl}}/user/all?role=teacher&page=1&limit=10",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -6108,7 +6139,7 @@
 									"query": [
 										{
 											"key": "role",
-											"value": "student"
+											"value": "teacher"
 										},
 										{
 											"key": "page",

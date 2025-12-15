@@ -4,6 +4,7 @@ import email from "../../configs/email";
 import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
 import fs from "../../utils/fs";
+import mongoose from "mongoose";
 
 interface UploadedFiles {
   avatar?: Express.Multer.File[];
@@ -69,7 +70,7 @@ const updateUser = async (
 };
 
 const getUserById = async (userId: string) => {
-  return User.findById(userId);
+  return User.findById(new mongoose.Types.ObjectId(userId));
 };
 
 const syncTeacherBalance = async (teacherId: string, balance: number) => {

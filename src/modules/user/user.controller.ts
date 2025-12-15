@@ -84,10 +84,26 @@ const unrestrictUser = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const getProfileById = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params?.userId;
+  if (!userId) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized");
+  }
+  const user = await userService.getUserById(userId);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "User profile retrieved successfully",
+      data: user,
+    })
+  );
+});
+
 export default {
   getProfile,
   updateProfile,
   queryAllUsers,
   restrictUser,
   unrestrictUser,
+  getProfileById,
 };

@@ -23,6 +23,13 @@ router
     userController.updateProfile
   );
 
+router
+  .route("/:userId")
+  .get(
+    auth("common"),
+    validate(userValidation.getUserById),
+    userController.getProfileById
+  );
 // Admin Route
 router
   .route("/all")
