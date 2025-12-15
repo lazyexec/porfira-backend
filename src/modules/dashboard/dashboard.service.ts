@@ -102,7 +102,7 @@ const getStudentStats = async (studentId: string) => {
     // givenReview: givenReviewCount,
     upcomingLessons,
     totalHours: statsAggregate[0]?.totalDuration || 0,
-    totalEarnings: statsAggregate[0]?.totalAmount || 0, // Using "totalEarnings" key as requested, though it's spending
+    totalSpending: statsAggregate[0]?.totalAmount || 0, // total Spending.
   };
 
   return stats;
