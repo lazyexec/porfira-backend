@@ -66,4 +66,10 @@ const getUserById = {
     userId: Joi.string().required(),
   }),
 };
-export default { updateProfile, queryAllUsers, restrictUser, unrestrictUser, getUserById };
+export default {
+  updateProfile,
+  queryAllUsers,
+  restrictUser,
+  unrestrictUser,
+  getUserById,
+};

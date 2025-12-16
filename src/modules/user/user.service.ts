@@ -36,8 +36,6 @@ const updateUser = async (
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
 
-  console.log({ files: files.avatar?.[0] });
-
   if (files) {
     if (files.avatar?.[0]) {
       const file = files.avatar[0];
