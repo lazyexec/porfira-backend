@@ -38,14 +38,15 @@ const updateUser = async (
 
   if (files) {
     if (files.avatar?.[0]) {
+      fs.deleteLocalFile(user.avatar);
       const file = files.avatar[0];
       user.avatar = env.BACKEND_URL + "/public" + fs.sanitizePath(file.path);
-      console.log(user.avatar);
     }
 
     if (user.role === "teacher" && files.content?.[0]) {
       const file = files.content[0];
       user.teacher = user.teacher ?? {};
+      fs.deleteLocalFile(user.teacher?.content!);
       user.teacher.content =
         env.BACKEND_URL + "/public" + fs.sanitizePath(file.path);
     }
@@ -58,6 +59,13 @@ const updateUser = async (
           "Maximum 2 documents allowed"
         );
       }
+
+      if (user.teacher?.documents?.length) {
+        await Promise.all(
+          user.teacher.documents.map((doc) => fs.deleteLocalFile(doc))
+        );
+      }
+
       user.teacher = user.teacher ?? {};
       user.teacher.documents = files.documents.map(
         (file) => env.BACKEND_URL + "/public" + fs.sanitizePath(file.path)

@@ -6,6 +6,11 @@ import notificationValidation from "./notification.validation";
 
 const router: express.Router = express.Router();
 
+router.delete(
+  "/clear",
+  auth("common"),
+  notificationController.deleteAllNotification
+);
 router
   .route("/:notificationId")
   .delete(
@@ -20,10 +25,5 @@ router
     validate(notificationValidation.getNotification),
     notificationController.getAllNotifications
   );
-router.delete(
-  "/clear",
-  auth("common"),
-  notificationController.deleteAllNotification
-);
 
 export default router;
