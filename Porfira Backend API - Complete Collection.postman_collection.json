@@ -364,7 +364,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"email\": \"student2@example.com\",\n  \"password\": \"1qazxsw2\"\n}",
+									"raw": "{\n  \"email\": \"student@example.com\",\n  \"password\": \"1qazxsw2\",\n  \"fcmToken\": \"null\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1527,7 +1527,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"Sharif Khan\",\r\n  \"avatar\": \"/uploads/users/user.png\",\r\n  \"bio\": \"Professional math tutor with 1 years of experience.\",\r\n  \"dateOfBirth\": \"1990-02-20T00:00:00.000Z\",\r\n  \"phoneNumber\": 8801622223344,\r\n  \"countryCode\": \"+880\",\r\n  \"teacher\": {\r\n    \"yearsOfTeachingExp\": 5,\r\n    \"subjectsTaught\": [\"Mathematics\", \"Algebra\", \"Geometry\"],\r\n    \"hourlyRate\": 1200,\r\n    \"availableTime\": {\r\n      \"startTime\": \"09:00 AM\",\r\n      \"endTime\": \"2025-01-01T17:00:00.000Z\"\r\n    },\r\n    \"availableDays\": [\"Monday\", \"Wednesday\", \"Friday\"],\r\n    \"content\": \"Experienced teacher offering 1-to-1 live sessions.\",\r\n    \"documents\": [\r\n      \"/uploads/teachers/cert1.pdf\",\r\n      \"/uploads/teachers/cert2.pdf\"\r\n    ],\r\n    \"qualification\": [\r\n      {\r\n        \"title\": \"B.Sc. in Mathematics\",\r\n        \"institution\": \"Dhaka University\",\r\n        \"year\": 2014\r\n      },\r\n      {\r\n        \"title\": \"M.Sc. in Applied Math\",\r\n        \"institution\": \"Dhaka University\",\r\n        \"year\": 2016\r\n      }\r\n    ]\r\n  }\r\n}\r\n",
+									"raw": "{\r\n  \"name\": \"Mahmudul Karim\",\r\n  \"avatar\": \"/uploads/users/user.png\",\r\n  \"bio\": \"Professional math tutor with 5 years of experience.\",\r\n  \"dateOfBirth\": \"1990-02-20T00:00:00.000Z\",\r\n  \"phoneNumber\": 8801622223344,\r\n  \"countryCode\": \"+880\",\r\n  \"teacher\": {\r\n    \"yearsOfTeachingExp\": 5,\r\n    \"subjectsTaught\": [\"Mathematics\", \"Algebra\", \"Geometry\"],\r\n    \"hourlyRate\": 0.5,\r\n    \"availableTime\": {\r\n      \"startTime\": \"2025-01-01T01:00:00.000Z\",\r\n      \"endTime\": \"2025-01-01T17:00:00.000Z\"\r\n    },\r\n    \"availableDays\": [\"Monday\", \"Wednesday\", \"Friday\"],\r\n    \"content\": \"Experienced teacher offering 1-to-1 live sessions.\",\r\n    \"documents\": [\r\n      \"/uploads/teachers/cert1.pdf\",\r\n      \"/uploads/teachers/cert2.pdf\"\r\n    ],\r\n    \"qualification\": [\r\n      {\r\n        \"title\": \"B.Sc. in Mathematics\",\r\n        \"institution\": \"Dhaka University\",\r\n        \"year\": 2014\r\n      },\r\n      {\r\n        \"title\": \"M.Sc. in Applied Math\",\r\n        \"institution\": \"Dhaka University\",\r\n        \"year\": 2016\r\n      }\r\n    ]\r\n  }\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1818,130 +1818,6 @@
 									"body": "{\n    \"status\": 200,\n    \"message\": \"User profile Updated successfully\",\n    \"response\": {\n        \"data\": {\n            \"_id\": \"693af84e8565e69fc2aba158\",\n            \"name\": \"System Admin\",\n            \"email\": \"admin@example.com\",\n            \"avatar\": \"/uploads/users/user.png\",\n            \"role\": \"admin\",\n            \"isEmailVerified\": true,\n            \"isResetPassword\": false,\n            \"fcmToken\": null,\n            \"dateOfBirth\": \"2005-06-15T00:00:00.000Z\",\n            \"phoneNumber\": 8801777001122,\n            \"countryCode\": \"+880\",\n            \"bio\": \"Super admin of the platform.\",\n            \"isDeleted\": false,\n            \"isRestricted\": false,\n            \"restrictionReason\": null,\n            \"isOnline\": false,\n            \"lastSeen\": \"2025-12-11T16:58:54.602Z\",\n            \"createdAt\": \"2025-12-11T16:58:57.664Z\",\n            \"updatedAt\": \"2025-12-11T17:25:48.323Z\",\n            \"student\": {\n                \"interestedSubjects\": [\n                    \"Mathematics\",\n                    \"Physics\",\n                    \"Chemistry\"\n                ],\n                \"_id\": \"693afe5da67e0f4302de7e77\"\n            },\n            \"id\": \"693af84e8565e69fc2aba158\"\n        }\n    }\n}"
 								},
 								{
-									"name": "Teacher",
-									"originalRequest": {
-										"method": "PATCH",
-										"header": [
-											{
-												"key": "Authorization",
-												"value": "Bearer {{accessToken}}",
-												"type": "text"
-											}
-										],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n  \"name\": \"Mahmudul Karim\",\r\n  \"avatar\": \"/uploads/users/user.png\",\r\n  \"bio\": \"Professional math tutor with 5 years of experience.\",\r\n  \"dateOfBirth\": \"1990-02-20T00:00:00.000Z\",\r\n  \"phoneNumber\": 8801622223344,\r\n  \"countryCode\": \"+880\",\r\n  \"teacher\": {\r\n    \"yearsOfTeachingExp\": 5,\r\n    \"subjectsTaught\": [\"Mathematics\", \"Algebra\", \"Geometry\"],\r\n    \"hourlyRate\": 1200,\r\n    \"availableTime\": {\r\n      \"startTime\": \"09:00 AM\",\r\n      \"endTime\": \"2025-01-01T17:00:00.000Z\"\r\n    },\r\n    \"availableDays\": [\"Monday\", \"Wednesday\", \"Friday\"],\r\n    \"content\": \"Experienced teacher offering 1-to-1 live sessions.\",\r\n    \"documents\": [\r\n      \"/uploads/teachers/cert1.pdf\",\r\n      \"/uploads/teachers/cert2.pdf\"\r\n    ],\r\n    \"qualification\": [\r\n      {\r\n        \"title\": \"B.Sc. in Mathematics\",\r\n        \"institution\": \"Dhaka University\",\r\n        \"year\": 2014\r\n      },\r\n      {\r\n        \"title\": \"M.Sc. in Applied Math\",\r\n        \"institution\": \"Dhaka University\",\r\n        \"year\": 2016\r\n      }\r\n    ]\r\n  }\r\n}\r\n",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{baseUrl}}/user/self/update",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"user",
-												"self",
-												"update"
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": null,
-									"header": [
-										{
-											"key": "Access-Control-Allow-Origin",
-											"value": "http://localhost:3000"
-										},
-										{
-											"key": "Vary",
-											"value": "Origin, Accept-Encoding"
-										},
-										{
-											"key": "Content-Security-Policy",
-											"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
-										},
-										{
-											"key": "Cross-Origin-Opener-Policy",
-											"value": "same-origin"
-										},
-										{
-											"key": "Cross-Origin-Resource-Policy",
-											"value": "same-origin"
-										},
-										{
-											"key": "Origin-Agent-Cluster",
-											"value": "?1"
-										},
-										{
-											"key": "Referrer-Policy",
-											"value": "no-referrer"
-										},
-										{
-											"key": "Strict-Transport-Security",
-											"value": "max-age=31536000; includeSubDomains"
-										},
-										{
-											"key": "X-Content-Type-Options",
-											"value": "nosniff"
-										},
-										{
-											"key": "X-DNS-Prefetch-Control",
-											"value": "off"
-										},
-										{
-											"key": "X-Download-Options",
-											"value": "noopen"
-										},
-										{
-											"key": "X-Frame-Options",
-											"value": "SAMEORIGIN"
-										},
-										{
-											"key": "X-Permitted-Cross-Domain-Policies",
-											"value": "none"
-										},
-										{
-											"key": "X-XSS-Protection",
-											"value": "0"
-										},
-										{
-											"key": "Content-Type",
-											"value": "application/json; charset=utf-8"
-										},
-										{
-											"key": "ETag",
-											"value": "W/\"5cc-TZ1tHD8Zy+TsPwyYlWjUXLdbAec\""
-										},
-										{
-											"key": "Content-Encoding",
-											"value": "br"
-										},
-										{
-											"key": "Date",
-											"value": "Thu, 11 Dec 2025 17:27:32 GMT"
-										},
-										{
-											"key": "Connection",
-											"value": "keep-alive"
-										},
-										{
-											"key": "Keep-Alive",
-											"value": "timeout=5"
-										},
-										{
-											"key": "Transfer-Encoding",
-											"value": "chunked"
-										}
-									],
-									"cookie": [],
-									"body": "{\n    \"status\": 200,\n    \"message\": \"User profile Updated successfully\",\n    \"response\": {\n        \"data\": {\n            \"_id\": \"693af7104deda559f6d0a966\",\n            \"name\": \"Mahmudul Karim\",\n            \"email\": \"teacher@example.com\",\n            \"avatar\": \"/uploads/users/user.png\",\n            \"role\": \"teacher\",\n            \"isEmailVerified\": true,\n            \"isResetPassword\": false,\n            \"fcmToken\": null,\n            \"dateOfBirth\": \"1990-02-20T00:00:00.000Z\",\n            \"phoneNumber\": 8801622223344,\n            \"countryCode\": \"+880\",\n            \"bio\": \"Professional math tutor with 5 years of experience.\",\n            \"isDeleted\": false,\n            \"isRestricted\": false,\n            \"restrictionReason\": null,\n            \"isOnline\": false,\n            \"lastSeen\": \"2025-12-11T16:53:36.449Z\",\n            \"createdAt\": \"2025-12-11T16:53:39.743Z\",\n            \"updatedAt\": \"2025-12-11T17:27:32.221Z\",\n            \"teacher\": {\n                \"yearsOfTeachingExp\": 5,\n                \"subjectsTaught\": [\n                    \"Mathematics\",\n                    \"Algebra\",\n                    \"Geometry\"\n                ],\n                \"stripePriceId\": null,\n                \"stripeOnboardingComplete\": false,\n                \"stripePayoutsEnabled\": false,\n                \"hourlyRate\": 1200,\n                \"availableTime\": {\n                    \"startTime\": \"09:00 AM\",\n                    \"endTime\": \"2025-01-01T17:00:00.000Z\"\n                },\n                \"availableDays\": [\n                    \"Monday\",\n                    \"Wednesday\",\n                    \"Friday\"\n                ],\n                \"content\": \"Experienced teacher offering 1-to-1 live sessions.\",\n                \"documents\": [\n                    \"/uploads/teachers/cert1.pdf\",\n                    \"/uploads/teachers/cert2.pdf\"\n                ],\n                \"rating\": 0,\n                \"qualification\": [\n                    {\n                        \"title\": \"B.Sc. in Mathematics\",\n                        \"institution\": \"Dhaka University\",\n                        \"year\": 2014,\n                        \"_id\": \"693aff04a67e0f4302de7e84\",\n                        \"id\": \"693aff04a67e0f4302de7e84\"\n                    },\n                    {\n                        \"title\": \"M.Sc. in Applied Math\",\n                        \"institution\": \"Dhaka University\",\n                        \"year\": 2016,\n                        \"_id\": \"693aff04a67e0f4302de7e85\",\n                        \"id\": \"693aff04a67e0f4302de7e85\"\n                    }\n                ],\n                \"status\": \"pending\",\n                \"_id\": \"693aff04a67e0f4302de7e83\"\n            },\n            \"id\": \"693af7104deda559f6d0a966\"\n        }\n    }\n}"
-								},
-								{
 									"name": "Student",
 									"originalRequest": {
 										"method": "PATCH",
@@ -2060,6 +1936,130 @@
 									],
 									"cookie": [],
 									"body": "{\n    \"status\": 200,\n    \"message\": \"User profile Updated successfully\",\n    \"response\": {\n        \"data\": {\n            \"_id\": \"693af8168565e69fc2aba14f\",\n            \"name\": \"Arif Hasan\",\n            \"email\": \"student@example.com\",\n            \"avatar\": \"/uploads/users/user.png\",\n            \"role\": \"student\",\n            \"isEmailVerified\": true,\n            \"isResetPassword\": false,\n            \"fcmToken\": null,\n            \"dateOfBirth\": \"2005-06-15T00:00:00.000Z\",\n            \"phoneNumber\": 8801777001122,\n            \"countryCode\": \"+880\",\n            \"bio\": \"Highly motivated student eager to learn math and science.\",\n            \"isDeleted\": false,\n            \"isRestricted\": false,\n            \"restrictionReason\": null,\n            \"isOnline\": false,\n            \"lastSeen\": \"2025-12-11T16:57:58.025Z\",\n            \"createdAt\": \"2025-12-11T16:58:01.291Z\",\n            \"updatedAt\": \"2025-12-11T17:28:36.256Z\",\n            \"student\": {\n                \"interestedSubjects\": [\n                    \"Mathematics\",\n                    \"Physics\",\n                    \"Chemistry\"\n                ],\n                \"_id\": \"693aff44a67e0f4302de7e89\"\n            },\n            \"id\": \"693af8168565e69fc2aba14f\"\n        }\n    }\n}"
+								},
+								{
+									"name": "Teacher",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{accessToken}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Mahmudul Karim\",\r\n  \"avatar\": \"/uploads/users/user.png\",\r\n  \"bio\": \"Professional math tutor with 5 years of experience.\",\r\n  \"dateOfBirth\": \"1990-02-20T00:00:00.000Z\",\r\n  \"phoneNumber\": 8801622223344,\r\n  \"countryCode\": \"+880\",\r\n  \"teacher\": {\r\n    \"yearsOfTeachingExp\": 5,\r\n    \"subjectsTaught\": [\"Mathematics\", \"Algebra\", \"Geometry\"],\r\n    \"hourlyRate\": 0.5,\r\n    \"availableTime\": {\r\n      \"startTime\": \"2025-01-01T01:00:00.000Z\",\r\n      \"endTime\": \"2025-01-01T17:00:00.000Z\"\r\n    },\r\n    \"availableDays\": [\"Monday\", \"Wednesday\", \"Friday\"],\r\n    \"content\": \"Experienced teacher offering 1-to-1 live sessions.\",\r\n    \"documents\": [\r\n      \"/uploads/teachers/cert1.pdf\",\r\n      \"/uploads/teachers/cert2.pdf\"\r\n    ],\r\n    \"qualification\": [\r\n      {\r\n        \"title\": \"B.Sc. in Mathematics\",\r\n        \"institution\": \"Dhaka University\",\r\n        \"year\": 2014\r\n      },\r\n      {\r\n        \"title\": \"M.Sc. in Applied Math\",\r\n        \"institution\": \"Dhaka University\",\r\n        \"year\": 2016\r\n      }\r\n    ]\r\n  }\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/user/self/update",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"user",
+												"self",
+												"update"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": null,
+									"header": [
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "http://localhost:3000"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin, Accept-Encoding"
+										},
+										{
+											"key": "Content-Security-Policy",
+											"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
+										},
+										{
+											"key": "Cross-Origin-Opener-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Cross-Origin-Resource-Policy",
+											"value": "same-origin"
+										},
+										{
+											"key": "Origin-Agent-Cluster",
+											"value": "?1"
+										},
+										{
+											"key": "Referrer-Policy",
+											"value": "no-referrer"
+										},
+										{
+											"key": "Strict-Transport-Security",
+											"value": "max-age=31536000; includeSubDomains"
+										},
+										{
+											"key": "X-Content-Type-Options",
+											"value": "nosniff"
+										},
+										{
+											"key": "X-DNS-Prefetch-Control",
+											"value": "off"
+										},
+										{
+											"key": "X-Download-Options",
+											"value": "noopen"
+										},
+										{
+											"key": "X-Frame-Options",
+											"value": "SAMEORIGIN"
+										},
+										{
+											"key": "X-Permitted-Cross-Domain-Policies",
+											"value": "none"
+										},
+										{
+											"key": "X-XSS-Protection",
+											"value": "0"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"67e-MJ0t7rPNLs+1xkFhNpWvjj1i04s\""
+										},
+										{
+											"key": "Content-Encoding",
+											"value": "br"
+										},
+										{
+											"key": "Date",
+											"value": "Wed, 17 Dec 2025 23:02:38 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"message\": \"User profile Updated successfully\",\n    \"response\": {\n        \"data\": {\n            \"_id\": \"69432a218039bd0d782b0ad7\",\n            \"name\": \"Mahmudul Karim\",\n            \"email\": \"teacher@example.com\",\n            \"avatar\": \"/uploads/users/user.png\",\n            \"role\": \"teacher\",\n            \"isEmailVerified\": true,\n            \"isResetPassword\": false,\n            \"fcmToken\": null,\n            \"dateOfBirth\": \"1990-02-20T00:00:00.000Z\",\n            \"phoneNumber\": 8801622223344,\n            \"countryCode\": \"+880\",\n            \"bio\": \"Professional math tutor with 5 years of experience.\",\n            \"isDeleted\": false,\n            \"isRestricted\": false,\n            \"restrictionReason\": null,\n            \"isOnline\": false,\n            \"lastSeen\": \"2025-12-17T22:09:37.206Z\",\n            \"createdAt\": \"2025-12-17T22:09:37.209Z\",\n            \"updatedAt\": \"2025-12-17T23:02:38.356Z\",\n            \"teacher\": {\n                \"yearsOfTeachingExp\": 5,\n                \"subjectsTaught\": [\n                    \"Mathematics\",\n                    \"Algebra\",\n                    \"Geometry\"\n                ],\n                \"stripePriceId\": null,\n                \"stripeAccountId\": null,\n                \"stripeOnboardingComplete\": false,\n                \"stripePayoutsEnabled\": false,\n                \"hourlyRate\": 0.5,\n                \"availableTime\": {\n                    \"startTime\": \"Wed Jan 01 2025 07:00:00 GMT+0600 (Bangladesh Standard Time)\",\n                    \"endTime\": \"2025-01-01T17:00:00.000Z\"\n                },\n                \"availableDays\": [\n                    \"Monday\",\n                    \"Wednesday\",\n                    \"Friday\"\n                ],\n                \"content\": \"Experienced teacher offering 1-to-1 live sessions.\",\n                \"documents\": [\n                    \"/uploads/teachers/cert1.pdf\",\n                    \"/uploads/teachers/cert2.pdf\"\n                ],\n                \"rating\": 0,\n                \"qualification\": [\n                    {\n                        \"title\": \"B.Sc. in Mathematics\",\n                        \"institution\": \"Dhaka University\",\n                        \"year\": 2014,\n                        \"_id\": \"6943368ecfcf955422898f3f\",\n                        \"id\": \"6943368ecfcf955422898f3f\"\n                    },\n                    {\n                        \"title\": \"M.Sc. in Applied Math\",\n                        \"institution\": \"Dhaka University\",\n                        \"year\": 2016,\n                        \"_id\": \"6943368ecfcf955422898f40\",\n                        \"id\": \"6943368ecfcf955422898f40\"\n                    }\n                ],\n                \"status\": \"pending\",\n                \"_id\": \"6943368ecfcf955422898f3e\"\n            },\n            \"student\": {\n                \"interestedSubjects\": [\n                    \"Mathematics\",\n                    \"Physics\",\n                    \"Chemistry\"\n                ],\n                \"_id\": \"69432dba04a6e5c9669db016\"\n            },\n            \"id\": \"69432a218039bd0d782b0ad7\"\n        }\n    }\n}"
 								}
 							]
 						},
