@@ -7,6 +7,8 @@ import response from "../../configs/response";
 import pick from "../../utils/pick";
 import fs from "../../utils/fs";
 import env from "../../configs/env";
+import { isUserOnline } from "../../utils/socket";
+import notificationService from "../notification/notification.service";
 
 const createConversation = catchAsync(async (req: Request, res: Response) => {
   const userId = req.user?.id;
@@ -33,7 +35,7 @@ const sendMessage = catchAsync(async (req: Request, res: Response) => {
   const file = req.file;
   let { type, content } = req.body;
   if (type !== "text" && file) {
-    content = env.BACKEND_URL + '/public' + fs.sanitizePath(file.path);
+    content = env.BACKEND_URL + "/public" + fs.sanitizePath(file.path);
   }
 
   if (!type || !content) {
@@ -51,6 +53,22 @@ const sendMessage = catchAsync(async (req: Request, res: Response) => {
 
   //TODO: send notification to target user
   io?.to(conversationId as string).emit("new-message", message);
+  // send Notification if user is Offline
+  const recieverId = (await messageService.getOtherParticipant(
+    conversationId,
+    req.user?.id!
+  )) as string;
+  if (!recieverId) {
+    return;
+  }
+  if (!isUserOnline(recieverId)) {
+    await notificationService.createNotification(
+      recieverId,
+      "New Message",
+      "You have a new message from " + req.user?.name,
+      "personal"
+    );
+  }
 
   res.status(httpStatus.OK).json(
     response({

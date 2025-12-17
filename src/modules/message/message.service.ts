@@ -16,6 +16,18 @@ const isRolesAreSame = async (user1: string, user2: string) => {
   return users[0]?.role === users[1]?.role;
 };
 
+const getOtherParticipant = async (conversationId: string, userId: string) => {
+  const conversation = await conversationModel.findById(conversationId);
+
+  if (!conversation) {
+    return null;
+  }
+
+  return conversation.participants.find(
+    (participant) => participant.toString() !== userId
+  );
+};
+
 const userUnderConversation = async (
   userId: string,
   conversationId: string
@@ -43,16 +55,34 @@ const createConversation = async (userId1: string, userId2: string) => {
     );
   }
 
-  const conversation = await conversationModel.findByParticipants(
+  // 1. Try to find existing conversation (handles legacy unsorted data)
+  let conversation = await conversationModel.findByParticipants(
     userId1,
     userId2
   );
+
   if (!conversation) {
-    const newConversation = await conversationModel.create({
-      participants: [userId1, userId2],
-    });
-    return newConversation;
+    // 2. If not found, use atomic upsert to create (or find if race condition occurred)
+    // We sort ids to ensure deterministic locking/finding for the exact array match
+    const sortedParticipants = [userId1, userId2].sort();
+
+    conversation = await conversationModel
+      .findOneAndUpdate(
+        {
+          participants: sortedParticipants,
+        },
+        {
+          $setOnInsert: { participants: sortedParticipants },
+        },
+        {
+          upsert: true,
+          new: true,
+          setDefaultsOnInsert: true,
+        }
+      )
+      .populate("participants", "name email avatar");
   }
+
   return conversation;
 };
 
@@ -150,6 +180,7 @@ export default {
   getConversations,
   deleteConversation,
   userUnderConversation,
+  getOtherParticipant,
   // Message Services
   createMessage,
   getMessage,

@@ -18,9 +18,16 @@ import type {
 const conversationSchema = new Schema<IConversation>(
   {
     participants: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+      type: [
+        { type: mongoose.Schema.Types.ObjectId, ref: "user", index: true },
+      ],
       required: true,
+      validate: {
+        validator: (v: mongoose.Types.ObjectId[]) => v.length === 2,
+        message: "1-to-1 conversation must have exactly 2 participants",
+      },
     },
+
     lastMessage: {
       type: mongoose.Schema.Types.ObjectId,
       required: false,
@@ -60,7 +67,7 @@ const messageSchema = new Schema<IMessage>(
     },
     isRead: {
       type: Boolean,
-      required: false,
+      default: false,
     },
     readAt: {
       type: Date,
@@ -79,12 +86,12 @@ conversationSchema.index({ participants: 1 });
 conversationSchema.index({ lastMessageAt: -1 });
 
 // Method to check if conversation exists between two users
-conversationSchema.statics.findByParticipants = async function (
-  userId1,
-  userId2
-) {
+conversationSchema.statics.findByParticipants = function (userId1, userId2) {
+  const participants = [userId1, userId2].sort((a, b) =>
+    a.toString().localeCompare(b.toString())
+  );
   return this.findOne({
-    participants: { $all: [userId1, userId2], $size: 2 },
+    participants,
   }).populate("participants", "name email avatar");
 };
 
@@ -93,7 +100,15 @@ const conversationModel = mongoose.model<IConversation, IConversationModel>(
   conversationSchema
 );
 
+messageSchema.index({ conversation: 1, createdAt: -1 });
 messageSchema.plugin(mongoosePaginate);
+
+messageSchema.post("save", async function (doc) {
+  await mongoose.model("Conversation").findByIdAndUpdate(doc.conversation, {
+    lastMessage: doc._id,
+    lastMessageAt: doc.createdAt,
+  });
+});
 
 const messageModel = mongoose.model<IMessage, IMessageModel>(
   "Message",

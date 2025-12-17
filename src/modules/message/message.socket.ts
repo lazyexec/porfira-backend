@@ -1,6 +1,8 @@
 import { Server, Socket } from "socket.io";
 import messageServices from "./message.service";
 import logger from "../../utils/logger";
+import { isUserOnline } from "../../utils/socket";
+import notificationService from "../notification/notification.service";
 
 const messageSocket = (io: Server, socket: Socket) => {
   socket.on("join-conversation", async ({ conversationId }) => {
@@ -51,11 +53,26 @@ const messageSocket = (io: Server, socket: Socket) => {
         type,
         content
       );
-
       // Populate sender info before emitting
       await message.populate("sender", "name email avatar role");
 
       io.to(conversationId).emit("new-message", message);
+      // send Notification if user is Offline
+      const recieverId = (await messageServices.getOtherParticipant(
+        conversationId,
+        socket.user?.id!
+      )) as string;
+      if (!recieverId) {
+        return;
+      } 
+      if (!isUserOnline(recieverId)) {
+        await notificationService.createNotification(
+          recieverId,
+          "New Message",
+          "You have a new message from " + socket.user?.name,
+          "personal"
+        );
+      } 
     } catch (error: any) {
       logger.error("Error sending message:", error);
       socket.emit("error", { message: error.message });
