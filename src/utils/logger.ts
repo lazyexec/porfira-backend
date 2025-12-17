@@ -41,7 +41,7 @@ const formatMeta = winston.format((info) => {
 // Custom layout
 const logFormat = winston.format.printf(
   ({ timestamp, level, message }) =>
-    `${timestamp} ${level.toUpperCase()} ${message}`
+    `${timestamp} [${level.toUpperCase()}] ${message}`
 );
 
 const logger = winston.createLogger({

@@ -2,12 +2,12 @@ import Joi from "joi";
 
 const updateProfile = {
   body: Joi.object({
-    name: Joi.string().trim().allow(null).optional(),
+    name: Joi.string().trim().optional(),
     avatar: Joi.string().optional(),
     fcmToken: Joi.string().allow(null).optional(),
-    dateOfBirth: Joi.date().allow(null).optional(),
-    phoneNumber: Joi.number().allow(null).optional(),
-    countryCode: Joi.string().allow(null).optional(),
+    dateOfBirth: Joi.date().optional(),
+    phoneNumber: Joi.number().optional(),
+    countryCode: Joi.string().optional(),
     bio: Joi.string().allow(null).optional(),
     // ---------- STUDENT FIELDS ----------
     student: Joi.object({
@@ -20,15 +20,15 @@ const updateProfile = {
     teacher: Joi.object({
       yearsOfTeachingExp: Joi.number().allow(null).optional(),
       subjectsTaught: Joi.array().items(Joi.string()).allow(null).optional(),
-      hourlyRate: Joi.number().allow(null).optional(),
+      hourlyRate: Joi.number().optional(),
       availableTime: Joi.object({
-        startTime: Joi.string().allow(null).optional(),
-        endTime: Joi.date().allow(null).optional(),
+        startTime: Joi.date().optional(),
+        endTime: Joi.date().optional(),
       }).optional(),
-      availableDays: Joi.array().items(Joi.string()).allow(null).optional(),
-      documents: Joi.array().items(Joi.string()).allow(null).optional(),
+      availableDays: Joi.array().items(Joi.string()).optional(),
+      documents: Joi.array().items(Joi.string()).optional(),
       content: Joi.string().allow(null).optional(),
-      qualification: Joi.array().items(Joi.object()).allow(null).optional(),
+      qualification: Joi.array().items(Joi.object()).optional(),
     }).optional(),
   }),
 };

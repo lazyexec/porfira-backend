@@ -49,7 +49,7 @@ const createRandomUsers = (count = 20) => {
   return users;
 };
 const seedUsers = async () => {
-  await User.insertMany(createRandomUsers());
+  await User.insertMany(users);
 };
 
 const seedDatabase = async () => {

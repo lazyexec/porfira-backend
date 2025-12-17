@@ -51,7 +51,8 @@ const processWebHookStripe = async (event: any) => {
       break;
     }
     case "charge.refunded": {
-      // await bookingService.handleRefundHook(event.data.object);
+      const charge = event.data.object;
+      await bookingService.handleRefund(charge.payment_intent);
       break;
     }
   }

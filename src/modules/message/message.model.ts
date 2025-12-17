@@ -18,9 +18,7 @@ import type {
 const conversationSchema = new Schema<IConversation>(
   {
     participants: {
-      type: [
-        { type: mongoose.Schema.Types.ObjectId, ref: "user", index: true },
-      ],
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
       required: true,
       validate: {
         validator: (v: mongoose.Types.ObjectId[]) => v.length === 2,

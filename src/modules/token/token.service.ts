@@ -4,7 +4,7 @@ import jwt from "../../utils/jwt";
 import ApiError from "../../utils/ApiError";
 import status from "http-status";
 import env from "../../configs/env";
-import { daysToDate } from "../../utils/date";
+import { strToDate } from "../../utils/date";
 
 const saveRefreshToken = async (opts: {
   userId: Types.ObjectId;
@@ -27,7 +27,7 @@ const saveRefreshToken = async (opts: {
     token,
     user: userId,
     type: "refresh",
-    expires: expiresAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // default 30 days
+    expires: expiresAt || strToDate(env.jwt.expiryRefreshToken),
     blacklisted: false,
     deviceId,
     ip,
@@ -52,7 +52,7 @@ const generateUserTokens = async (opts: {
     env.jwt.expiryRefreshToken
   );
 
-  const expiresAt = daysToDate(env.jwt.expiryRefreshToken);
+  const expiresAt = strToDate(env.jwt.expiryRefreshToken);
 
   await saveRefreshToken({
     userId,
@@ -66,7 +66,7 @@ const generateUserTokens = async (opts: {
   return {
     access: {
       token: accessToken,
-      expiresAt: daysToDate(env.jwt.expiryAccessToken),
+      expiresAt: strToDate(env.jwt.expiryAccessToken),
     },
     refresh: {
       token: refreshToken,
@@ -137,7 +137,7 @@ const refreshAuth = async (
     env.jwt.expiryRefreshToken
   );
 
-  const newExpiresAt = daysToDate(env.jwt.expiryRefreshToken);
+  const newExpiresAt = strToDate(env.jwt.expiryRefreshToken);
 
   await saveRefreshToken({
     userId,

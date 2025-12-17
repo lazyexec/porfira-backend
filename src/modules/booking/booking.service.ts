@@ -1,11 +1,14 @@
+import mongoose from "mongoose";
+import logger from "../../utils/logger";
 import ApiError from "../../utils/ApiError";
 import httpStatus from "http-status";
 import userService from "../user/user.service";
-import transactionService from "../transaction/transaction.service";
 import Booking from "./booking.model";
 import stripe from "../../configs/stripe";
 import Transaction from "../transaction/transaction.model";
 import notificationService from "../notification/notification.service";
+import env from "../../configs/env";
+import transactionService from "../transaction/transaction.service";
 function addHours(date: Date, hoursToAdd: number) {
   const newDate = new Date(date);
   newDate.setHours(newDate.getHours() + hoursToAdd);
@@ -20,6 +23,8 @@ const claimBooking = async (
   time: Date,
   subject: string
 ) => {
+  if (duration < 1) throw new ApiError(400, "Duration must be at least 1 hour");
+
   const teacher = await userService.getGenuineTeacher(teacherId);
   if (!teacher) throw new ApiError(400, "Invalid teacher ID");
 
@@ -36,57 +41,77 @@ const claimBooking = async (
   if (!priceId)
     throw new ApiError(400, "Teacher does not have a Stripe price ID");
 
-  //TODO: Handle in different way
-
-  const stripeAccountId = teacher.teacher?.stripeAccountId;
-  if (!stripeAccountId) {
+  let stripeAccountId = teacher.teacher?.stripeAccountId;
+  if (!stripeAccountId && !env.DEBUG) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       "Teacher has not set up payouts"
     );
+  } else {
+    stripeAccountId = "ca_FkyHCg7X8mlvCUdMDao4mMxagUfhIwXb";
   }
 
-  // Create transaction record
-  const transaction = await transactionService.createTransaction({
-    performedBy: userId,
-    receivedBy: teacherId,
-    amount: totalAmount,
-    platformFee: platformFee,
-    teacherEarnings: teacherEarnings,
-    status: "pending",
-    type: "payment",
-    description: `Booking for ${subject} - ${duration} hour(s)`,
-    priceId: priceId,
-    meta: {},
-  });
-
-  const stripeSession = await stripe.createStripeSession({
-    priceId: priceId,
-    quantity: duration,
-    successUrl: `${process.env.FRONTEND_URL}/loading`,
-    cancelUrl: `${process.env.FRONTEND_URL}/`,
-    metadata: {
-      transactionId: transaction._id.toString(),
-      app: "porfira-payment",
-    },
-    applicationFeeAmount: platformFee, // Stripe Connect Application Fee
-    transferDestination: stripeAccountId, // Stripe Connect Destination
-  });
-
-  // Create booking with transaction reference
-  await Booking.create({
-    student: userId,
+  // Availability Check
+  const fromTime = new Date(time);
+  const toTime = addHours(fromTime, duration);
+  const conflict = await Booking.findOne({
     teacher: teacherId,
-    transaction: transaction._id,
-    duration,
-    date,
-    fromTime: time,
-    toTime: addHours(time, duration),
-    subject,
-    status: "unpaid",
+    status: { $in: ["scheduled", "paid", "pending"] },
+    $or: [
+      { fromTime: { $lt: toTime, $gte: fromTime } },
+      { toTime: { $gt: fromTime, $lte: toTime } },
+    ],
   });
 
-  return { url: stripeSession.url };
+  if (conflict) {
+    throw new ApiError(400, "Teacher is not available at this time");
+  }
+
+  try {
+    // Create transaction record
+    const transaction = await transactionService.createTransaction({
+      performedBy: userId,
+      receivedBy: teacherId,
+      amount: totalAmount,
+      platformFee: platformFee,
+      teacherEarnings: teacherEarnings,
+      status: "pending",
+      type: "payment",
+      description: `Booking for ${subject} - ${duration} hour(s)`,
+      priceId: priceId,
+      meta: {},
+    });
+
+    // Create booking with transaction reference
+    await Booking.create({
+      student: userId,
+      teacher: teacherId,
+      transaction: transaction._id,
+      duration,
+      date,
+      fromTime: fromTime,
+      toTime: toTime,
+      subject,
+      status: "unpaid",
+    });
+
+    const stripeSession = await stripe.createStripeSession({
+      priceId: priceId,
+      quantity: duration,
+      successUrl: `${process.env.FRONTEND_URL}/loading`,
+      cancelUrl: `${process.env.FRONTEND_URL}/`,
+      metadata: {
+        transactionId: transaction._id.toString(),
+        app: "porfira-payment",
+      },
+      applicationFeeAmount: platformFee, // Stripe Connect Application Fee
+      transferDestination: stripeAccountId, // Stripe Connect Destination
+    });
+
+    return { url: stripeSession.url };
+  } catch (error) {
+    throw error;
+  }
 };
 
 const confirmSession = async (stripeEvent: any) => {
@@ -95,24 +120,27 @@ const confirmSession = async (stripeEvent: any) => {
 
   switch (stripeEvent.type) {
     case "payment_intent.succeeded":
+    case "checkout.session.completed":
       session = stripeEvent.data.object;
-      if (
-        session.metadata.app === "porfira-payment" &&
-        session.metadata.transactionId
-      ) {
-        const existingTransaction = await Transaction.findById(
-          session.metadata.transactionId
-        );
+      const transactionId = session.metadata?.transactionId;
+
+      if (session.metadata?.app === "porfira-payment" && transactionId) {
+        const existingTransaction = await Transaction.findById(transactionId);
 
         if (existingTransaction?.status === "completed") {
           return Booking.findOne({ transaction: existingTransaction._id });
         }
 
+        const paymentIntentId =
+          session.payment_intent ||
+          (session.object === "payment_intent" ? session.id : null);
+
         const updatedTransaction = await Transaction.findByIdAndUpdate(
-          session.metadata.transactionId,
+          transactionId,
           {
             status: "completed",
-            transactionId: session.id,
+            transactionId: session.id, // Reference ID (Checkout Session or PI)
+            "meta.paymentIntent": paymentIntentId,
           },
           { new: true }
         );
@@ -160,13 +188,15 @@ const rePayment = async (bookingId: string, userId: string) => {
   }
 
   const user = await userService.getUserById(booking?.teacher.toString());
-  const stripeAccountId = user?.teacher?.stripeAccountId;
+  let stripeAccountId = user?.teacher?.stripeAccountId;
 
-  if (!stripeAccountId) {
+  if (!stripeAccountId && !env.DEBUG) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       "Teacher has not set up payouts"
     );
+  } else {
+    stripeAccountId = "ca_FkyHCg7X8mlvCUdMDao4mMxagUfhIwXb";
   }
 
   // console.log({
@@ -339,28 +369,26 @@ const cancelBooking = async (
   if (shouldRefund) {
     const transaction = await Transaction.findById(booking.transaction);
     if (transaction && transaction.transactionId) {
-      // Refund via Stripe
-      await stripe.refundPayment(transaction.transactionId); // Using transactionId as PI or looking up PI
-      // Note: stripe.refundPayment expects PaymentIntentId.
-      // In confirming session we saved session.id as transactionId.
-      // We might need to fetch PI from session if transactionId is actually session ID.
-      // Looking at confirmSession: transactionId = session.id.
-      // So we need to retrieve session to get payment_intent?
-      // Let's assume for now we stored PI in meta in a better world, but here we might need to fetch session
-      // Or usually Checkout Session ID can be used to retrieve SetupIntent/PaymentIntent.
+      try {
+        const session = await stripe.stripe.checkout.sessions.retrieve(
+          transaction.transactionId
+        );
+        if (session.payment_intent) {
+          await stripe.refundPayment(session.payment_intent as string);
+        } else {
+          logger.error(
+            `No payment intent found for session ${transaction.transactionId}`
+          );
+        }
 
-      // Correct approach with current code:
-      // The 'transactionId' field stores 'session.id' (cs_test_...).
-      // We need payment_intent to refund.
-      const session = await stripe.stripe.checkout.sessions.retrieve(
-        transaction.transactionId
-      );
-      if (session.payment_intent) {
-        await stripe.refundPayment(session.payment_intent as string);
+        transaction.status = "refunded";
+        transaction.type = "refund";
+        await transaction.save();
+      } catch (error: any) {
+        logger.error(`Stripe refund failed: ${error.message}`);
+        // Optionally throw or just log depending on business need
+        // For now we log so the booking still gets cancelled locally
       }
-
-      transaction.status = "refunded";
-      await transaction.save();
     }
   }
 

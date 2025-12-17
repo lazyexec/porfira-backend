@@ -13,7 +13,7 @@ export interface ITeacher {
   stripePayoutsEnabled?: boolean;
   hourlyRate?: number | null;
   availableTime?: {
-    startTime?: string | null;
+    startTime?: Date | null;
     endTime?: Date | null;
   } | null;
   availableDays?: string[] | null;

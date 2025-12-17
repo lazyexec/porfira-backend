@@ -23,20 +23,20 @@ router
     userController.updateProfile
   );
 
+// Admin Route (must be registered before ":userId" to avoid route collisions)
+router.get(
+  "/all",
+  auth("admin"),
+  validate(userValidation.queryAllUsers),
+  userController.queryAllUsers
+);
+
 router
   .route("/:userId")
   .get(
     auth("common"),
     validate(userValidation.getUserById),
     userController.getProfileById
-  );
-// Admin Route
-router
-  .route("/all")
-  .get(
-    auth("admin"),
-    validate(userValidation.queryAllUsers),
-    userController.queryAllUsers
   );
 
 router
