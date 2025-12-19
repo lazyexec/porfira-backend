@@ -6,6 +6,7 @@ import httpStatus from "http-status";
 import fs from "../../utils/fs";
 import mongoose from "mongoose";
 import env from "../../configs/env";
+import { IUser } from "./user.interface";
 
 interface UploadedFiles {
   avatar?: Express.Multer.File[];
@@ -131,6 +132,33 @@ const unRestrictUser = async (userId: string) => {
   });
 };
 
+const addUser = async (
+  name: string,
+  email: string,
+  role: string,
+  password: string,
+  files: UploadedFiles
+) => {
+  let userObject: IUser = {
+    name,
+    email,
+    role,
+    password,
+    isEmailVerified: true,
+  };
+  if (files) {
+    if (files.avatar?.[0]) {
+      const file = files.avatar[0];
+      userObject = {
+        ...userObject,
+        avatar: env.BACKEND_URL + "/public" + fs.sanitizePath(file.path),
+      };
+    }
+  }
+  const user = await User.create(userObject);
+  return user;
+};
+
 export default {
   getUserByEmail,
   updateUser,
@@ -141,4 +169,5 @@ export default {
   queryAllUsers,
   restrictUser,
   unRestrictUser,
+  addUser,
 };

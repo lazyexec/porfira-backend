@@ -1,4 +1,5 @@
 import Joi from "joi";
+import validator from "../../utils/validator";
 
 const updateProfile = {
   body: Joi.object({
@@ -66,10 +67,22 @@ const getUserById = {
     userId: Joi.string().required(),
   }),
 };
+
+const addUser = {
+  body: Joi.object({
+    avatar: Joi.string().optional(),
+    name: Joi.string().required(),
+    email: Joi.string().required(),
+    role: Joi.string().required(),
+    password: Joi.custom(validator.password).required(),
+  }),
+};
+
 export default {
   updateProfile,
   queryAllUsers,
   restrictUser,
   unrestrictUser,
   getUserById,
+  addUser,
 };

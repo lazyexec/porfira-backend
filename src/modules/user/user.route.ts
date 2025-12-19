@@ -55,4 +55,12 @@ router
     userController.unrestrictUser
   );
 
+router
+  .route("/create")
+  .post(
+    auth("admin"),
+    validate(userValidation.addUser),
+    userController.addUser
+  );
+
 export default router;

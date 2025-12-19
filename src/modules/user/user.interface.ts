@@ -31,12 +31,12 @@ export interface ITeacher {
 
 export interface IUser {
   email: string;
-  avatar: string;
-  isEmailVerified: boolean;
-  isResetPassword: boolean;
+  avatar?: string;
+  isEmailVerified?: boolean;
+  isResetPassword?: boolean;
   id?: Types.ObjectId | string;
   _id?: Types.ObjectId | string;
-  isDeleted: boolean;
+  isDeleted?: boolean;
   name?: string | null;
   googleAuth?: string | null;
   password?: string | null;
