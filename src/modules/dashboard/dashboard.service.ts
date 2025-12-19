@@ -181,7 +181,108 @@ const getTeacherStats = async (teacherId: string) => {
   return stats;
 };
 
+const getAdminStats = async () => {
+  const currentDate = new Date();
+  const twelveMonthsAgo = new Date();
+  twelveMonthsAgo.setMonth(currentDate.getMonth() - 11);
+  twelveMonthsAgo.setDate(1);
+  twelveMonthsAgo.setHours(0, 0, 0, 0);
+
+  const [
+    totalStudents,
+    totalTeachers,
+    totalEarningsAggregate,
+    monthlyEarnings,
+    lastTransactions,
+  ] = await Promise.all([
+    User.countDocuments({
+      role: "student",
+      status: "active",
+      isEmailVerified: true,
+    }),
+
+    User.countDocuments({
+      role: "teacher",
+      status: "active",
+      isEmailVerified: true,
+    }),
+
+    Transaction.aggregate([
+      {
+        $match: {
+          status: "completed",
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalEarnings: { $sum: "$platformFee" },
+        },
+      },
+    ]),
+
+    // 4. Monthly Earnings for the last 12 months
+    Transaction.aggregate([
+      {
+        $match: {
+          status: "completed",
+          createdAt: { $gte: twelveMonthsAgo },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" },
+          },
+          earnings: { $sum: "$platformFee" },
+        },
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1 },
+      },
+    ]),
+
+    // 5. Last 10 Transactions
+    Transaction.find()
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .populate("performedBy", "name avatar")
+      .populate("receivedBy", "name avatar"),
+  ]);
+
+  const monthlyStats = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - i);
+    const monthStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}`;
+    const found = monthlyEarnings.find(
+      (item: any) =>
+        `${item._id.year}-${String(item._id.month).padStart(2, "0")}` ===
+        monthStr
+    );
+    monthlyStats.push({
+      month: monthStr,
+      earnings: found ? found.earnings : 0,
+    });
+  }
+
+  const stats = {
+    totalStudents,
+    totalTeachers,
+    totalEarnings: totalEarningsAggregate[0]?.totalEarnings || 0,
+    monthlyEarnings: monthlyStats,
+    lastTransactions,
+  };
+
+  return stats;
+};
+
 export const dashboardService = {
   getStudentStats,
   getTeacherStats,
+  getAdminStats,
 };

@@ -10,6 +10,7 @@ import transactionRouter from "../../transaction/transaction.route";
 import messageRouter from "../../message/message.route";
 import dashboardRouter from "../../dashboard/dashboard.route";
 import supportRouter from "../../support/support.route";
+import settingsRouter from "../../settings/settings.route";
 
 const mainRouter: Router = express.Router();
 
@@ -62,6 +63,10 @@ const routes: routeObjects[] = [
   {
     path: "/support",
     route: supportRouter,
+  },
+  {
+    path: "/settings",
+    route: settingsRouter,
   },
 ];
 

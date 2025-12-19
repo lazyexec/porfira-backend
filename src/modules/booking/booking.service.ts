@@ -105,7 +105,7 @@ const claimBooking = async (
         app: "porfira-payment",
       },
       applicationFeeAmount: platformFee, // Stripe Connect Application Fee
-      transferDestination: stripeAccountId, // Stripe Connect Destination
+      // transferDestination: stripeAccountId, // Stripe Connect Destination
     });
 
     return { url: stripeSession.url };
@@ -228,7 +228,7 @@ const rePayment = async (bookingId: string, userId: string) => {
       app: "porfira-payment",
     },
     applicationFeeAmount: transaction.platformFee, // Stripe Connect Application Fee
-    transferDestination: stripeAccountId, // Stripe Connect Destination
+    // transferDestination: stripeAccountId, // Stripe Connect Destination
   });
 
   return { url: stripeSession.url };

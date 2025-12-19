@@ -1375,6 +1375,28 @@
 					]
 				},
 				{
+					"name": "Dashboard",
+					"item": [
+						{
+							"name": "Dashboard",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/dashboard",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"dashboard"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "user",
 					"item": [
 						{
@@ -3879,6 +3901,122 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "about",
+					"item": [
+						{
+							"name": "Terms and Conditions",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"teacherId\": \"693da0d59bc1fff06059876c\",\n  \"date\": \"2025-12-15\",\n  \"duration\": 1,\n  \"time\": \"2015-06-22T13:17:21+0000\",\n  \"subject\": \"Mathematics\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/settings/terms",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"settings",
+										"terms"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "About Us",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"teacherId\": \"693da0d59bc1fff06059876c\",\n  \"date\": \"2025-12-15\",\n  \"duration\": 1,\n  \"time\": \"2015-06-22T13:17:21+0000\",\n  \"subject\": \"Mathematics\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/settings/about",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"settings",
+										"about"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Privacy Policy",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"teacherId\": \"693da0d59bc1fff06059876c\",\n  \"date\": \"2025-12-15\",\n  \"duration\": 1,\n  \"time\": \"2015-06-22T13:17:21+0000\",\n  \"subject\": \"Mathematics\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/settings/privacy",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"settings",
+										"privacy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FAQ",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/settings/faq",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"settings",
+										"faq"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			],
 			"auth": {
@@ -3919,146 +4057,6 @@
 		{
 			"name": "teacher",
 			"item": [
-				{
-					"name": "dashboard",
-					"item": [
-						{
-							"name": "Get Teacher Dashboard",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "Bearer {{accessToken}}",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{baseUrl}}/dashboard/teacher",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"dashboard",
-										"teacher"
-									]
-								}
-							},
-							"response": [
-								{
-									"name": "Get Teacher Dashboard",
-									"originalRequest": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Authorization",
-												"value": "Bearer {{accessToken}}",
-												"type": "text"
-											}
-										],
-										"url": {
-											"raw": "{{baseUrl}}/dashboard/teacher",
-											"host": [
-												"{{baseUrl}}"
-											],
-											"path": [
-												"dashboard",
-												"teacher"
-											]
-										}
-									},
-									"status": "OK",
-									"code": 200,
-									"_postman_previewlanguage": null,
-									"header": [
-										{
-											"key": "Access-Control-Allow-Origin",
-											"value": "http://localhost:3000"
-										},
-										{
-											"key": "Vary",
-											"value": "Origin, Accept-Encoding"
-										},
-										{
-											"key": "Content-Security-Policy",
-											"value": "default-src 'self';base-uri 'self';font-src 'self' https: data:;form-action 'self';frame-ancestors 'self';img-src 'self' data:;object-src 'none';script-src 'self';script-src-attr 'none';style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests"
-										},
-										{
-											"key": "Cross-Origin-Opener-Policy",
-											"value": "same-origin"
-										},
-										{
-											"key": "Cross-Origin-Resource-Policy",
-											"value": "same-origin"
-										},
-										{
-											"key": "Origin-Agent-Cluster",
-											"value": "?1"
-										},
-										{
-											"key": "Referrer-Policy",
-											"value": "no-referrer"
-										},
-										{
-											"key": "Strict-Transport-Security",
-											"value": "max-age=31536000; includeSubDomains"
-										},
-										{
-											"key": "X-Content-Type-Options",
-											"value": "nosniff"
-										},
-										{
-											"key": "X-DNS-Prefetch-Control",
-											"value": "off"
-										},
-										{
-											"key": "X-Download-Options",
-											"value": "noopen"
-										},
-										{
-											"key": "X-Frame-Options",
-											"value": "SAMEORIGIN"
-										},
-										{
-											"key": "X-Permitted-Cross-Domain-Policies",
-											"value": "none"
-										},
-										{
-											"key": "X-XSS-Protection",
-											"value": "0"
-										},
-										{
-											"key": "Content-Type",
-											"value": "application/json; charset=utf-8"
-										},
-										{
-											"key": "Content-Length",
-											"value": "191"
-										},
-										{
-											"key": "ETag",
-											"value": "W/\"bf-4ctkkbHIh+U/gui0VFQdsCVndZY\""
-										},
-										{
-											"key": "Date",
-											"value": "Thu, 11 Dec 2025 17:49:21 GMT"
-										},
-										{
-											"key": "Connection",
-											"value": "keep-alive"
-										},
-										{
-											"key": "Keep-Alive",
-											"value": "timeout=5"
-										}
-									],
-									"cookie": [],
-									"body": "{\n    \"status\": 200,\n    \"message\": \"Teacher dashboard stats retrieved successfully\",\n    \"response\": {\n        \"data\": {\n            \"totalStudents\": 0,\n            \"totalEarnings\": 0,\n            \"upcomingLesson\": 0,\n            \"completedLesson\": 0,\n            \"upcomingLessons\": []\n        }\n    }\n}"
-								}
-							]
-						}
-					]
-				},
 				{
 					"name": "wallet",
 					"item": [
@@ -6994,6 +6992,10 @@
 							"response": []
 						}
 					]
+				},
+				{
+					"name": "about",
+					"item": []
 				}
 			],
 			"auth": {
