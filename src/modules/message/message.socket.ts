@@ -6,8 +6,6 @@ import notificationService from "../notification/notification.service";
 
 const messageSocket = (io: Server, socket: Socket) => {
   socket.on("join-conversation", async ({ conversationId }) => {
-    console.log(socket.user?.id!, conversationId);
-    // console.log(io, socket);
     try {
       const isMember = await messageServices.userUnderConversation(
         socket.user?.id!,

@@ -105,7 +105,6 @@ const queryAllUsers = async (filter: any, options: object) => {
       query[key] = filter[key];
     }
   }
-  console.log({ query, options });
   const users = await User.paginate(query, options);
   return users;
 };

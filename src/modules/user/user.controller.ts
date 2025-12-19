@@ -49,7 +49,6 @@ const queryAllUsers = catchAsync(async (req: Request, res: Response) => {
     "phoneNumber",
   ]);
   const options = pick(req.query, ["page", "limit", "sort"]);
-  console.log({ queries: req.query, options });
   const users = await userService.queryAllUsers(filter, options);
   res.status(httpStatus.OK).json(
     response({

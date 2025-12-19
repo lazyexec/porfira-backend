@@ -15,12 +15,14 @@ import rateLimit from "express-rate-limit";
 
 const app: Application = express();
 // Rate Limiter
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 200,
-  })
-);
+if (!env.DEBUG) {
+  app.use(
+    rateLimit({
+      windowMs: 15 * 60 * 1000, // 15 minutes
+      max: 200,
+    })
+  );
+}
 // For Exporting Public Files to User
 app.use("/public", express.static(path.join(__dirname, "../public")));
 // Morgan Logger for logging requests

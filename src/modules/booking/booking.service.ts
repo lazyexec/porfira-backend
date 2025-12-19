@@ -199,13 +199,6 @@ const rePayment = async (bookingId: string, userId: string) => {
     stripeAccountId = "ca_FkyHCg7X8mlvCUdMDao4mMxagUfhIwXb";
   }
 
-  // console.log({
-  //   transaction,
-  //   priceId: transaction?.priceId,
-  //   stripeAccountId,
-  //   platformFee: transaction?.platformFee,
-  // });
-
   if (
     !transaction ||
     !transaction?.priceId ||

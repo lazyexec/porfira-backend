@@ -35,7 +35,7 @@ const pushNotification = async (
       const response = await admin
         .messaging()
         .sendEachForMulticast(multicastMessage);
-      console.log(
+      logger.success(
         `Successfully sent ${response.successCount} messages, ${response.failureCount} failed.`
       );
       return response;
@@ -50,7 +50,7 @@ const pushNotification = async (
         token: targetTokens[0]!,
       };
       const response = await admin.messaging().send(message);
-      console.log("Successfully sent message:", response);
+      logger.success("Successfully sent message:", response);
       return response;
     } else if (typeof targetTokens === "string") {
       // Handle single string token

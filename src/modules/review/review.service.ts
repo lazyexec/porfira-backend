@@ -75,7 +75,6 @@ const deleteReview = async (reviewId: string) => {
 };
 
 const queryReview = async (filter: object, options: object) => {
-  console.log(filter, options);
   const review = await Review.paginate(filter, {
     ...options,
     populate: [
