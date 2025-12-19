@@ -44,6 +44,9 @@ const register = catchAsync(async (req: Request, res: Response) => {
 const login = catchAsync(async (req: Request, res: Response) => {
   const { email, password } = req.body;
   const user = await authService.login(email, password);
+  if (user.isRestricted) {
+    throw new ApiError(httpStatus.FORBIDDEN, "Your Account is Restricted");
+  }
   const token = await tokenService.generateUserTokens({
     userId: user._id as Types.ObjectId,
     deviceId: req.device?.host || null,

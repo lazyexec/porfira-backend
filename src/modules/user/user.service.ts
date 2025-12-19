@@ -111,25 +111,47 @@ const queryAllUsers = async (filter: any, options: object) => {
 };
 
 const restrictUser = async (userId: string, reason: string) => {
-  const user = await User.findById(userId);
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { isRestricted: true, restrictionReason: reason },
+    { new: true }
+  );
+
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
+
   await email.sendRestrictionEmail(user.email, reason);
-  await user.updateOne({ isRestricted: true, restrictionReason: reason });
 };
 
 const unRestrictUser = async (userId: string) => {
-  const user = await User.findById(userId);
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { isRestricted: false, restrictionReason: null },
+    { new: true }
+  );
+
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
+
   await email.sendUnrestrictedEmail(user.email);
-  await user.updateOne({
-    _id: userId,
-    isRestricted: false,
-    restrictionReason: null,
-  });
+};
+
+const deleteUser = async (userId: string) => {
+  return await User.findByIdAndUpdate(
+    userId,
+    { isDeleted: true },
+    { new: true }
+  );
+};
+
+const recoverUser = async (userId: string) => {
+  return await User.findByIdAndUpdate(
+    userId,
+    { isDeleted: false },
+    { new: true }
+  );
 };
 
 const addUser = async (
@@ -170,4 +192,6 @@ export default {
   restrictUser,
   unRestrictUser,
   addUser,
+  deleteUser,
+  recoverUser,
 };

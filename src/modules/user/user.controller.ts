@@ -112,6 +112,30 @@ const addUser = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params?.userId;
+  await userService.deleteUser(userId);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "User Deleted successfully",
+      data: {},
+    })
+  );
+});
+
+const recoverUser = catchAsync(async (req: Request, res: Response) => {
+  const userId = req.params?.userId;
+  await userService.recoverUser(userId);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "User Recovered successfully",
+      data: {},
+    })
+  );
+});
+
 export default {
   getProfile,
   updateProfile,
@@ -120,4 +144,6 @@ export default {
   unrestrictUser,
   getProfileById,
   addUser,
+  deleteUser,
+  recoverUser,
 };

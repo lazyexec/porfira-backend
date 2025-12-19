@@ -63,4 +63,19 @@ router
     userController.addUser
   );
 
+router
+  .route("/delete/:userId")
+  .delete(
+    auth("admin"),
+    validate(userValidation.getUserById),
+    userController.deleteUser
+  );
+router
+  .route("/recover/:userId")
+  .post(
+    auth("admin"),
+    validate(userValidation.getUserById),
+    userController.recoverUser
+  );
+
 export default router;
