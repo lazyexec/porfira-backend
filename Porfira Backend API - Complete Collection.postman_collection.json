@@ -6108,6 +6108,31 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Delete Transactions",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/transaction/delete/:transactionId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"transaction",
+										"delete",
+										":transactionId"
+									],
+									"variable": [
+										{
+											"key": "transactionId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -6644,7 +6669,7 @@
 									},
 									"status": "OK",
 									"code": 200,
-									"_postman_previewlanguage": "",
+									"_postman_previewlanguage": null,
 									"header": [
 										{
 											"key": "Access-Control-Allow-Origin",
@@ -7136,7 +7161,134 @@
 				},
 				{
 					"name": "about",
-					"item": []
+					"item": [
+						{
+							"name": "Set Terms and Conditions",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"content\": \"<h1>Terms and Conditions</h1>\\n<p>Welcome to <strong>Porfira</strong>. By using our services, you agree to the following:</p>\\n<ul>\\n  <li>You must be at least 18 years old.</li>\\n  <li>Users are responsible for their own account security.</li>\\n</ul>\\n<hr />\\n<p>For more details, contact us at <a href=\\\"mailto:support@porfira.com\\\">support@porfira.com</a>.</p>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/settings/terms",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"settings",
+										"terms"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "About Us",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"content\": \"<h1>About Porfira</h1>\\n<p>Porfira is a premium <em>monolithic-ts</em> backend solution designed for scalability and performance.</p>\\n<table>\\n  <thead>\\n    <tr>\\n      <th>Feature</th>\\n      <th>Status</th>\\n    </tr>\\n  </thead>\\n  <tbody>\\n    <tr>\\n      <td>Scalability</td>\\n      <td>Ready</td>\\n    </tr>\\n    <tr>\\n      <td>Security</td>\\n      <td>Enhanced</td>\\n    </tr>\\n  </tbody>\\n</table>\\n<p><img src=\\\"https://via.placeholder.com/150\\\" alt=\\\"Logo\\\" /> Our mission is excellence.</p>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/settings/about",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"settings",
+										"about"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Privacy Policy",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"content\": \"<h1>Privacy Policy</h1>\\n<p>We value your privacy. Your data is handled according to the following principles:</p>\\n<blockquote>\\n  <p>\\\"Privacy is not an option, and it shouldn't be the price we pay for just getting on the internet.\\\"</p>\\n</blockquote>\\n<p>We use <span style=\\\"color: blue;\\\">secure encryption</span> to protect your personal information.</p>\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/settings/privacy",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"settings",
+										"privacy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "FAQ",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"faqs\": [\r\n    {\r\n      \"question\": \"How do I reset my password?\",\r\n      \"answer\": \"Go to the <strong>Settings</strong> page and click on <a href=\\\"#\\\">Reset Password</a>.\"\r\n    },\r\n    {\r\n      \"question\": \"Is my data safe?\",\r\n      \"answer\": \"Yes, we use <em>industry-standard</em> encryption to keep your data safe.\"\r\n    },\r\n    {\r\n      \"question\": \"Can I use images in my profile?\",\r\n      \"answer\": \"Absolutely! See example: <img src=\\\"https://via.placeholder.com/50\\\" alt=\\\"User Icon\\\" />\"\r\n    }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/settings/faq",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"settings",
+										"faq"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			],
 			"auth": {
@@ -7173,6 +7325,10 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "about",
+			"item": []
 		}
 	],
 	"event": [

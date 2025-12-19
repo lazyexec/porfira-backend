@@ -176,6 +176,10 @@ const getStudentTransactions = async (
   );
 };
 
+const deleteTransaction = async (transactionId: string) => {
+  await Transaction.findByIdAndDelete(transactionId);
+};
+
 export default {
   getTransactions,
   getTeacherEarnings,
@@ -189,4 +193,5 @@ export default {
   getStudentTransactions,
   // Account completion
   createOnBoardingIntent,
+  deleteTransaction,
 };

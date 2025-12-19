@@ -14,6 +14,13 @@ router.get(
   transactionController.getAllTransactions
 );
 
+router.delete(
+  "/delete/:transactionId",
+  auth("admin"),
+  validate(transactionValidation.getTransaction),
+  transactionController.deleteTransaction
+);
+
 // Teacher Wallet
 router.post(
   "/wallet",

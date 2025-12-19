@@ -105,6 +105,19 @@ const getStudentTransactions = catchAsync(
   }
 );
 
+const deleteTransaction = catchAsync(async (req: Request, res: Response) => {
+  const { transactionId } = req.params;
+  await transactionService.deleteTransaction(transactionId!);
+
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Transaction deleted successfully",
+      data: {},
+    })
+  );
+});
+
 export default {
   getAllTransactions,
   getTransaction,
@@ -112,4 +125,5 @@ export default {
   getStudentWalletDashboard,
   getTeacherTransactions,
   getStudentTransactions,
+  deleteTransaction,
 };
