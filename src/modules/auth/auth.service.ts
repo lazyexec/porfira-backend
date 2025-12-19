@@ -45,6 +45,12 @@ const login = async (email: string, password: string) => {
   if (!user.isEmailVerified) {
     throw new ApiError(http.UNAUTHORIZED, "Email not verified");
   }
+  if (user.isRestricted) {
+    throw new ApiError(
+      http.FORBIDDEN,
+      "Your account has been restricted. Contact support for assistance."
+    );
+  }
   return user;
 };
 
