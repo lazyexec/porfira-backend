@@ -167,6 +167,11 @@ const addUser = async (
     password,
     isEmailVerified: true,
   };
+
+  if (await User.isEmailTaken(email)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
+  }
+
   if (files) {
     if (files.avatar?.[0]) {
       const file = files.avatar[0];
