@@ -80,8 +80,13 @@ const getStudentBookings = catchAsync(async (req: Request, res: Response) => {
   if (!studentId) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "User not authenticated");
   }
-  const options = pick(req.query, ["sort", "limit", "page", "status"]);
-  const booking = await bookingService.getStudentBookings(studentId, options);
+  const filter = pick(req.query, ["status"]);
+  const options = pick(req.query, ["sort", "limit", "page"]);
+  const booking = await bookingService.getStudentBookings(
+    studentId,
+    filter,
+    options
+  );
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,

@@ -67,7 +67,7 @@ transactionSchema.plugin(mongoosePaginate);
 transactionSchema.plugin(hideFields);
 
 const Transaction = mongoose.model<ITransaction, ITransactionModel>(
-  "Transaction",
+  "transaction",
   transactionSchema
 );
 

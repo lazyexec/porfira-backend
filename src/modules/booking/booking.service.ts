@@ -42,7 +42,8 @@ const claimBooking = async (
     throw new ApiError(400, "Teacher does not have a Stripe price ID");
 
   let stripeAccountId = teacher.teacher?.stripeAccountId;
-  if (!stripeAccountId && !env.DEBUG) {
+  if (!stripeAccountId && env.DEBUG) {
+    //DEBUG
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       "Teacher has not set up payouts"
@@ -62,10 +63,10 @@ const claimBooking = async (
       { toTime: { $gt: fromTime, $lte: toTime } },
     ],
   });
-
-  if (conflict) {
-    throw new ApiError(400, "Teacher is not available at this time");
-  }
+  // DEBUG
+  // if (conflict) {
+  //   throw new ApiError(400, "Teacher is not available at this time");
+  // }
 
   try {
     // Create transaction record
@@ -98,8 +99,8 @@ const claimBooking = async (
     const stripeSession = await stripe.createStripeSession({
       priceId: priceId,
       quantity: duration,
-      successUrl: `${process.env.FRONTEND_URL}/loading`,
-      cancelUrl: `${process.env.FRONTEND_URL}/`,
+      successUrl: `https://corpida-web-3nj3.vercel.app/dashboard/myLessonspage/`,
+      cancelUrl: `https://corpida-web-3nj3.vercel.app/dashboard/myLessonspage/`,
       metadata: {
         transactionId: transaction._id.toString(),
         app: "porfira-payment",
@@ -123,6 +124,7 @@ const confirmSession = async (stripeEvent: any) => {
     case "checkout.session.completed":
       session = stripeEvent.data.object;
       const transactionId = session.metadata?.transactionId;
+      console.log(session);
 
       if (session.metadata?.app === "porfira-payment" && transactionId) {
         const existingTransaction = await Transaction.findById(transactionId);
@@ -155,6 +157,7 @@ const confirmSession = async (stripeEvent: any) => {
           booking?.teacher?.toString()!
         );
       }
+      logger.info("Transaction Intent Received");
       break;
     default:
       throw new ApiError(
@@ -190,7 +193,7 @@ const rePayment = async (bookingId: string, userId: string) => {
   const user = await userService.getUserById(booking?.teacher.toString());
   let stripeAccountId = user?.teacher?.stripeAccountId;
 
-  if (!stripeAccountId && !env.DEBUG) {
+  if (!stripeAccountId && env.DEBUG) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       "Teacher has not set up payouts"
@@ -198,6 +201,13 @@ const rePayment = async (bookingId: string, userId: string) => {
   } else {
     stripeAccountId = "ca_FkyHCg7X8mlvCUdMDao4mMxagUfhIwXb";
   }
+
+  // console.log({
+  //   transaction,
+  //   priceId: transaction?.priceId,
+  //   stripeAccountId,
+  //   platformFee: transaction?.platformFee,
+  // });
 
   if (
     !transaction ||
@@ -214,8 +224,8 @@ const rePayment = async (bookingId: string, userId: string) => {
   const stripeSession = await stripe.createStripeSession({
     priceId: transaction?.priceId,
     quantity: booking.duration,
-    successUrl: `${process.env.FRONTEND_URL}/loading`,
-    cancelUrl: `${process.env.FRONTEND_URL}/`,
+    successUrl: `https://corpida-web-3nj3.vercel.app/dashboard/myLessonspage/`,
+    cancelUrl: `https://corpida-web-3nj3.vercel.app/dashboard/myLessonspage/`,
     metadata: {
       transactionId: transaction._id.toString(),
       app: "porfira-payment",
@@ -232,8 +242,15 @@ const getBookingsTeacher = async (teacherId: string, options: any) => {
   return bookings;
 };
 
-const getStudentBookings = async (studentId: string, options: any) => {
-  const bookings = await Booking.paginate({ student: studentId }, options);
+const getStudentBookings = async (
+  studentId: string,
+  filter: any,
+  options: any
+) => {
+  const bookings = await Booking.paginate(
+    { student: studentId, ...filter },
+    options
+  );
   return bookings;
 };
 
@@ -361,27 +378,29 @@ const cancelBooking = async (
 
   if (shouldRefund) {
     const transaction = await Transaction.findById(booking.transaction);
-    if (transaction && transaction.transactionId) {
-      try {
-        const session = await stripe.stripe.checkout.sessions.retrieve(
-          transaction.transactionId
-        );
-        if (session.payment_intent) {
-          await stripe.refundPayment(session.payment_intent as string);
-        } else {
-          logger.error(
-            `No payment intent found for session ${transaction.transactionId}`
-          );
-        }
+    if (!transaction || !transaction.transactionId) {
+      throw new ApiError(httpStatus.BAD_REQUEST, "Transaction not found");
+    }
 
-        transaction.status = "refunded";
-        transaction.type = "refund";
-        await transaction.save();
-      } catch (error: any) {
-        logger.error(`Stripe refund failed: ${error.message}`);
-        // Optionally throw or just log depending on business need
-        // For now we log so the booking still gets cancelled locally
+    try {
+      const session = await stripe.stripe.checkout.sessions.retrieve(
+        transaction.transactionId
+      );
+      if (session.payment_intent) {
+        await stripe.refundPayment(session.payment_intent as string);
+      } else {
+        logger.error(
+          `No payment intent found for session ${transaction.transactionId}`
+        );
       }
+
+      transaction.status = "refunded";
+      transaction.type = "refund";
+      await transaction.save();
+    } catch (error: any) {
+      logger.error(`Stripe refund failed: ${error.message}`);
+      // Optionally throw or just log depending on business need
+      // For now we log so the booking still gets cancelled locally
     }
   }
 

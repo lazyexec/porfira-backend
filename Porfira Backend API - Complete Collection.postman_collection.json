@@ -4555,8 +4555,25 @@
 						{
 							"name": "Cancel Booking",
 							"request": {
-								"method": "GET",
-								"header": []
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/booking/:bookingId/cancel",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"booking",
+										":bookingId",
+										"cancel"
+									],
+									"variable": [
+										{
+											"key": "bookingId",
+											"value": ""
+										}
+									]
+								}
 							},
 							"response": []
 						}
@@ -5302,19 +5319,29 @@
 							"request": {
 								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"reason\": \"ddd\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
-									"raw": "{{baseUrl}}/:bookingId/cancel",
+									"raw": "{{baseUrl}}/booking/:bookingId/cancel",
 									"host": [
 										"{{baseUrl}}"
 									],
 									"path": [
+										"booking",
 										":bookingId",
 										"cancel"
 									],
 									"variable": [
 										{
 											"key": "bookingId",
-											"value": ""
+											"value": "69473217e1fbf4359ea0e849"
 										}
 									]
 								}
@@ -6648,7 +6675,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name\": \"User Added by Admin\",\r\n    \"role\": \"admin\",\r\n    \"email\": \"useradded@example.com\",\r\n    \"password\": \"NewPassword1\"\r\n}",
+									"raw": "{\r\n    \"name\": \"User Added by Admin\",\r\n    \"role\": \"admin\",\r\n    \"email\": \"hey@example.com\",\r\n    \"password\": \"NewPassword1\",\r\n   \"dateOfBirth\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -6781,6 +6808,64 @@
 									"body": "{\n    \"status\": 200,\n    \"message\": \"User profile Added successfully\",\n    \"response\": {\n        \"data\": {\n            \"name\": \"User Added by Admin\",\n            \"email\": \"useradded@example.com\",\n            \"avatar\": \"/uploads/users/user.png\",\n            \"role\": \"admin\",\n            \"isEmailVerified\": true,\n            \"isResetPassword\": false,\n            \"fcmToken\": null,\n            \"dateOfBirth\": null,\n            \"phoneNumber\": null,\n            \"countryCode\": null,\n            \"bio\": null,\n            \"isDeleted\": false,\n            \"isRestricted\": false,\n            \"restrictionReason\": null,\n            \"isOnline\": false,\n            \"_id\": \"69459e7aaa0f937c6e29f180\",\n            \"lastSeen\": \"2025-12-19T18:50:34.164Z\",\n            \"createdAt\": \"2025-12-19T18:50:34.167Z\",\n            \"updatedAt\": \"2025-12-19T18:50:34.167Z\",\n            \"id\": \"69459e7aaa0f937c6e29f180\"\n        }\n    }\n}"
 								}
 							]
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"User Added by Admin\",\r\n    \"role\": \"admin\",\r\n    \"email\": \"useradded@example.com\",\r\n    \"password\": \"NewPassword1\"\r\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user/delete/:userId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"delete",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "69432a218039bd0d782b0ad7"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"User Added by Admin\",\r\n    \"role\": \"admin\",\r\n    \"email\": \"useradded@example.com\",\r\n    \"password\": \"NewPassword1\"\r\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/user/recover/:userId",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"user",
+										"recover",
+										":userId"
+									],
+									"variable": [
+										{
+											"key": "userId",
+											"value": "69432a218039bd0d782b0ad7"
+										}
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -7353,7 +7438,134 @@
 		},
 		{
 			"name": "about",
-			"item": []
+			"item": [
+				{
+					"name": "Set Terms and Conditions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"<h1>Terms and Conditions</h1>\\n<p>Welcome to <strong>Porfira</strong>. By using our services, you agree to the following:</p>\\n<ul>\\n  <li>You must be at least 18 years old.</li>\\n  <li>Users are responsible for their own account security.</li>\\n</ul>\\n<hr />\\n<p>For more details, contact us at <a href=\\\"mailto:support@porfira.com\\\">support@porfira.com</a>.</p>\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/settings/terms",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"settings",
+								"terms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "About Us",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"<h1>About Porfira</h1>\\n<p>Porfira is a premium <em>monolithic-ts</em> backend solution designed for scalability and performance.</p>\\n<table>\\n  <thead>\\n    <tr>\\n      <th>Feature</th>\\n      <th>Status</th>\\n    </tr>\\n  </thead>\\n  <tbody>\\n    <tr>\\n      <td>Scalability</td>\\n      <td>Ready</td>\\n    </tr>\\n    <tr>\\n      <td>Security</td>\\n      <td>Enhanced</td>\\n    </tr>\\n  </tbody>\\n</table>\\n<p><img src=\\\"https://via.placeholder.com/150\\\" alt=\\\"Logo\\\" /> Our mission is excellence.</p>\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/settings/about",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"settings",
+								"about"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Privacy Policy",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"<h1>Privacy Policy</h1>\\n<p>We value your privacy. Your data is handled according to the following principles:</p>\\n<blockquote>\\n  <p>\\\"Privacy is not an option, and it shouldn't be the price we pay for just getting on the internet.\\\"</p>\\n</blockquote>\\n<p>We use <span style=\\\"color: blue;\\\">secure encryption</span> to protect your personal information.</p>\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/settings/privacy",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"settings",
+								"privacy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "FAQ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"faqs\": [\r\n    {\r\n      \"question\": \"How do I reset my password?\",\r\n      \"answer\": \"Go to the <strong>Settings</strong> page and click on <a href=\\\"#\\\">Reset Password</a>.\"\r\n    },\r\n    {\r\n      \"question\": \"Is my data safe?\",\r\n      \"answer\": \"Yes, we use <em>industry-standard</em> encryption to keep your data safe.\"\r\n    },\r\n    {\r\n      \"question\": \"Can I use images in my profile?\",\r\n      \"answer\": \"Absolutely! See example: <img src=\\\"https://via.placeholder.com/50\\\" alt=\\\"User Icon\\\" />\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/settings/faq",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"settings",
+								"faq"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
