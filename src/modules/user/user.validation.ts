@@ -74,6 +74,7 @@ const addUser = {
     name: Joi.string().required(),
     email: Joi.string().required(),
     role: Joi.string().required(),
+    dateOfBirth: Joi.string().isoDate().optional(),
     password: Joi.custom(validator.password).required(),
   }),
 };

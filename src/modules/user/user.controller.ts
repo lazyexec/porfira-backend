@@ -99,9 +99,8 @@ const getProfileById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const addUser = catchAsync(async (req: Request, res: Response) => {
-  const { name, email, role, password } = req.body;
   const files: any = req.files;
-  const user = await userService.addUser(name, email, role, password, files);
+  const user = await userService.addUser({ ...req.body, files });
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,

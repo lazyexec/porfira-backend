@@ -59,6 +59,7 @@ router
   .route("/create")
   .post(
     auth("admin"),
+    uploadAll,
     validate(userValidation.addUser),
     userController.addUser
   );

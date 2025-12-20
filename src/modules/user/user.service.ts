@@ -153,18 +153,27 @@ const recoverUser = async (userId: string) => {
   );
 };
 
-const addUser = async (
-  name: string,
-  email: string,
-  role: string,
-  password: string,
-  files: UploadedFiles
-) => {
+const addUser = async ({
+  name,
+  email,
+  role,
+  password,
+  dateOfBirth,
+  files,
+}: {
+  name: string;
+  email: string;
+  role: string;
+  password: string;
+  dateOfBirth?: Date;
+  files?: UploadedFiles;
+}) => {
   let userObject: IUser = {
     name,
     email,
     role,
     password,
+    dateOfBirth,
     isEmailVerified: true,
   };
 
@@ -172,17 +181,13 @@ const addUser = async (
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }
 
-  if (files) {
-    if (files.avatar?.[0]) {
-      const file = files.avatar[0];
-      userObject = {
-        ...userObject,
-        avatar: env.BACKEND_URL + "/public" + fs.sanitizePath(file.path),
-      };
-    }
+  if (files?.avatar?.[0]) {
+    const file = files.avatar[0];
+    userObject.avatar =
+      env.BACKEND_URL + "/public" + fs.sanitizePath(file.path);
   }
-  const user = await User.create(userObject);
-  return user;
+
+  return User.create(userObject);
 };
 
 export default {
