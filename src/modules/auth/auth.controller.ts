@@ -11,7 +11,6 @@ import tokenService from "../token/token.service";
 const register = catchAsync(async (req: Request, res: Response) => {
   const { email, name, ...rest } = req.body;
   const user = await userService.getUserByEmail(email);
-
   if (user && !user.isDeleted) {
     throw new ApiError(httpStatus.BAD_REQUEST, "Email already taken");
   }

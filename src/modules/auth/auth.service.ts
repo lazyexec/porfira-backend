@@ -4,14 +4,19 @@ import { randomOtp } from "../../utils/otp";
 import User from "../user/user.model";
 import http from "http-status";
 import Token from "../token/token.model";
+import logger from "../../utils/logger";
 
 const register = async (userData: object) => {
   const otp = randomOtp();
   const user = new User(userData);
   user.oneTimeCode = otp;
   user.onTimeCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
-  await emailHelper.sendRegistrationEmail(user.email, otp);
   await user.save();
+  setImmediate(() => {
+    emailHelper
+      .sendRegistrationEmail(user.email, otp)
+      .catch((err) => logger.error(err));
+  });
   return user;
 };
 

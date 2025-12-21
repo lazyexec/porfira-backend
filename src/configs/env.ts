@@ -65,6 +65,7 @@ const env = {
     provider: {
       host: value.SMTP_HOST,
       port: value.SMTP_PORT,
+      pool: true,
       secure: value.SMTP_PORT === 465, // true for 465, false for other ports
       auth: {
         user: value.SMTP_USERNAME,
