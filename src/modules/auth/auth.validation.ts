@@ -60,6 +60,12 @@ const changePassword = {
     newPassword: Joi.string().min(6).max(100).required(),
   }),
 };
+
+const resendOtp = {
+  body: Joi.object({
+    email: Joi.string().required(),
+  }),
+}
 export default {
   register,
   login,
@@ -69,4 +75,5 @@ export default {
   forgotPassword,
   resetPassword,
   changePassword,
+  resendOtp
 };

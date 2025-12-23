@@ -41,6 +41,16 @@ const sendRegistrationEmail = async (to: string, token: string) => {
   // Implementation for sending registration email
 };
 
+const sendVerifyAccountEmail = async (to: string, token: string) => {
+  logger.info(`Sending registration email to ${to} with token ${token}`);
+  await sendMail({
+    to,
+    subject: "Account Verification",
+    text: `Please verify your account using this token: ${token}`,
+  });
+  // Implementation for sending registration email
+};
+
 const sendResetPasswordEmail = async (to: string, token: string) => {
   await sendMail({
     to,
@@ -74,4 +84,5 @@ export default {
   sendResetPasswordEmail,
   sendRestrictionEmail,
   sendUnrestrictedEmail,
+  sendVerifyAccountEmail
 };

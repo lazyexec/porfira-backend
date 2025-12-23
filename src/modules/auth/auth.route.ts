@@ -40,5 +40,17 @@ router.post(
   authController.changePassword
 );
 
+router.post(
+  "/req-verify-account",
+  auth("common"),
+  authController.reqVerifyAccount
+);
+
+router.post(
+  "/resend-otp",
+  validate(authValidation.resendOtp),
+  authController.resendOtp
+);
+
 router.delete("/delete-me", auth("common"), authController.deleteAccount);
 export default router;

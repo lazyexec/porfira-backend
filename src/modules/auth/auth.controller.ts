@@ -7,6 +7,7 @@ import authService from "./auth.service";
 import ApiError from "../../utils/ApiError";
 import response from "../../configs/response";
 import tokenService from "../token/token.service";
+import { IUser } from "../user/user.interface";
 
 const register = catchAsync(async (req: Request, res: Response) => {
   const { email, name, ...rest } = req.body;
@@ -151,6 +152,31 @@ const deleteAccount = catchAsync(async (req: Request, res: Response) => {
   );
 });
 
+const reqVerifyAccount = catchAsync(async (req: Request, res: Response) => {
+  const user = req?.user;
+  if (!user) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "User not found");
+  }
+  await authService.reqVerifyAccount(user as IUser);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Verification email sent",
+    })
+  );
+});
+
+const resendOtp = catchAsync(async (req: Request, res: Response) => {
+  const { email } = req.body;
+  await authService.resendOtp(email);
+  res.status(httpStatus.OK).json(
+    response({
+      status: httpStatus.OK,
+      message: "Verification Email Re-Sent!",
+    })
+  );
+});
+
 export default {
   register,
   login,
@@ -161,4 +187,6 @@ export default {
   resetPassword,
   changePassword,
   deleteAccount,
+  reqVerifyAccount,
+  resendOtp,
 };

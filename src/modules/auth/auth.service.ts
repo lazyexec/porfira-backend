@@ -5,6 +5,7 @@ import User from "../user/user.model";
 import http from "http-status";
 import Token from "../token/token.model";
 import logger from "../../utils/logger";
+import { IUser, IUserModel } from "../user/user.interface";
 
 const register = async (userData: object) => {
   const otp = randomOtp();
@@ -46,9 +47,6 @@ const login = async (email: string, password: string) => {
   const user = await User.findOne({ email, isDeleted: false });
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(http.UNAUTHORIZED, "Incorrect email or password");
-  }
-  if (!user.isEmailVerified) {
-    throw new ApiError(http.UNAUTHORIZED, "Email not verified");
   }
   if (user.isRestricted) {
     throw new ApiError(
@@ -137,6 +135,73 @@ const deleteAccount = async (userId: any) => {
   return user;
 };
 
+const reqVerifyAccount = async (user: IUser) => {
+  if (user.isEmailVerified && !user.isResetPassword) {
+    throw new ApiError(http.BAD_REQUEST, "Email is already verified");
+  }
+
+  if (user.onTimeCodeExpires) {
+    const resendAllowedAt =
+      new Date(user.onTimeCodeExpires).getTime() - 7 * 60 * 1000;
+    if (Date.now() < resendAllowedAt) {
+      throw new ApiError(
+        http.TOO_MANY_REQUESTS,
+        "Please wait before requesting a new verification code"
+      );
+    }
+  }
+
+  const userDoc = await User.findById(user._id);
+  if (!userDoc) {
+    throw new ApiError(http.NOT_FOUND, "User not found");
+  }
+
+  const otp = randomOtp();
+  userDoc.oneTimeCode = otp;
+  userDoc.onTimeCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+  await userDoc.save();
+
+  setImmediate(() => {
+    emailHelper
+      .sendRegistrationEmail(userDoc.email, otp)
+      .catch((err) => logger.error(err));
+  });
+
+  return userDoc;
+};
+
+const resendOtp = async (email: string) => {
+  const user = await User.findOne({ email, isDeleted: false });
+  if (!user) {
+    throw new ApiError(http.NOT_FOUND, "Invalid Request!");
+  }
+
+  if (!user.oneTimeCode && !user.onTimeCodeExpires) {
+    throw new ApiError(http.BAD_REQUEST, "Bad Request!");
+  }
+
+  if (user.onTimeCodeExpires) {
+    const resendAllowedAt =
+      new Date(user.onTimeCodeExpires).getTime() - 7 * 60 * 1000;
+    if (Date.now() < resendAllowedAt) {
+      throw new ApiError(
+        http.TOO_MANY_REQUESTS,
+        "Please wait before requesting a new verification code"
+      );
+    }
+  }
+
+  const otp = randomOtp();
+  user.oneTimeCode = otp;
+  user.onTimeCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+  if (user.isResetPassword) {
+    await emailHelper.sendResetPasswordEmail(user.email, otp);
+  } else {
+    await emailHelper.sendRegistrationEmail(user.email, otp);
+  }
+  await user.save();
+};
+
 export default {
   // Utility Functions
   // getUserByEmail,
@@ -148,4 +213,6 @@ export default {
   resetPassword,
   changePassword,
   deleteAccount,
+  resendOtp,
+  reqVerifyAccount,
 };
