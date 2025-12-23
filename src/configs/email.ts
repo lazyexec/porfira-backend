@@ -6,14 +6,16 @@ import httpStatus from "http-status";
 
 // Create a test account or replace with real credentials.
 const transporter = nodemailer.createTransport(env.email.provider);
-transporter
-  .verify()
-  .then(() => {
-    logger.info("SMTP transporter is Ready for Usage!");
-  })
-  .catch((err) => {
-    logger.error("SMTP transporter failed to connect with error:", err);
-  });
+if (env.DEBUG) {
+  transporter
+    .verify()
+    .then(() => {
+      logger.info("SMTP transporter is Ready for Usage!");
+    })
+    .catch((err) => {
+      logger.error("SMTP transporter failed to connect with error:", err);
+    });
+}
 
 const sendMail = async (options: nodemailer.SendMailOptions) => {
   try {
@@ -22,7 +24,10 @@ const sendMail = async (options: nodemailer.SendMailOptions) => {
       ...options,
     });
   } catch (error: any) {
-    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, error.message);
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      "Failed to Send Email: error: " + error.message
+    );
   }
 };
 
