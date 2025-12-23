@@ -15,11 +15,15 @@ import rateLimit from "express-rate-limit";
 
 const app: Application = express();
 // Rate Limiter
+// REQUIRED on Render / reverse proxy
+app.set("trust proxy", 1);
 if (!env.DEBUG) {
   app.use(
     rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
       max: 200,
+      // standardHeaders: true,
+      // legacyHeaders: false,
     })
   );
 }
