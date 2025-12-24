@@ -91,6 +91,8 @@ const resetPassword = async (email: any, otp: string, newPassword: string) => {
   }
   user.password = newPassword;
   user.isResetPassword = false;
+  user.oneTimeCode = null;
+  user.onTimeCodeExpires = null;
   await user.save();
   return user;
 };

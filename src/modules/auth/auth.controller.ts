@@ -42,7 +42,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
 });
 
 const login = catchAsync(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email, password, fcmToken } = req.body;
   const user = await authService.login(email, password);
   const token = await tokenService.generateUserTokens({
     userId: user._id as Types.ObjectId,
@@ -50,6 +50,9 @@ const login = catchAsync(async (req: Request, res: Response) => {
     ip: req.device?.ip || null,
     userAgent: req.get("User-Agent") || null,
   });
+  if (fcmToken) {
+    await userService.updateUser(user._id?.toString(), { fcmToken }, {});
+  }
   res.status(httpStatus.OK).json(
     response({
       status: httpStatus.OK,
@@ -81,7 +84,13 @@ const verifyAccount = catchAsync(async (req: Request, res: Response) => {
 
 const logout = catchAsync(async (req: Request, res: Response) => {
   const { refreshToken } = req.body;
-  await tokenService.revokeRefreshToken(refreshToken, "refresh");
+  const removedToken = await tokenService.revokeRefreshToken(
+    refreshToken,
+    "refresh"
+  );
+  if (!removedToken) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Invalid Refresh Token");
+  }
   res
     .status(httpStatus.OK)
     .json(response({ status: httpStatus.OK, message: "Logout successful" }));
