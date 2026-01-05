@@ -51,7 +51,6 @@ const sendMessage = catchAsync(async (req: Request, res: Response) => {
     content
   );
 
-  //TODO: send notification to target user
   io?.to(conversationId as string).emit("new-message", message);
   // send Notification if user is Offline
   const recieverId = (await messageService.getOtherParticipant(

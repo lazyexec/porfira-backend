@@ -42,14 +42,11 @@ const claimBooking = async (
     throw new ApiError(400, "Teacher does not have a Stripe price ID");
 
   let stripeAccountId = teacher.teacher?.stripeAccountId;
-  if (!stripeAccountId && env.DEBUG) {
-    //DEBUG
+  if (!stripeAccountId) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       "Teacher has not set up payouts"
     );
-  } else {
-    stripeAccountId = "ca_FkyHCg7X8mlvCUdMDao4mMxagUfhIwXb";
   }
 
   // Availability Check
@@ -99,14 +96,14 @@ const claimBooking = async (
     const stripeSession = await stripe.createStripeSession({
       priceId: priceId,
       quantity: duration,
-      successUrl: `https://corpida-web-3nj3.vercel.app/dashboard/myLessonspage/`,
-      cancelUrl: `https://corpida-web-3nj3.vercel.app/dashboard/myLessonspage/`,
+      successUrl: `${env.FRONTEND_URL}/dashboard/myLessonspage/`,
+      cancelUrl: `${env.FRONTEND_URL}/dashboard/myLessonspage/`,
       metadata: {
         transactionId: transaction._id.toString(),
         app: "porfira-payment",
       },
       applicationFeeAmount: platformFee, // Stripe Connect Application Fee
-      // transferDestination: stripeAccountId, // Stripe Connect Destination
+      transferDestination: stripeAccountId, // Stripe Connect Destination
     });
 
     return { url: stripeSession.url };
@@ -124,7 +121,6 @@ const confirmSession = async (stripeEvent: any) => {
     case "checkout.session.completed":
       session = stripeEvent.data.object;
       const transactionId = session.metadata?.transactionId;
-      console.log(session);
 
       if (session.metadata?.app === "porfira-payment" && transactionId) {
         const existingTransaction = await Transaction.findById(transactionId);
@@ -193,13 +189,11 @@ const rePayment = async (bookingId: string, userId: string) => {
   const user = await userService.getUserById(booking?.teacher.toString());
   let stripeAccountId = user?.teacher?.stripeAccountId;
 
-  if (!stripeAccountId && env.DEBUG) {
+  if (!stripeAccountId) {
     throw new ApiError(
       httpStatus.BAD_REQUEST,
       "Teacher has not set up payouts"
     );
-  } else {
-    stripeAccountId = "ca_FkyHCg7X8mlvCUdMDao4mMxagUfhIwXb";
   }
 
   // console.log({
@@ -224,8 +218,8 @@ const rePayment = async (bookingId: string, userId: string) => {
   const stripeSession = await stripe.createStripeSession({
     priceId: transaction?.priceId,
     quantity: booking.duration,
-    successUrl: `https://corpida-web-3nj3.vercel.app/dashboard/myLessonspage/`,
-    cancelUrl: `https://corpida-web-3nj3.vercel.app/dashboard/myLessonspage/`,
+    successUrl: `${env.FRONTEND_URL}/dashboard/myLessonspage/`,
+    cancelUrl: `${env.FRONTEND_URL}/dashboard/myLessonspage/`,
     metadata: {
       transactionId: transaction._id.toString(),
       app: "porfira-payment",
