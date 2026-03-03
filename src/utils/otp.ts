@@ -1,8 +1,9 @@
+import crypto from "crypto";
+
 const randomOtp = (length = 6) => {
-  return Math.floor(
-    Math.pow(10, length - 1) +
-      Math.random() * (Math.pow(10, length) - Math.pow(10, length - 1) - 1)
-  ).toString();
+  const min = Math.pow(10, length - 1);
+  const max = Math.pow(10, length) - 1;
+  return crypto.randomInt(min, max + 1).toString();
 };
 
 export { randomOtp };

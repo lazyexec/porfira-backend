@@ -22,6 +22,10 @@ const register = async (userData: object) => {
 };
 
 const verifyAccount = async (email: string, code: string) => {
+  if (!email || !code) {
+    throw new ApiError(http.BAD_REQUEST, "Email and code are required");
+  }
+
   const user = await User.findOne({ email, oneTimeCode: code });
   if (!user) {
     throw new ApiError(http.FORBIDDEN, "Invalid code or email");
