@@ -11,6 +11,7 @@ import webhookRouter from "./modules/stripe/stripe.route";
 import morgan from "morgan";
 import cors from "cors";
 import path from "path";
+import fs from "fs";
 import rateLimit from "express-rate-limit";
 
 const app: Application = express();
@@ -27,8 +28,16 @@ if (!env.DEBUG) {
     })
   );
 }
-// For Exporting Public Files to User
-app.use("/public", express.static(path.join(__dirname, "../public")));
+// Serve uploaded/static files from runtime cwd first, with build-dir fallback.
+const staticPublicDirs = [
+  path.resolve(process.cwd(), "public"),
+  path.resolve(process.cwd(), "dist/public"),
+  path.resolve(__dirname, "../public"),
+].filter((dir, index, arr) => fs.existsSync(dir) && arr.indexOf(dir) === index);
+
+for (const dir of staticPublicDirs) {
+  app.use("/public", express.static(dir));
+}
 // Morgan Logger for logging requests
 if (env.DEBUG) {
   app.use(morgan("dev"));
