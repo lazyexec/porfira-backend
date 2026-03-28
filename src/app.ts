@@ -47,7 +47,14 @@ if (env.DEBUG) {
 // Enable CORS
 app.use(
   cors({
-    origin: env.FRONTEND_URL,
+    origin: (origin, callback) => {
+      // Allow non-browser clients (no Origin header).
+      if (!origin) return callback(null, true);
+      if (env.FRONTEND_URLS.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
   })
 );
 // Webhook Route for raw body

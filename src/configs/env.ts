@@ -30,9 +30,12 @@ const validator = Joi.object({
     .required()
     .description("Stripe Webhook Secret Key"),
   // URLS
-  FRONTEND_URL: Joi.string().default("*").description("Frontend URL"),
+  FRONTEND_URL: Joi.string()
+    .default("http://localhost:3000")
+    .description("Frontend URL (single URL or comma-separated URLs)"),
   BACKEND_URL: Joi.string()
-    .default(`http://${process.env.BACKEND_IP}:${process.env.PORT}`)
+    .uri({ scheme: [/https?/] })
+    .default(`http://${process.env.BACKEND_IP || "localhost"}:${process.env.PORT || 3000}`)
     .description("Frontend URL"),
   FIREBASE_PROJECT_ID: Joi.string()
     .required()
@@ -48,6 +51,20 @@ const validator = Joi.object({
 const { value, error } = validator.validate(process.env);
 
 if (error) throw new Error(error.message);
+
+const parsedFrontendUrls = value.FRONTEND_URL
+  .split(",")
+  .map((url: string) => url.trim())
+  .filter(Boolean);
+
+for (const url of parsedFrontendUrls) {
+  const { error: urlError } = Joi.string()
+    .uri({ scheme: [/https?/] })
+    .validate(url);
+  if (urlError) {
+    throw new Error(`Invalid FRONTEND_URL entry: ${url}`);
+  }
+}
 
 const env = {
   PORT: value.PORT,
@@ -78,7 +95,8 @@ const env = {
   STRIPE_SECRET_KEY: value.STRIPE_SECRET_KEY,
   STRIPE_WEBHOOK_SECRET: value.STRIPE_WEBHOOK_SECRET,
   // URLS
-  FRONTEND_URL: value.FRONTEND_URL,
+  FRONTEND_URL: parsedFrontendUrls[0],
+  FRONTEND_URLS: parsedFrontendUrls,
   BACKEND_URL: value.BACKEND_URL,
   // Firebase Config
   firebase: {
