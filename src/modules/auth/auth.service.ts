@@ -70,6 +70,7 @@ const forgotPassword = async (email: string) => {
   user.oneTimeCode = otp;
   user.onTimeCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
   user.isResetPassword = true;
+  logger.info(`Sending reset password email to ${user.email} with token ${otp}`);
   await emailHelper.sendResetPasswordEmail(user.email, otp);
   await user.save();
   return user;
@@ -201,8 +202,10 @@ const resendOtp = async (email: string) => {
   user.oneTimeCode = otp;
   user.onTimeCodeExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
   if (user.isResetPassword) {
+    logger.info(`Re-sending reset password email to ${user.email} with token ${otp}`);
     await emailHelper.sendResetPasswordEmail(user.email, otp);
   } else {
+    logger.info(`Re-sending registration email to ${user.email} with token ${otp}`);
     await emailHelper.sendRegistrationEmail(user.email, otp);
   }
   await user.save();

@@ -20,10 +20,10 @@ const validator = Joi.object({
   JWT_REFRESH_EXPIRY: Joi.string()
     .default("30d")
     .description("JWT Refresh Expiry time"),
-  SMTP_HOST: Joi.string().required().description("SMTP Host"),
-  SMTP_PORT: Joi.number().required().description("SMTP Port"),
-  SMTP_USERNAME: Joi.string().required().description("SMTP Username"),
-  SMTP_PASSWORD: Joi.string().required().description("SMTP Password"),
+  BREVO_API_KEY: Joi.string().required().description("Brevo API Key"),
+  BREVO_SENDER_NAME: Joi.string()
+    .default("Porfira")
+    .description("Brevo Sender Name"),
   EMAIL_FROM: Joi.string().email().required().description("Email From Address"),
   STRIPE_SECRET_KEY: Joi.string().required().description("Stripe Secret Key"),
   STRIPE_WEBHOOK_SECRET: Joi.string()
@@ -79,16 +79,8 @@ const env = {
     expiryRefreshToken: value.JWT_REFRESH_EXPIRY,
   },
   email: {
-    provider: {
-      host: value.SMTP_HOST,
-      port: value.SMTP_PORT,
-      pool: true,
-      secure: value.SMTP_PORT === 465, // true for 465, false for other ports
-      auth: {
-        user: value.SMTP_USERNAME,
-        pass: value.SMTP_PASSWORD,
-      },
-    },
+    apiKey: value.BREVO_API_KEY,
+    senderName: value.BREVO_SENDER_NAME,
     from: value.EMAIL_FROM,
   },
   // STRIPE ACCOUNT

@@ -1,32 +1,50 @@
 import env from "./env";
 import logger from "../utils/logger";
-import nodemailer from "nodemailer";
+import * as brevo from "@getbrevo/brevo";
 import ApiError from "../utils/ApiError";
 import httpStatus from "http-status";
 
-// Create a test account or replace with real credentials.
-const transporter = nodemailer.createTransport(env.email.provider);
-if (env.DEBUG) {
-  transporter
-    .verify()
-    .then(() => {
-      logger.info("SMTP transporter is Ready for Usage!");
-    })
-    .catch((err) => {
-      logger.error("SMTP transporter failed to connect with error:", err);
-    });
-}
+const transactionalEmailApi = new brevo.TransactionalEmailsApi();
+transactionalEmailApi.setApiKey(
+  brevo.TransactionalEmailsApiApiKeys.apiKey,
+  env.email.apiKey
+);
 
-const sendMail = async (options: nodemailer.SendMailOptions) => {
+type SendMailOptions = {
+  to: string | string[];
+  subject: string;
+  text?: string;
+  html?: string;
+};
+
+const sendMail = async (options: SendMailOptions) => {
   try {
-    await transporter.sendMail({
-      from: env.email.from,
-      ...options,
-    });
+    const recipients = (Array.isArray(options.to) ? options.to : [options.to])
+      .filter(Boolean)
+      .map((email) => ({ email }));
+
+    if (!recipients.length) {
+      throw new Error("At least one recipient is required");
+    }
+
+    const payload = new brevo.SendSmtpEmail();
+    payload.sender = {
+      email: env.email.from,
+      name: env.email.senderName,
+    };
+    payload.to = recipients;
+    payload.subject = options.subject;
+    if (options.text) payload.textContent = options.text;
+    if (options.html) payload.htmlContent = options.html;
+
+    await transactionalEmailApi.sendTransacEmail(payload);
   } catch (error: any) {
+    const message =
+      error?.response?.body?.message || error?.message || "Unknown error";
+
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      "Failed to Send Email: error: " + error.message
+      "Failed to Send Email: error: " + message
     );
   }
 };
